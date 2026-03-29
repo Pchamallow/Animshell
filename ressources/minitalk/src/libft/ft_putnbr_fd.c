@@ -1,0 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/26 14:40:13 by stkloutz          #+#    #+#             */
+/*   Updated: 2025/10/26 15:06:02 by stkloutz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+void	ft_putnbr_fd(int n, int fd)
+{
+	unsigned int	nb;
+
+	if (n < 0)
+	{
+		ft_putchar_fd('-', fd);
+		nb = -(unsigned int)n;
+	}
+	else
+		nb = (unsigned int)n;
+	if (nb >= 10)
+	{
+		ft_putnbr_fd(nb / 10, fd);
+	}
+	ft_putchar_fd(nb % 10 + '0', fd);
+}
