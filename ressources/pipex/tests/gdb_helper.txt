@@ -1,0 +1,11 @@
+display str[i]
+display type->cmd[i]
+display i
+./pipex infile.txt ./cat wc outfile.txt
+./pipex "" ls wc outfile.txt
+
+
+display dst[i]
+display src[i]
+
+p parse->error
