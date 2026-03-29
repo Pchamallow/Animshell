@@ -1,0 +1,14 @@
+Faire un make clean -> retirer les .o
+
+1. Ajouter
+- dossiers : 
+-- includes
+-- src
+-- lib
+
+- fichiers :
+-- Makefile
+-- RAEDME.md
+
+2. retirer : 
+src -> TO_DELETE.c
