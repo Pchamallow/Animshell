@@ -1,0 +1,15 @@
+# Temporary files
+*.swp
+
+# Object files
+*.o
+
+# Libraries
+*.a
+
+# Executables
+*.out
+
+
+# Tests
+
