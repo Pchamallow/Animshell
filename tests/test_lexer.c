@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 19:41:38 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/03/31 19:50:59 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/02 23:17:31 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #define MAX_LENGTH 100
 
 // this function check for a delimiter(it is a piece of data
-// that seprated it from other) to peform some specif case
+// that separated it from other) to peform some specif case
 // on it
 bool isDelimiter(char chr)
 {
@@ -44,7 +44,7 @@ bool isOperator(char chr)
             || chr == '=');
 }
 
-// this function check for an valid identifier
+// this function check for a valid identifier
 bool isValidIdentifier(char* str)
 {
     return (str[0] != '0' && str[0] != '1' && str[0] != '2'
@@ -149,17 +149,21 @@ int lexicalAnalyzer(char* input)
 }
 
 // main function
-int main()
+int main(int ac, char **av)
 {
     // Input 01
-    char lex_input[MAX_LENGTH] = "int a = b + c";
-    printf("For Expression \"%s\":\n", lex_input);
-    lexicalAnalyzer(lex_input);
-    printf(" \n");
+    /*char lex_input[MAX_LENGTH] = "int a = b + c";*/
+    /*printf("For Expression \"%s\":\n", lex_input);*/
+    /*lexicalAnalyzer(lex_input);*/
+    /*printf(" \n");*/
     // Input 02
-    char lex_input01[MAX_LENGTH]
-        = "int x=ab+bc+30+switch+ 0y ";
-    printf("For Expression \"%s\":\n", lex_input01);
-    lexicalAnalyzer(lex_input01);
+    /*char lex_input01[MAX_LENGTH]*/
+        /*= "int x=ab+bc+30+switch+ 0y ";*/
+    /*printf("For Expression \"%s\":\n", lex_input01);*/
+    /*lexicalAnalyzer(lex_input01);*/
+    // Input main
+    (void)ac;
+    printf("For Expression \"%s\":\n", av[1]);
+    lexicalAnalyzer(av[1]);
     return (0);
 }
