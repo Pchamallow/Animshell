@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 10:18:29 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 11:41:46 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,25 @@
 
 # include "../lib/libft/libft.h"
 # include <stdlib.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <termios.h>
+
+
+typedef struct s_env
+{
+    char    *username;
+}               t_env;
 
 /***********************************************************************/
 /*                            SRC                                      */
 /***********************************************************************/
 int		main(void);
-/**************************************************************** Text */
+/********************************************************** struct env */
+void    init_struct_env(t_env *env);
+void	free_struct_env(t_env *env);
+/**************************************************************** term */
+
 
 
 #endif
