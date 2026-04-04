@@ -1,0 +1,10 @@
+*.o
+
+#pour vim
+*.swp
+tags
+
+*.a
+*.out
+
+tests

@@ -6,53 +6,60 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 14:16:05 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 16:17:21 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int execute(t_env *env)
+void handle_sigint(int sig)
 {
-    struct termios oldt, newt;
+    (void)sig;
+    write(1, "\nminishell$ ", 12); // réaffiche le prompt
+}
+
+int execute(t_env *env, char **token)
+{
+	t_exec	exec;
+	// char c;
+    // struct termios oldt, newt;
 
 	/* ENV A CHARGER EN AMONT */
 	init_struct_env(env); /*comportemement si on ne trouve pas d user ou 
 	de name ?*/
-	// ft_printf_fd(2, "Your username is %s\n", env.username);
 
-	if (term_raw_mode(&oldt, &newt))
-		return (1);
+	is_cmd(&exec, token);
 	
 	/*  BOUCLE WHILE  */
-	char *line;
-	// char	c;
-
-
-	// ft_printf_fd(2, "%d\n", nb);
-	
-	// ft_printf_fd(2, "%s\n", env.username);
+	signal(SIGINT, handle_sigint);
 	
 	while (1)
 	{
-		line = readline(env->username);
-		if (!line)
+		exec.line = readline("minishell$ ");
+		if (!exec.line)
+		{
+		    printf("exit\n");
 			break;
-
-		if (*line)
-			add_history(line);
-
+		}
+		
+		/*  raw mode */
+		// if (term_raw_mode(&oldt, &newt))
+		// 	return (1);
 		// read(STDIN_FILENO, &c, 1);
-
-		// printf("Tu as tapé : %c\n", c);
-
-		free(line);
+		// if (c == 'C')
+		// 	return (1);
+		// tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+		echo(&exec);
+		
+		if (*exec.line)
+			add_history(exec.line);
+			
+		free(exec.line);
 	}
 
 	
 
 	// revenir au terminal normal
-	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 	
 	return (0);
 	// free_struct_env(&env);

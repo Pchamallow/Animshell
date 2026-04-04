@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:10:42 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 14:11:06 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 15:08:19 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /*
 from canon to raw mode + disable echo
--> CTRL + C = "^C" instead of shut down the program
+-> ICANON = characters are send to the program
 -> echo = disable original echo for use ours
 */
 int term_raw_mode(struct termios *oldt, struct termios *newt)
