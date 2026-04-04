@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:10:42 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 14:11:06 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 15:17:33 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ int term_raw_mode(struct termios *oldt, struct termios *newt)
 	newt = oldt;
 	
 	/* avec echo */
-	// newt->c_lflag &= ~(ICANON);
+	 newt->c_lflag &= ~(ICANON);
 	/* sans echo */
-	newt->c_lflag &= ~(ICANON | ECHO);
+	/*newt->c_lflag &= ~(ICANON | ECHO);*/
 
 	if (tcsetattr(STDIN_FILENO, TCSANOW, newt) == -1) 
 	{

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 14:15:37 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 18:01:47 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,44 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <termios.h>
+//ajout steph:
+#include <stdbool.h>
 
 
 typedef struct s_env
 {
     char    *username;
 }               t_env;
+
+/***********************************************************************/
+//ajout steph pour parsing :
+typedef enum e_token_type
+{
+	WORD,
+	REDIRECTION,
+	PIPE,
+	EQUAL,
+	IS_CMD,
+	IS_BUILT_IN,
+	IS_FILE
+}   t_token_type;
+
+typedef struct s_token
+{
+	char			*value;
+	char			*cmd_path;
+	char			*path_explicite;
+	char			**options;
+	char			**args_execve;
+	int				file_null;
+	int				nb_opt;
+	int				fd;
+	int				close;
+	t_token_type	type;
+	struct s_token	*next;
+}				t_token;
+
+/***********************************************************************/
 
 /***********************************************************************/
 /*                            SRC                                      */
