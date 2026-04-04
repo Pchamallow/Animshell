@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 14:14:41 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 15:10:09 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ int	main(void)
 	t_env env;
 
 
-	execute(&env);
+	if (execute(&env) == 1)
+		return (1);
+
+	return (0);
 
 }

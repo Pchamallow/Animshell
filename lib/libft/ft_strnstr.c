@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:03:15 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/01/25 21:35:06 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 15:44:48 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 	if (!big)
 		return (NULL);
 	src = (char *)big;
-	if (little[i] == 0 || !little)
+	if (little[j] == 0 || !little)
 		return (src);
 	while (src[i] && (i + j) < len)
 	{
@@ -35,7 +35,7 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 			i++;
 		}
 		if (!little[j])
-			return (&src[i]);
+			return (&src[i + j]);
 	}
 	return (NULL);
 }

@@ -10,4 +10,5 @@
 
 
 initialisation of environnement
-get_username = for the prompt we have "username@hostname$ "
+get_username = for the prompt we have "username@hostname$ "coucou
+README.md
