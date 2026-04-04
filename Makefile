@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/01 16:12:55 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/04/04 10:19:48 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,14 +17,14 @@ CC			:= cc
 CFLAGS		:= -Wall -Wextra -Werror -g 
 MAKEFLAGS	+= --no-print-directory
 DATE		:= $(shell date +"%y_%m_%d_%H-%M-%S")
-BUILD_DIR	:= .pipex
+BUILD_DIR	:= .minishell
 
 # Includes
 INCLUDES	:=							\
 				-Iincludes				\
 				-Ilib/libft/			\
 
-NAME		:= pipex
+NAME		:= minishell
 
 # Colors
 GREEN		:='\033[0;32m'
