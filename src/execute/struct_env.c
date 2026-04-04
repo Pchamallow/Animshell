@@ -1,23 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   struct_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/01 16:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 14:14:41 by pswirgie         ###   ########.fr       */
+/*   Created: 2026/04/04 11:00:00 by pswirgie          #+#    #+#             */
+/*   Updated: 2026/04/04 14:05:18 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// void	free_struct_env(t_env *env)
+// {
+	
+// }
 
-int	main(void)
+/* get_username = for the prompt we have "username@hostname$ "
+*/
+void    init_struct_env(t_env *env)
 {
-	t_env env;
-
-
-	execute(&env);
+	env->username = "minishell$ ";
 
 }
