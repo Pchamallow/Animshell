@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 15:10:09 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 17:56:55 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 int	main(void)
 {
-	t_env env;
-
-
-	if (execute(&env) == 1)
+	t_minishell	minishell;
+	
+	minishell.token.value ="coucou";
+	if (execute(&minishell) == 1)
 		return (1);
 
 	return (0);

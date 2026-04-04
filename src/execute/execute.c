@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 16:17:21 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 18:08:34 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,21 @@
 
 void handle_sigint(int sig)
 {
-    (void)sig;
-    write(1, "\nminishell$ ", 12); // réaffiche le prompt
+	(void)sig;
+	write(1, "\nminishell$ ", 12); // réaffiche le prompt
 }
 
-int execute(t_env *env, char **token)
+int execute(t_minishell *minishell)
 {
 	t_exec	exec;
+
+	// ft_printf_fd(2, "%s\n", token->value);
+	
 	// char c;
-    // struct termios oldt, newt;
+	// struct termios oldt, newt;
 
 	/* ENV A CHARGER EN AMONT */
-	init_struct_env(env); /*comportemement si on ne trouve pas d user ou 
-	de name ?*/
+	// init_struct_env(env); /*comportemement si on ne trouve pas d user ou 
 
 	is_cmd(&exec, token);
 	
@@ -38,24 +40,24 @@ int execute(t_env *env, char **token)
 		exec.line = readline("minishell$ ");
 		if (!exec.line)
 		{
-		    printf("exit\n");
+			printf("exit\n");
 			break;
 		}
 		
-		/*  raw mode */
-		// if (term_raw_mode(&oldt, &newt))
-		// 	return (1);
-		// read(STDIN_FILENO, &c, 1);
-		// if (c == 'C')
-		// 	return (1);
-		// tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-		echo(&exec);
+	// 	/*  raw mode */
+	// 	// if (term_raw_mode(&oldt, &newt))
+	// 	// 	return (1);
+	// 	// read(STDIN_FILENO, &c, 1);
+	// 	// if (c == 'C')
+	// 	// 	return (1);
+	// 	// tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+	// 	echo(&exec);
 		
-		if (*exec.line)
-			add_history(exec.line);
+	// 	if (*exec.line)
+	// 		add_history(exec.line);
 			
-		free(exec.line);
-	}
+	// 	free(exec.line);
+	// }
 
 	
 

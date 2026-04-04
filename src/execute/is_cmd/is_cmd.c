@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 16:47:29 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 17:51:57 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ To search path = 0;
 Absolute path = 1;
 Explicit path = 2;
 */
+
+
+
 int	path_type(t_exec *exec, char *token)
 {
 	int	i;
@@ -45,15 +48,14 @@ static int	path_cmd(t_exec *exec, t_token *token)
 	int		i;
 	int		len;
 
-	i = path_type(exec, token);
+	i = path_type(exec, token->value);
 	if (i == 1)
 	{
-		len = len_cmd(token) + 1;
+		len = len_cmd(token->value) + 1;
 		token->cmd_path = ft_calloc(sizeof(char *), len);
 		if (!token->cmd_path)
-            ft_printf_fd(exec, "Malloc failed.\n");
-			// print_error_free(exec, "Malloc failed.\n", EXIT_FAILURE);
-		ft_strlcpy(type->cmd_path, type->cmd, len);
+			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+		ft_strlcpy(token->cmd_path, token->value, len);
 	}
 	else if (i == 0)
 	{
@@ -69,16 +71,21 @@ static int	path_cmd(t_exec *exec, t_token *token)
 	return (0);
 }
 
-int is_cmd(t_exec *exec, char **token)
+/*
+is a command ? path is valid ?
+type 0 = WORD
+type 4 = IS_CMD
+*/
+int is_cmd(t_exec *exec, t_token *token)
 {
-    char    *paths;
-    int     i;
+	char	*paths;
 
-    i = 0;
-    paths = getenv("PATH");
-    while(token[i])
-    {
-        path_cmd(exec, token[i]);
-        i++;
-    }
+	i = 0;
+	paths = getenv("PATH");
+	while(token != NULL)
+	{
+		if (token->type == 0 || token->type == 4)
+			path_cmd(exec, token);
+		token = token->next;
+	}
 }

@@ -12,3 +12,6 @@
 initialisation of environnement
 get_username = for the prompt we have "username@hostname$ "coucou
 README.md
+
+
+- [exit-code-terminal](https://www.geeksforgeeks.org/linux-unix/how-to-use-exit-code-to-read-from-terminal-from-script-and-with-logical-operators/)

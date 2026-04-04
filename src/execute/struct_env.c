@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 11:00:00 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 14:05:18 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 17:17:12 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 
 /* get_username = for the prompt we have "username@hostname$ "
 */
-void    init_struct_env(t_env *env)
-{
-	env->username = "minishell$ ";
+// void    init_struct_env(t_env *env)
+// {
+// 	env->username = "minishell$ ";
 
-}
+// }
