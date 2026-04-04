@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/04 11:27:45 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/04/04 14:16:27 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,8 +34,10 @@ NC			:='\033[0m'
 # Sources
 SRCS		:= 											\
 			src/main.c									\
+			src/execute/execute.c						\
 			src/execute/launch_display.c				\
 			src/execute/struct_env.c					\
+			src/execute/term.c							\
 
 
 OBJS		:= $(SRCS:src/%.c=$(BUILD_DIR)/%.o)

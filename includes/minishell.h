@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 11:41:46 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 14:15:37 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,14 @@ typedef struct s_env
 /*                            SRC                                      */
 /***********************************************************************/
 int		main(void);
+/************************************************************* execute */
+int execute(t_env *env);
+
 /********************************************************** struct env */
 void    init_struct_env(t_env *env);
-void	free_struct_env(t_env *env);
+// void	free_struct_env(t_env *env);
 /**************************************************************** term */
+int term_raw_mode(struct termios *oldt, struct termios *newt);
 
 
 
