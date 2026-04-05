@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/05 19:29:29 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/05 22:03:57 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,15 @@ typedef enum e_token_type
 {
 	WORD,
 	REDIRECTION,
+	HEREDOC,
 	PIPE,
 	ONE_SPACE,
-	EQUAL,
+	EQUAL,//sans doute pas besoin
 	IS_CMD,
 	IS_BUILT_IN,
-	IS_FILE
+	IS_FILE,
+	IS_ARG,
+	IS_DELIMITER
 }			t_token_type;
 
 typedef struct s_token

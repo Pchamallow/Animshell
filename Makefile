@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/05 19:17:33 by stkloutz         ###   ########.fr        #
+#    Updated: 2026/04/05 21:16:26 by stkloutz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,7 @@ SRCS		:= 											\
 			src/execute/term.c							\
 			src/parsing/ft_token_list.c					\
 			src/parsing/handle_token_types.c			\
-			src/parsing/parsing.c						\
+			src/parsing/separate_into_tokens.c			\
 
 
 OBJS		:= $(SRCS:src/%.c=$(BUILD_DIR)/%.o)

@@ -3,86 +3,65 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/05 19:25:18 by stkloutz         ###   ########.fr       */
+/*   Created: 2026/04/05 21:18:24 by stkloutz          #+#    #+#             */
+/*   Updated: 2026/04/05 23:08:55 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	is_whitespace(char c)
+t_token	*case_redirection(t_token *token, bool *cmd_found)
 {
-	if (c == ' ' || c == '\t')
-		return (true);
-	return (false);
+	return (token);
 }
 
-bool	is_separator(char c)
+t_token *case_heredoc(t_token *token, bool *cmd_found)
 {
-	if (ft_strchr(" \t|<>\"\'", c) == NULL)
-		return (false);
-	return (true);
+	return (token);
 }
 
-void	print_tokens_types(t_token *token)// pour tester
+t_token *case_command(t_token *token, bool *cmd_found)
 {
+	*cmd_found = true;
+	if (token->value == "echo" || token->value == "cd" || token->value== "pwd"
+			|| token->value == "export" || token->value == "unset"
+			|| token->value == "env" || token->value == "exit")
+		token->type = IS_BUILT_IN;
+	else
+		token->type = IS_CMD;
+	token = token->next;
+
+	return (token);
+}
+
+int	parsing(t_token **token_list)
+{
+	t_token	token;
+	bool	cmd_found;//pareil avec file in, file out, heredoc -> struct de bool ?
+
+	token = *token_list;
 	while (token)
 	{
-		ft_printf_fd(1, "%s	type=%d\n", token->value, token->type);
-		token = token->next;
+		cmd_found = false;
+		//first token
+		if (token->type == ONE_SPACE)
+			token = token->next;
+		if (!token)
+			break;
+		if (token->type == PIPE)
+		{
+			ft_printf_fd(2, "syntax error\n");
+			return (1);
+		}
+		if (token->type == REDIRECTION)
+			token = case_redirection(&token, &cmd_found);
+		if (token->type == WORD)
+			token = case_command(&token, &cmd_found);
+		if (token->type == HEREDOC)
+			token = case_heredoc(&token, &cmd_found);
+		//si pipe : check next token != NULL
 	}
-}
 
-void	print_tokens(t_token *token)// pour tester
-{
-	int	something_to_write;
-
-	something_to_write = 0;
-	while (token)
-	{
-		ft_printf_fd(1, "%s", token->value);
-		something_to_write = 1;
-		token = token->next;
-	}
-	if (something_to_write)
-		ft_printf_fd(1, "\n");
-}
-
-/*	************************************************	*/
-/* 1 token is:											*/
-/*- 1 space												*/
-/*- a sequence of characters enclosed by "" or ''		*/
-/*- |													*/
-/*- < or <<												*/
-/*- > or >>												*/
-/*- a sequence of characters separated by spaces, tabs,	*/
-/* 	or any character listed above						*/
-/*	************************************************	*/
-int	separate_into_tokens(char *line, t_token **token_list)
-{
-	int	i;
-
-	i = 0;
-	while (line[i])
-	{
-		handle_spaces(line, token_list, &i);
-		if (line[i] == '\"' || line[i] == '\'')
-			handle_quotes(line, token_list, &i, line[i]);
-		handle_spaces(line, token_list, &i);
-		if (line[i] == '|')
-			handle_pipe(line, token_list, &i);
-		handle_spaces(line, token_list, &i);
-		if (line[i] == '>' || line[i] == '<')
-			handle_redirection(line, token_list, &i, line[i]);
-		handle_spaces(line, token_list, &i);
-		if (line[i] && !is_separator(line[i]))
-			handle_words_no_quotes(line, token_list, &i);
-	}
-	//tests : *******
-	print_tokens_types(*token_list);
-	print_tokens(*token_list);
-	// **************
-	return (0);
 }

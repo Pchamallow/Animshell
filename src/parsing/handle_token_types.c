@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/05 19:35:19 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/05 22:07:17 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	handle_redirection(char *line, t_token **token_list,
 	int	i;
 	int	start;
 	int	len;
+	int	type;
 
 	i = *index;
 	start = i;
@@ -65,8 +66,12 @@ void	handle_redirection(char *line, t_token **token_list,
 		len++;
 		i++;
 	}
+	if (angle_bracket == '<' && len == 2)
+		type = HEREDOC;
+	else
+		type = REDIRECTION;
 	ft_token_add_back(token_list,
-		ft_token_new(ft_substr(line, start, len), REDIRECTION), line);
+		ft_token_new(ft_substr(line, start, len), type), line);
 	i++;
 	*index = i;
 }
