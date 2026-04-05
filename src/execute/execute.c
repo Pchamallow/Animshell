@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 14:16:05 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 22:58:52 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 int execute(t_env *env)
 {
     struct termios oldt, newt;
+	t_token	*first_token;
+
+	first_token = NULL;
 
 	/* ENV A CHARGER EN AMONT */
 	init_struct_env(env); /*comportemement si on ne trouve pas d user ou 
@@ -42,6 +45,9 @@ int execute(t_env *env)
 		if (*line)
 			add_history(line);
 
+		// PARSING ICI :
+		separate_into_tokens(line, &first_token);
+		ft_token_lstclear(&first_token);
 		// read(STDIN_FILENO, &c, 1);
 
 		// printf("Tu as tapé : %c\n", c);

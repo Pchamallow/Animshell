@@ -1,0 +1,19 @@
+#READLINE SUPPRESSORS
+{
+	leak readline
+	Memcheck:Leak
+	...
+	fun:readline
+}
+{
+	leak add_history
+	Memcheck:Leak
+	...
+	fun:add_history
+}
+{
+	too many lines
+	Memcheck:Leak
+	...
+	fun:readline_internal_char
+}

@@ -1,0 +1,96 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_token_list.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/05 19:14:01 by stkloutz          #+#    #+#             */
+/*   Updated: 2026/04/05 19:14:12 by stkloutz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+t_token	*ft_token_new(char *str, t_token_type token_type)
+{
+	t_token	*token;
+
+	if (!str)
+	{
+		ft_printf_fd(2, "No value to extract\n");
+		return (NULL);
+	}
+	token = malloc(sizeof (t_token));
+	if (!token)
+	{
+		ft_printf_fd(2, "Error malloc when creating token\n");
+		free(str);
+		return (NULL);
+	}
+	ft_bzero(token, sizeof(t_token));
+	token->type = token_type;
+	token->value = str;
+	token->next = NULL;
+	return (token);
+}
+
+t_token	*ft_token_last(t_token *lst)
+{
+	if (!lst)
+		return (lst);
+	while (lst->next != NULL)
+		lst = lst->next;
+	return (lst);
+}
+
+void	ft_token_add_back(t_token **head, t_token *newer, char *line)
+{
+	t_token	*last;
+
+	if (!head || !newer)
+	{
+		if (head)
+			ft_token_lstclear(head);
+		free(line);
+		exit(2);
+	}
+	if (!*head)
+	{
+		*head = newer;
+		return ;
+	}
+	else
+	{
+		last = ft_token_last(*head);
+		last->next = newer;
+	}
+	return ;
+}
+
+void	ft_token_delone(t_token *lst, void (*del)(void *))
+{
+	if (!lst || !del)
+		return ;
+	del(lst->value);
+	//il faudra free tout le reste aussi
+	free(lst);
+	return ;
+}
+
+void	ft_token_lstclear(t_token **head)
+{
+	t_token	*current;
+	t_token	*next;
+
+	if (!head)
+		return ;
+	current = *head;
+	while (current)
+	{
+		next = current->next;
+		ft_token_delone(current, free);
+		current = next;
+	}
+	*head = NULL;
+}

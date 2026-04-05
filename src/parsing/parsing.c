@@ -6,25 +6,11 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/04 18:26:08 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/05 19:25:18 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_token	*ft_token_new(char *str, t_token_type token_type)
-{
-	t_token	*token;
-
-	token = malloc(sizeof (t_token));
-	if (!token)
-		return (NULL);
-	ft_bzero(token, sizeof(t_token));
-	token->type = token_type;
-	token->value = str;
-	token->next = NULL;
-	return (token);
-}
 
 bool	is_whitespace(char c)
 {
@@ -33,139 +19,70 @@ bool	is_whitespace(char c)
 	return (false);
 }
 
+bool	is_separator(char c)
+{
+	if (ft_strchr(" \t|<>\"\'", c) == NULL)
+		return (false);
+	return (true);
+}
+
+void	print_tokens_types(t_token *token)// pour tester
+{
+	while (token)
+	{
+		ft_printf_fd(1, "%s	type=%d\n", token->value, token->type);
+		token = token->next;
+	}
+}
+
+void	print_tokens(t_token *token)// pour tester
+{
+	int	something_to_write;
+
+	something_to_write = 0;
+	while (token)
+	{
+		ft_printf_fd(1, "%s", token->value);
+		something_to_write = 1;
+		token = token->next;
+	}
+	if (something_to_write)
+		ft_printf_fd(1, "\n");
+}
+
+/*	************************************************	*/
 /* 1 token is:											*/
-/*- all characters between "" or ''						*/
+/*- 1 space												*/
+/*- a sequence of characters enclosed by "" or ''		*/
 /*- |													*/
 /*- < or <<												*/
 /*- > or >>												*/
-/*- =													*/
 /*- a sequence of characters separated by spaces, tabs,	*/
-/* or any character listed above						*/
-int	count_tokens(char *line)
-{
-	int nb_tokens;
-	int	i;
-
-	nb_tokens = 0;
-	while (line[i])
-	{
-		//trim spaces :
-		while (is_whitespace(line[i]))
-			i++;
-		//double quotes :
-		if (line[i] == '"')
-		{
-			while (line[i] != '"')
-			{
-				i++;
-				if (line[i] == '\0')
-				{
-					ft_printf_fd(2, "Error: unclosed quotes");
-					return(1);
-				}
-			}
-			nb_tokens++;
-			i++;
-			//trim spaces :
-			while (is_whitespace(line[i]))
-				i++;
-		}
-		//single quotes :
-		if (line[i] == ''')
-		{
-			while (line[i] != ''')
-			{
-				i++;
-				if (line[i] == '\0')
-				{
-					ft_printf_fd(2, "Error: unclosed quotes");
-					return(-1);
-				}
-			}
-			nb_tokens++;
-			i++;
-			//trim spaces :
-			while (is_whitespace(line[i]))
-				i++;
-		}
-		//pipes :
-		if (line[i] && line[i] == '|')
-		{
-			nb_tokens++;
-			i++;
-			//trim spaces :
-			while (is_whitespace(line[i]))
-				i++;
-		}
-		//redirections < :
-		if (line[i] && line[i] == '<')
-		{
-			nb_tokens++;
-			i++;
-				if (line[i] == '<')
-					i++;
-			//trim spaces :
-			while (is_whitespace(line[i]))
-				i++;
-		}
-		//redirections > :
-		if (line[i] && line[i] == '>')
-		{
-			nb_tokens++;
-			i++;
-				if (line[i] == '>')
-					i++;
-			//trim spaces :
-			while (is_whitespace(line[i]))
-				i++;
-		}
-		//words not enclosed with quotes:
-		if (line[i])
-		{
-			nb_tokens++;
-			while (line[i] && !is_separator(line[i]))
-				i++;
-		}
-
-	}
-	return(nb_tokens);
-}
-
-t_token	*separate_into_tokens(char *line, t_token **token_list)
+/* 	or any character listed above						*/
+/*	************************************************	*/
+int	separate_into_tokens(char *line, t_token **token_list)
 {
 	int	i;
-	int	start;
-	int	len;
 
+	i = 0;
 	while (line[i])
 	{
-		//trim spaces
-		while (is_whitespace(line[i]))
-			i++;
-		//if quote
-		if (line[i] == '"')
-		{
-			start = i + 1; // + 1 pour pas avoir de quote
-			while (line[i] != '"')
-			{
-				i++;
-				if (line[i] == '\0')
-				{
-					ft_printf_fd(2, "Error: unclosed quotes");
-					return(1);
-				}
-			}
-			i++;
-			len = i - start;
-			//lst_add_back(token_list, ft_token_new(ft_substr, WORD));
-			//trim spaces :
-			while (is_whitespace(line[i]))
-				i++;
-		}
-		//if pipe
-		//if redirection
-		//if words not enclosed with quotes
-		i++;
+		handle_spaces(line, token_list, &i);
+		if (line[i] == '\"' || line[i] == '\'')
+			handle_quotes(line, token_list, &i, line[i]);
+		handle_spaces(line, token_list, &i);
+		if (line[i] == '|')
+			handle_pipe(line, token_list, &i);
+		handle_spaces(line, token_list, &i);
+		if (line[i] == '>' || line[i] == '<')
+			handle_redirection(line, token_list, &i, line[i]);
+		handle_spaces(line, token_list, &i);
+		if (line[i] && !is_separator(line[i]))
+			handle_words_no_quotes(line, token_list, &i);
 	}
-
+	//tests : *******
+	print_tokens_types(*token_list);
+	print_tokens(*token_list);
+	// **************
+	return (0);
 }
