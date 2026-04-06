@@ -19,13 +19,47 @@
 # include <readline/history.h>
 # include <termios.h>
 //ajout steph:
+# include <signal.h>
 # include <stdbool.h>
 
-
-typedef struct s_env
+typedef enum e_token_type
 {
-    char    *username;
-}               t_env;
+	WORD,
+	REDIRECTION,
+	PIPE,
+	EQUAL,
+	IS_CMD,
+	IS_BUILT_IN,
+	IS_FILE
+}   t_token_type;
+
+typedef struct s_token
+{
+	char				*value;
+	char				*cmd_path;
+	char				*path_explicite;
+	char				**options;
+	char				**args_execve;
+	int					file_null;
+	int					nb_opt;
+	int					fd;
+	int					close;
+	t_token_type		type;
+	struct s_token		*next;
+}				t_token;
+
+typedef struct s_exec
+{
+	char	*line;
+	int		error;
+}			t_exec;
+
+typedef struct s_minishell
+{
+	t_exec		exec;
+	t_token		token;
+}				t_minishell;
+
 
 /***********************************************************************/
 //ajout steph pour parsing :
@@ -78,13 +112,25 @@ typedef struct s_token
 /***********************************************************************/
 int		main(void);
 /************************************************************* execute */
-int execute(t_env *env);
+int		execute(t_minishell *minishell);
+int		is_cmd(t_minishell *minishell);
+int		path_cmd(t_minishell *minishell, t_token *token, char **all_paths);
+void	free_double(char **tab, int len);
+
+/************************************************************ built-in */
+
+int     echo(t_exec *exec);
 
 /********************************************************** struct env */
-void    init_struct_env(t_env *env);
+// void    init_struct_env(t_env *env);
 // void	free_struct_env(t_env *env);
 /**************************************************************** term */
 int term_raw_mode(struct termios *oldt, struct termios *newt);
+/********************************************************** error_free */
+void	print_error_free(t_minishell *minishell, char *str, int error);
+/*************************************************************** utils */
+int	len_double(char **tab);
+int	len_cmd_no_endspace(char *str);
 
 /************************************************************* parsing */
 void	handle_quotes(char *line, t_token **token_list, int *index, char quote);

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 15:42:57 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/03/27 18:25:11 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/04 17:06:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,20 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-typedef struct s_element
+typedef struct s_token
 {
-	char		*file;
-	char		*cmd;
-	char		*cmd_path;
-	char		*path_explicite;
-	char		**options;
-	char		**args_execve;
-	int			file_null;
-	int			nb_opt;
-	int			is_file;
-	int			is_cmd;
-	int			fd;
-	int			close;
-}				t_element;
+	char				*value;
+	char				*cmd_path;
+	char				*path_explicite;
+	char				**options;
+	char				**args_execve;
+	int					file_null;
+	int					nb_opt;
+	int					fd;
+	int					close;
+	t_token_type		type;
+	t_token				*next;
+}				t_token;
 
 typedef struct s_parse
 {

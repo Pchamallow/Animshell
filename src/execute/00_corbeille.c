@@ -30,3 +30,12 @@ void	free_struct_env(t_env *env)
 	if (env->username)
 		free(env->username);
 }
+
+
+/* get_username = for the prompt we have "username@hostname$ "
+*/
+// void    init_struct_env(t_env *env)
+// {
+// 	env->username = "minishell$ ";
+
+// }

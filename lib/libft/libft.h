@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 10:50:27 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/02/15 17:25:31 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/06 13:59:37 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 
 typedef struct s_list
 {
-	int				content;
+	void *			content;
 	int				index;
 	struct s_list	*next;
 }					t_list;
@@ -69,15 +69,15 @@ int		ft_putnbr_fd(int n, int fd);
 int		ft_putunbr_fd(long int n, int fd);
 
 // Bonus Part
-t_list	*ft_lstnew(int content);
+t_list	*ft_lstnew(void *content);
 void	ft_lstadd_front(t_list **lst, t_list *newer);
 int		ft_lstsize(t_list *lst);
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstlast(t_list *lst);
 void	ft_lstadd_back(t_list **lst, t_list *newer);
-// void	ft_lstdelone(t_list *lst, void (*del)(int));
+void	ft_lstdelone(t_list *lst, void (*del)(void *));
 void	ft_lstclear(t_list **head);
-// void	ft_lstiter(t_list *lst, void (*f)(void *));
+void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 // PRINTF

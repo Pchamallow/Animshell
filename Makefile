@@ -33,15 +33,19 @@ NC			:='\033[0m'
 
 # Sources
 SRCS		:= 											\
-			src/main.c									\
+			src/execute/is_cmd/is_cmd.c					\
+			src/execute/is_cmd/is_path.c				\
+			src/execute/utils.c							\
+			src/execute/error_free.c					\
 			src/execute/execute.c						\
 			src/execute/launch_display.c				\
-			src/execute/struct_env.c					\
 			src/execute/term.c							\
 			src/parsing/ft_token_list.c					\
 			src/parsing/handle_token_types.c			\
 			src/parsing/separate_into_tokens.c			\
 			src/parsing/parsing.c						\
+			src/execute/build_in/echo.c					\
+			src/main.c									\
 
 
 OBJS		:= $(SRCS:src/%.c=$(BUILD_DIR)/%.o)

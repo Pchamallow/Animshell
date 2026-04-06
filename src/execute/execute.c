@@ -12,29 +12,32 @@
 
 #include "minishell.h"
 
-int execute(t_env *env)
+void handle_sigint(int sig)
 {
     struct termios oldt, newt;
 	t_token	*first_token;
 
 	first_token = NULL;
+	(void)sig;
+	write(1, "\nminishell$ ", 12); // réaffiche le prompt
+}
+
+int execute(t_minishell *minishell)
+{
+	// t_exec	exec;
+
+	// ft_printf_fd(2, "%s\n", token->value);
+	
+	// char c;
+	// struct termios oldt, newt;
 
 	/* ENV A CHARGER EN AMONT */
-	init_struct_env(env); /*comportemement si on ne trouve pas d user ou 
-	de name ?*/
-	// ft_printf_fd(2, "Your username is %s\n", env.username);
+	// init_struct_env(env); /*comportemement si on ne trouve pas d user ou 
 
-	if (term_raw_mode(&oldt, &newt))
-		return (1);
+	is_cmd(minishell);
 	
 	/*  BOUCLE WHILE  */
-	char *line;
-	// char	c;
-
-
-	// ft_printf_fd(2, "%d\n", nb);
-	
-	// ft_printf_fd(2, "%s\n", env.username);
+	// signal(SIGINT, handle_sigint);
 	
 	while (1)
 	{
@@ -60,7 +63,6 @@ int execute(t_env *env)
 	
 
 	// revenir au terminal normal
-	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 	
 	return (0);
 	// free_struct_env(&env);
