@@ -6,11 +6,43 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 17:51:57 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/06 14:49:51 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static bool	is_path(t_minishell *minishell)
+{
+	char	*paths;
+
+	paths = getenv("PATH");
+	// ft_printf_fd(2, "%s\n", paths);
+	if (paths == NULL)
+		print_error_free(minishell, "PATH not found.\n", 2);
+	return (true);
+}
+
+// static int	path_type(t_exec *exec, char *token)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	if (token[0] == '/')
+// 	{
+// 		if (access(token, X_OK) == 0)
+// 			return (1);
+// 		else
+// 		{
+// 			ft_printf_fd(2, "no such file or directory: %s\n", token);
+// 			exec->error = 127;
+// 			return (-1);
+// 		}
+// 	}
+// 	if (token[0] == '.' && token[1] == '/')
+// 		return (2);
+// 	return (0);
+// }
 
 /*
 Command not found = -1;
@@ -18,31 +50,7 @@ To search path = 0;
 Absolute path = 1;
 Explicit path = 2;
 */
-
-
-
-int	path_type(t_exec *exec, char *token)
-{
-	int	i;
-
-	i = 0;
-	if (token[0] == '/')
-	{
-		if (access(token, X_OK) == 0)
-			return (1);
-		else
-		{
-			ft_printf_fd(2, "no such file or directory: %s\n", token);
-			exec->error = 127;
-			return (-1);
-		}
-	}
-	if (token[0] == '.' && token[1] == '/')
-		return (2);
-	return (0);
-}
-
-static int	path_cmd(t_exec *exec, t_token *token)
+static int	path_cmd(t_minishell *minishell, t_exec *exec, t_token *token)
 {
 	char	**all_paths;
 	int		i;
@@ -76,16 +84,17 @@ is a command ? path is valid ?
 type 0 = WORD
 type 4 = IS_CMD
 */
-int is_cmd(t_exec *exec, t_token *token)
+int is_cmd(t_minishell *minishell)
 {
-	char	*paths;
+	t_token	*token;
 
-	i = 0;
-	paths = getenv("PATH");
+	token = &minishell->token;
 	while(token != NULL)
 	{
 		if (token->type == 0 || token->type == 4)
-			path_cmd(exec, token);
+			// is_path(minishell);
+			path_cmd(minishell, &minishell->exec, token);
 		token = token->next;
 	}
+	return (0);
 }

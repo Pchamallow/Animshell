@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 18:08:34 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/06 14:37:47 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void handle_sigint(int sig)
 
 int execute(t_minishell *minishell)
 {
-	t_exec	exec;
+	// t_exec	exec;
 
 	// ft_printf_fd(2, "%s\n", token->value);
 	
@@ -30,20 +30,20 @@ int execute(t_minishell *minishell)
 	/* ENV A CHARGER EN AMONT */
 	// init_struct_env(env); /*comportemement si on ne trouve pas d user ou 
 
-	is_cmd(&exec, token);
+	is_cmd(minishell);
 	
 	/*  BOUCLE WHILE  */
-	signal(SIGINT, handle_sigint);
+	// signal(SIGINT, handle_sigint);
 	
-	while (1)
-	{
-		exec.line = readline("minishell$ ");
-		if (!exec.line)
-		{
-			printf("exit\n");
-			break;
-		}
-		
+	// while (1)
+	// {
+	// 	exec.line = readline("minishell$ ");
+	// 	if (!exec.line)
+	// 	{
+	// 		printf("exit\n");
+	// 		break;
+	// 	}
+	
 	// 	/*  raw mode */
 	// 	// if (term_raw_mode(&oldt, &newt))
 	// 	// 	return (1);

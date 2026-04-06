@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 18:01:59 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/06 14:36:05 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ typedef struct s_minishell
 int		main(void);
 /************************************************************* execute */
 int		execute(t_minishell *minishell);
-int		is_cmd(t_exec *exec, t_token *token);
+int		is_cmd(t_minishell *minishell);
 /************************************************************ built-in */
 
 int     echo(t_exec *exec);
@@ -75,6 +75,8 @@ int     echo(t_exec *exec);
 // void	free_struct_env(t_env *env);
 /**************************************************************** term */
 int term_raw_mode(struct termios *oldt, struct termios *newt);
+/********************************************************** error_free */
+void	print_error_free(t_minishell *minishell, char *str, int error);
 
 
 
