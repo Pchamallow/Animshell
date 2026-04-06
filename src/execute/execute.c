@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 14:37:47 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/06 14:25:57 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 
 void handle_sigint(int sig)
 {
+    struct termios oldt, newt;
+	t_token	*first_token;
+
+	first_token = NULL;
 	(void)sig;
 	write(1, "\nminishell$ ", 12); // réaffiche le prompt
 }
@@ -35,29 +39,26 @@ int execute(t_minishell *minishell)
 	/*  BOUCLE WHILE  */
 	// signal(SIGINT, handle_sigint);
 	
-	// while (1)
-	// {
-	// 	exec.line = readline("minishell$ ");
-	// 	if (!exec.line)
-	// 	{
-	// 		printf("exit\n");
-	// 		break;
-	// 	}
-	
-	// 	/*  raw mode */
-	// 	// if (term_raw_mode(&oldt, &newt))
-	// 	// 	return (1);
-	// 	// read(STDIN_FILENO, &c, 1);
-	// 	// if (c == 'C')
-	// 	// 	return (1);
-	// 	// tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-	// 	echo(&exec);
-		
-	// 	if (*exec.line)
-	// 		add_history(exec.line);
-			
-	// 	free(exec.line);
-	// }
+	while (1)
+	{
+		line = readline(env->username);
+		if (!line)
+			break;
+
+		if (*line)
+			add_history(line);
+
+		// PARSING ICI :************************
+		separate_into_tokens(line, &first_token);
+		parse_tokens(&first_token);
+		ft_token_lstclear(&first_token);
+		// *************************************
+		// read(STDIN_FILENO, &c, 1);
+
+		// printf("Tu as tapé : %c\n", c);
+
+		free(line);
+	}
 
 	
 

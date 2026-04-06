@@ -29,9 +29,9 @@ int term_raw_mode(struct termios *oldt, struct termios *newt)
 	newt = oldt;
 	
 	/* avec echo */
-	// newt->c_lflag &= ~(ICANON);
+	 newt->c_lflag &= ~(ICANON);
 	/* sans echo */
-	newt->c_lflag &= ~(ICANON | ECHO);
+	/*newt->c_lflag &= ~(ICANON | ECHO);*/
 
 	if (tcsetattr(STDIN_FILENO, TCSANOW, newt) == -1) 
 	{

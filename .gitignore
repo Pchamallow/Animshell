@@ -1,10 +1,16 @@
-*.o
-
-#pour vim
+# Temporary files
 *.swp
 tags
 
-*.a
-*.out
+# Object files
+*.o
 
-tests
+# Libraries
+*.a
+
+# Executables
+*.out
+minishell
+
+# Tests
+
