@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 15:34:12 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/06 15:52:52 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ int term_raw_mode(struct termios *oldt, struct termios *newt);
 void	print_error_free(t_minishell *minishell, char *str, int error);
 /*************************************************************** utils */
 int	len_double(char **tab);
+int	len_cmd_no_endspace(char *str);
+
 
 
 #endif

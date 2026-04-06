@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 15:20:21 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/06 15:51:23 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int is_cmd(t_minishell *minishell)
 	char	**all_paths;
 	char	*paths_one_line;
 	t_token	*token;
-
+	
 	paths_one_line = is_path(minishell);
 	all_paths = ft_split(paths_one_line, ':');
 	token = &minishell->token;

@@ -6,32 +6,11 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 15:34:44 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/06 15:52:58 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	len_cmd_no_endspace(char *str)
-{
-	int	i;
-	int	cmd;
-
-	i = 0;
-	cmd = 0;
-	while (str[i])
-	{
-		if (str[i] != ' ')
-		{
-			cmd = 1;
-			while (str[i] && str[i] != ' ')
-				i++;
-			break ;
-		}
-		i++;
-	}
-	return (i);
-}
 
 static void	no_cmd(t_token *token, int *error)
 {
@@ -40,17 +19,17 @@ static void	no_cmd(t_token *token, int *error)
 	*error = 127;
 }
 
-// static void	path_explicit(t_minishell *minishell, t_token *token)
-// {
-// 	int	len;
+static void	path_explicit(t_minishell *minishell, t_token *token)
+{
+	int	len;
 
-// 	len = ft_strlen(token->value);
-// 	token->cmd_path = ft_calloc(sizeof(char *), len + 1);
-// 	if (!token->cmd_path)
-// 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-// 	ft_strlcpy(token->cmd_path, token->value, len + 1);
-// 	cmd_explicit(minishell, token);
-// }
+	len = ft_strlen(token->value);
+	token->cmd_path = ft_calloc(sizeof(char *), len + 1);
+	if (!token->cmd_path)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	ft_strlcpy(token->cmd_path, token->value, len + 1);
+	cmd_explicit(minishell, token);
+}
 
 static void	is_valid_path(t_minishell *minishell,
 	t_token *token, char **all_paths, int len)
@@ -129,7 +108,7 @@ int	path_cmd(t_minishell *minishell, t_token *token, char **all_paths)
 	}
 	else if (i == -1)
 		return (1);
-	// else if (i == 2)
-	// 	path_explicit(parse, type);
+	else if (i == 2)
+		path_explicit(parse, type);
 	return (0);
 }
