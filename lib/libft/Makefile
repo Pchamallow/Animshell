@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/02/15 17:29:12 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/04/06 13:49:06 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,9 +59,9 @@ FILES	:= \
 	ft_printf_fd.c\
 	ft_printpercent.c\
 	ft_putpointer.c\
-# 	ft_lstdelone.c \
-# 	ft_lstiter.c \
-# 	ft_lstmap.c \
+	ft_lstdelone.c \
+	ft_lstiter.c \
+	ft_lstmap.c \
 
 OBJET	:= $(FILES:.c=.o)
 
