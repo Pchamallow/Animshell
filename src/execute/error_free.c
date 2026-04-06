@@ -6,26 +6,26 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 14:36:53 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/06 15:29:10 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	free_double(char **tab, int len)
-// {
-// 	int	i;
+void	free_double(char **tab, int len)
+{
+	int	i;
 
-// 	i = 0;
-// 	if (!tab)
-// 		return ;
-// 	while (i < len)
-// 	{
-// 		free(tab[i]);
-// 		i++;
-// 	}
-// 	free(tab);
-// }
+	i = 0;
+	if (!tab)
+		return ;
+	while (i < len)
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
 
 // void	free_structure(t_minishell *minishell)
 // {

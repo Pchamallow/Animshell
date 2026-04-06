@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 14:36:05 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/06 15:34:12 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <readline/history.h>
 # include <termios.h>
 # include <signal.h>
+# include <stdbool.h>
 
 typedef enum e_token_type
 {
@@ -66,6 +67,9 @@ int		main(void);
 /************************************************************* execute */
 int		execute(t_minishell *minishell);
 int		is_cmd(t_minishell *minishell);
+int		path_cmd(t_minishell *minishell, t_token *token, char **all_paths);
+void	free_double(char **tab, int len);
+
 /************************************************************ built-in */
 
 int     echo(t_exec *exec);
@@ -77,7 +81,8 @@ int     echo(t_exec *exec);
 int term_raw_mode(struct termios *oldt, struct termios *newt);
 /********************************************************** error_free */
 void	print_error_free(t_minishell *minishell, char *str, int error);
-
+/*************************************************************** utils */
+int	len_double(char **tab);
 
 
 #endif

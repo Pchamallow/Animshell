@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/06 14:29:47 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/04/06 15:35:15 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,8 @@ NC			:='\033[0m'
 # Sources
 SRCS		:= 											\
 			src/execute/is_cmd/is_cmd.c					\
+			src/execute/is_cmd/is_path.c				\
+			src/execute/utils.c							\
 			src/execute/error_free.c					\
 			src/execute/execute.c						\
 			src/execute/launch_display.c				\
