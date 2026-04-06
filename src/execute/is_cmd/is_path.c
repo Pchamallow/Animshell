@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 15:52:58 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/06 21:09:00 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 static void	no_cmd(t_token *token, int *error)
 {
 	token->type = 0;
-	ft_printf_fd(2, "command not found: %s\n", token->value);
+	/*ft_printf_fd(2, "command not found: %s\n", token->value);*/
 	*error = 127;
 }
 
-static void	path_explicit(t_minishell *minishell, t_token *token)
-{
-	int	len;
+/*static void	path_explicit(t_minishell *minishell, t_token *token)*/
+/*{*/
+	/*int	len;*/
 
-	len = ft_strlen(token->value);
-	token->cmd_path = ft_calloc(sizeof(char *), len + 1);
-	if (!token->cmd_path)
-		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	ft_strlcpy(token->cmd_path, token->value, len + 1);
-	cmd_explicit(minishell, token);
-}
+	/*len = ft_strlen(token->value);*/
+	/*token->cmd_path = ft_calloc(sizeof(char *), len + 1);*/
+	/*if (!token->cmd_path)*/
+		/*print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);*/
+	/*ft_strlcpy(token->cmd_path, token->value, len + 1);*/
+	/*cmd_explicit(minishell, token);*/
+/*}*/
 
 static void	is_valid_path(t_minishell *minishell,
 	t_token *token, char **all_paths, int len)
@@ -68,9 +68,9 @@ Explicit path = 2;
 */
 static int	path_type(t_exec *exec, char *token)
 {
-	int	i;
+	/*int	i;*/
 
-	i = 0;
+	/*i = 0;*/
 	if (token[0] == '/')
 	{
 		if (access(token, X_OK) == 0)
@@ -108,7 +108,7 @@ int	path_cmd(t_minishell *minishell, t_token *token, char **all_paths)
 	}
 	else if (i == -1)
 		return (1);
-	else if (i == 2)
-		path_explicit(parse, type);
+	/*else if (i == 2)*/
+		/*path_explicit(parse, type);*/
 	return (0);
 }

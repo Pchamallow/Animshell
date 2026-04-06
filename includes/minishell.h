@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 17:18:46 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/06 19:34:37 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,45 +21,6 @@
 //ajout steph:
 # include <signal.h>
 # include <stdbool.h>
-
-typedef enum e_token_type
-{
-	WORD,
-	REDIRECTION,
-	PIPE,
-	EQUAL,
-	IS_CMD,
-	IS_BUILT_IN,
-	IS_FILE
-}   t_token_type;
-
-typedef struct s_token
-{
-	char				*value;
-	char				*cmd_path;
-	char				*path_explicite;
-	char				**options;
-	char				**args_execve;
-	int					file_null;
-	int					nb_opt;
-	int					fd;
-	int					close;
-	t_token_type		type;
-	struct s_token		*next;
-}				t_token;
-
-typedef struct s_exec
-{
-	char	*line;
-	int		error;
-}			t_exec;
-
-typedef struct s_minishell
-{
-	t_exec		exec;
-	t_token		token;
-}				t_minishell;
-
 
 /***********************************************************************/
 //ajout steph pour parsing :
@@ -102,6 +63,18 @@ typedef struct s_token
 	t_quote_type	quote;
 	struct s_token	*next;
 }				t_token;
+
+typedef struct s_exec
+{
+	char	*line;
+	int		error;
+}			t_exec;
+
+typedef struct s_minishell
+{
+	t_exec		exec;
+	t_token		token;
+}				t_minishell;
 
 # define CMD_LIST "echo, cd, pwd, export, unset, env, exit"
 

@@ -6,7 +6,7 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/06 17:50:30 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/06 21:21:10 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,13 @@ void	print_tokens_types(t_token *token)// pour tester
 	char *str[] = {"word", "is_cmd", "is_built_in", "is_arg", "is_filename",
 		"is_delimiter", "space", "pipe", "redirection", "is input",
 		"is_output", "is_append", "heredoc"};
-	char *quote[] = {"no", "single", "double"};
+	/*char *quote[] = {"no", "single", "double"};*/
 	while (token)
 	{
-		ft_printf_fd(1, "%s	type=%s quote=%s\n", token->value,
-				str[token->type], quote[token->quote]);
+		/*ft_printf_fd(1, "%s	type=%s quote=%s\n", token->value,*/
+				/*str[token->type], quote[token->quote]);*/
+		ft_printf_fd(1, "%s		type=%s\n", token->value,
+				str[token->type]);
 		token = token->next;
 	}
 }
@@ -56,21 +58,22 @@ void	print_tokens(t_token *token)// pour tester
 }
 
 /*	************************************************	*/
-/* 1 token is:											*/
-/*- 1 space												*/
-/*- a sequence of characters enclosed by "" or ''		*/
-/*- |													*/
-/*- < or <<												*/
-/*- > or >>												*/
-/*- a sequence of characters separated by spaces, tabs,	*/
-/* 	or any character listed above						*/
+/*		This function :									*/
+/*1.Trim spaces at the beginning of the input line		*/
+/*2.Separate the line into tokens :						*/
+/* A token is:											*/
+/*		- spaces, tabs -> become 1 space				*/
+/*		- a sequence of characters enclosed by "" or ''	*/
+/*		- |												*/
+/*		- <, <<, >, >>									*/
+/*		- a sequence of characters separated by spaces,	*/
+/* 		tabs, or any character listed above				*/
 /*	************************************************	*/
 int	separate_into_tokens(char *line, t_token **token_list)
 {
 	int	i;
 
 	i = 0;
-	/*On zappe les espaces du debut s'il y en a :*/
 	while (is_whitespace(line[i]))
 		i++;
 	while (line[i])

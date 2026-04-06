@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 21:18:24 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/06 17:45:11 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/06 21:52:56 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_token	*case_redirection(t_token *token, int *error)
 		delete_space(token);
 	if (!token->next || token->next->type != WORD)
 	{
-		ft_printf_fd(2, "minishell: syntax error after %s", token->value);
+		ft_printf_fd(2, "minishell: syntax error after %s\n", token->value);
 		*error = 1;
 		return (token);
 	}
@@ -53,11 +53,13 @@ t_token *case_heredoc(t_token *token, int *error)
 	if (!token->next || token->next->type != WORD)
 	{
 		*error = 2;
-		ft_printf_fd(2, "minishell: syntax error after %s", token->value);
+		ft_printf_fd(2, "minishell: syntax error after %s\n", token->value);
 		return (token);
 	}
 	token = token->next;
 	token->type = IS_DELIMITER;
+	if (token->next && token->next->type == ONE_SPACE)
+		delete_space(token);
 	token = token->next;
 	return (token);
 }
@@ -100,7 +102,7 @@ t_token *case_pipe(t_token *token, bool *cmd_found, int *error)
 		delete_space(token);
 	if (!token->next || token->next->type == PIPE)
 	{
-		ft_printf_fd(2, "minishell: syntax error after %s", token->value);
+		ft_printf_fd(2, "minishell: syntax error after %s\n", token->value);
 		*error = 3;
 		return (token);
 	}
@@ -130,7 +132,7 @@ int	parse_tokens(t_token **token_list)
 		if (!error && token && token->type == PIPE)
 			token = case_pipe(token, &cmd_found, &error);
 	}
-	ft_printf_fd(1, "token list after parsing:\n");
-	print_tokens_types(*token_list);
+	ft_printf_fd(1, "token list after parsing:\n");//pour test
+	print_tokens_types(*token_list);//pour test
 	return (error);
 }

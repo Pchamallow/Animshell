@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 14:25:57 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/06 21:07:24 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void handle_sigint(int sig)
 {
-    struct termios oldt, newt;
-	t_token	*first_token;
+    /*struct termios oldt, newt;*/
+	/*t_token	*first_token;*/
 
-	first_token = NULL;
+	/*first_token = NULL;*/
 	(void)sig;
 	write(1, "\nminishell$ ", 12); // réaffiche le prompt
 }
@@ -39,9 +39,16 @@ int execute(t_minishell *minishell)
 	/*  BOUCLE WHILE  */
 	// signal(SIGINT, handle_sigint);
 	
+	//variables pour boucle while :
+	char	*line;
+	t_token	*first_token;
+
+	first_token = NULL;
+
 	while (1)
 	{
-		line = readline(env->username);
+		/*line = readline(env->username);*/
+		line = readline("minishell$ ");
 		if (!line)
 			break;
 
