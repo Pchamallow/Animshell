@@ -6,11 +6,19 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/05 22:07:17 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/06 17:28:51 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	add_quote_type(t_token *token, char quote)
+{
+	if (quote == '\'')
+		token->quote = SINGLE;
+	if (quote == '\"')
+		token->quote = DOUBLE;
+}
 
 void	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 {
@@ -19,8 +27,8 @@ void	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 	int	len;
 
 	i = *index;
+	i++;//pour enlever le quote de debut
 	start = i;
-	i++;
 	while (line[i] != quote)
 	{
 		i++;
@@ -32,10 +40,11 @@ void	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 			exit(2);//pas besoin de tout quitter ici, juste afficher une erreur
 		}
 	}
-	i++;
 	len = i - start;
 	ft_token_add_back(token_list,
 		ft_token_new(ft_substr(line, start, len), WORD), line);
+	add_quote_type(ft_token_last(*token_list), quote);
+	i++;//pour enlever le quote de fin
 	*index = i;
 }
 

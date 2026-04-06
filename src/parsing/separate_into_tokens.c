@@ -6,7 +6,7 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/05 21:15:39 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/06 17:50:30 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,14 @@ bool	is_separator(char c)
 
 void	print_tokens_types(t_token *token)// pour tester
 {
+	char *str[] = {"word", "is_cmd", "is_built_in", "is_arg", "is_filename",
+		"is_delimiter", "space", "pipe", "redirection", "is input",
+		"is_output", "is_append", "heredoc"};
+	char *quote[] = {"no", "single", "double"};
 	while (token)
 	{
-		ft_printf_fd(1, "%s	type=%d\n", token->value, token->type);
+		ft_printf_fd(1, "%s	type=%s quote=%s\n", token->value,
+				str[token->type], quote[token->quote]);
 		token = token->next;
 	}
 }
@@ -65,9 +70,11 @@ int	separate_into_tokens(char *line, t_token **token_list)
 	int	i;
 
 	i = 0;
+	/*On zappe les espaces du debut s'il y en a :*/
+	while (is_whitespace(line[i]))
+		i++;
 	while (line[i])
 	{
-		handle_spaces(line, token_list, &i);
 		if (line[i] == '\"' || line[i] == '\'')
 			handle_quotes(line, token_list, &i, line[i]);
 		handle_spaces(line, token_list, &i);
@@ -79,9 +86,10 @@ int	separate_into_tokens(char *line, t_token **token_list)
 		handle_spaces(line, token_list, &i);
 		if (line[i] && !is_separator(line[i]))
 			handle_words_no_quotes(line, token_list, &i);
+		handle_spaces(line, token_list, &i);
 	}
 	//tests : *******
-	print_tokens_types(*token_list);
+	/*print_tokens_types(*token_list);*/
 	print_tokens(*token_list);
 	// **************
 	return (0);

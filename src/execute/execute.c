@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 22:58:52 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/06 14:25:57 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,11 @@ int execute(t_env *env)
 		if (*line)
 			add_history(line);
 
-		// PARSING ICI :
+		// PARSING ICI :************************
 		separate_into_tokens(line, &first_token);
+		parse_tokens(&first_token);
 		ft_token_lstclear(&first_token);
+		// *************************************
 		// read(STDIN_FILENO, &c, 1);
 
 		// printf("Tu as tapé : %c\n", c);

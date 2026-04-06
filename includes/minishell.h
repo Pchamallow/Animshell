@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/05 22:03:57 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/06 17:18:46 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,26 @@ typedef struct s_env
 typedef enum e_token_type
 {
 	WORD,
-	REDIRECTION,
-	HEREDOC,
-	PIPE,
-	ONE_SPACE,
-	EQUAL,//sans doute pas besoin
 	IS_CMD,
 	IS_BUILT_IN,
-	IS_FILE,
 	IS_ARG,
-	IS_DELIMITER
+	IS_FILENAME,
+	IS_DELIMITER,
+	ONE_SPACE,
+	PIPE,
+	REDIRECTION,
+	IS_INPUT,
+	IS_OUTPUT,
+	IS_APPEND,
+	HEREDOC
 }			t_token_type;
+
+typedef enum e_quote_type
+{
+	NO,
+	SINGLE,
+	DOUBLE
+}			t_quote_type;
 
 typedef struct s_token
 {
@@ -56,8 +65,11 @@ typedef struct s_token
 	int				fd;
 	int				close;
 	t_token_type	type;
+	t_quote_type	quote;
 	struct s_token	*next;
 }				t_token;
+
+# define CMD_LIST "echo, cd, pwd, export, unset, env, exit"
 
 /***********************************************************************/
 
@@ -84,11 +96,15 @@ void	handle_spaces(char *line, t_token **token_list, int *index);
 bool	is_whitespace(char c);
 bool	is_separator(char c);
 int		separate_into_tokens(char *line, t_token **token_list);
+int		parse_tokens(t_token **token_list);
 /********************************************************** token_list */
 t_token	*ft_token_new(char *str, t_token_type token_type);
 t_token	*ft_token_last(t_token *lst);
 void	ft_token_add_back(t_token **head, t_token *newer, char *line);
 void	ft_token_delone(t_token *lst, void (*del)(void *));
 void	ft_token_lstclear(t_token **head);
+/********************************************* tests print a supprimer */
+void	print_tokens_types(t_token *token);// pour tester
+void	print_tokens(t_token *token);// pour tester
 
 #endif
