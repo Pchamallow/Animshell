@@ -1,0 +1,4 @@
+display src[i + j]
+display little[j]
+
+display minishell.token->next.value
