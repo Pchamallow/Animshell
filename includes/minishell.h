@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 19:34:37 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/08 22:31:36 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,12 @@ void	handle_spaces(char *line, t_token **token_list, int *index);
 bool	is_whitespace(char c);
 bool	is_separator(char c);
 int		separate_into_tokens(char *line, t_token **token_list);
+void	delete_next(t_token *token);
+t_token	*case_heredoc(t_token *token, int *error);
+t_token	*case_redirection(t_token *token, int *error);
+t_token	*case_command(t_token *token, bool *cmd_found);
+t_token	*case_arg(t_token *token);
+t_token	*case_pipe(t_token *token, bool *cmd_found, int *error, t_token **head);
 int		parse_tokens(t_token **token_list);
 /********************************************************** token_list */
 t_token	*ft_token_new(char *str, t_token_type token_type);

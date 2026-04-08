@@ -6,7 +6,7 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/06 21:21:10 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/08 19:45:12 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,19 @@ void	print_tokens(t_token *token)// pour tester
 		ft_printf_fd(1, "\n");
 }
 
-/*	************************************************	*/
-/*		This function :									*/
-/*1.Trim spaces at the beginning of the input line		*/
-/*2.Separate the line into tokens :						*/
-/* A token is:											*/
-/*		- spaces, tabs -> become 1 space				*/
-/*		- a sequence of characters enclosed by "" or ''	*/
-/*		- |												*/
-/*		- <, <<, >, >>									*/
-/*		- a sequence of characters separated by spaces,	*/
-/* 		tabs, or any character listed above				*/
-/*	************************************************	*/
+/*	******************************************************		*/
+/*		This function:											*/
+/* 1.Trim spaces at the beginning of the input line				*/
+/* 2.Separate the line into tokens:								*/
+/* Types of tokens:												*/
+/*		- SPACE: spaces, tabs -> become 1 space					*/
+/*		- PIPE: |												*/
+/*		- REDIRECTION: <, <<, >, >>								*/
+/*		- WORD: 												*/
+/*			- a sequence of characters enclosed by "" or ''		*/
+/*			- a sequence of characters separated by spaces,		*/
+/* 				tabs, or any character listed above				*/
+/*	******************************************************		*/
 int	separate_into_tokens(char *line, t_token **token_list)
 {
 	int	i;

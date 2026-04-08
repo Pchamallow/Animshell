@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/06 21:51:06 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/08 19:40:59 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,12 @@ void	handle_pipe(char *line, t_token **token_list, int *index)
 
 /*	This function creates a token			*/
 /*	with the redirection operator.			*/
-/*	If the operator is <<					*/
-/*	the type of the token will be HEREDOC	*/
 void	handle_redirection(char *line, t_token **token_list,
 		int *index, char angle_bracket)
 {
 	int	i;
 	int	start;
 	int	len;
-	int	type;
 
 	i = *index;
 	start = i;
@@ -87,12 +84,8 @@ void	handle_redirection(char *line, t_token **token_list,
 		len++;
 		i++;
 	}
-	if (angle_bracket == '<' && len == 2)
-		type = HEREDOC;
-	else
-		type = REDIRECTION;
 	ft_token_add_back(token_list,
-		ft_token_new(ft_substr(line, start, len), type), line);
+		ft_token_new(ft_substr(line, start, len), REDIRECTION), line);
 	i++;
 	*index = i;
 }
