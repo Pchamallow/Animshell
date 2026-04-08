@@ -6,19 +6,23 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 15:29:10 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/08 21:17:22 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_double(char **tab, int len)
+void	free_double(char **tab)
 {
 	int	i;
+	int	len;
 
 	i = 0;
+	len = 0;
 	if (!tab)
 		return ;
+	while (tab[len] != NULL)
+		len++;
 	while (i < len)
 	{
 		free(tab[i]);
@@ -61,6 +65,17 @@ void	free_double(char **tab, int len)
 // 	free_structure(&parse->in, parse, 0);
 // 	exit(error);
 // }
+
+void	strerror_print(char *filename)
+{
+	char	*err;
+
+	err = strerror(errno);
+	write(2, err, strlen(err));
+	write(2, ": ", 2);
+	write(2, filename, strlen(filename));
+	write(2, "\n", 1);
+}
 
 void	print_error_free(t_minishell *minishell, char *str, int error)
 {

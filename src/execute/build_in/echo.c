@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 16:04:27 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/08 19:54:28 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,8 @@ int echo(t_exec *exec)
 	int		i;
 	int		index;
 
-	// if (exec.echo = 1)
 	i = 0;
-	tmp = ft_strnstr(exec->line, "echo ",
+	tmp = ft_strnstr(exec->line, "echo",
 		ft_strlen(exec->line));
 	index = index_word(&exec->line[i]);
 	result = ft_substr(exec->line, index, ft_strlen(tmp) + 1);

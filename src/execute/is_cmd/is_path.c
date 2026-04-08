@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 15:52:58 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/08 18:12:59 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ static void	is_valid_path(t_minishell *minishell,
 	}
 	if (is_find == 0)
 		token->cmd_path = NULL;
-	free_double(all_paths, len + 1);
 	if (i >= len + 1)
 		no_cmd(token, &minishell->exec.error);
 }
@@ -68,9 +67,6 @@ Explicit path = 2;
 */
 static int	path_type(t_exec *exec, char *token)
 {
-	int	i;
-
-	i = 0;
 	if (token[0] == '/')
 	{
 		if (access(token, X_OK) == 0)
@@ -98,7 +94,10 @@ int	path_cmd(t_minishell *minishell, t_token *token, char **all_paths)
 		len = len_cmd_no_endspace(token->value) + 1;
 		token->cmd_path = ft_calloc(sizeof(char *), len);
 		if (!token->cmd_path)
+		{
+			free_double(all_paths);
 			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+		}
 		ft_strlcpy(token->cmd_path, token->value, len);
 	}
 	else if (i == 0)
@@ -109,6 +108,6 @@ int	path_cmd(t_minishell *minishell, t_token *token, char **all_paths)
 	else if (i == -1)
 		return (1);
 	else if (i == 2)
-		path_explicit(parse, type);
+		path_explicit(minishell, token);
 	return (0);
 }

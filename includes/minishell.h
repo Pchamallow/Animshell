@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 18:12:33 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/08 22:02:43 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <termios.h>
+# include <fcntl.h>
+# include <errno.h>
 //ajout steph:
 # include <signal.h>
 # include <stdbool.h>
@@ -59,21 +61,40 @@ typedef struct s_token
 	int				nb_opt;
 	int				fd;
 	int				close;
+	int				input; // savoir si c est un file type infile
+	int				output;// savoir si c est un file type outfile
 	t_token_type	type;
 	t_quote_type	quote;
 	struct s_token	*next;
 }				t_token;
 
+typedef enum e_built_in
+{
+	NONE,
+	IS_ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT
+}			t_built_in;
+
 typedef struct s_exec
 {
-	char	*line;
-	int		error;
+	char		*line;
+	char		*file_input;
+	char		*file_output;
+	int			error;
+	int			input; // -1 file invalide, 0 pas de input, 1 = file, 2 = pipe
+	int			output; // 0 pas de output(donc terminal), 1 = file, 2 = pipe
+	t_built_in	built_in;
 }			t_exec;
 
 typedef struct s_minishell
 {
 	t_exec		exec;
-	t_token		token;
+	t_token		*token;
 }				t_minishell;
 
 # define CMD_LIST "echo, cd, pwd, export, unset, env, exit"
@@ -83,27 +104,34 @@ typedef struct s_minishell
 /***********************************************************************/
 /*                            SRC                                      */
 /***********************************************************************/
-int		main(void);
+int		main(int argc, char **argv, char **envp);
 /************************************************************* execute */
-int		execute(t_minishell *minishell);
-int		is_cmd(t_minishell *minishell);
+int		execute(t_minishell *minishell, char **envp);
+int		read_tokens(t_minishell *minishell, t_token *token, char **envp);
+void	read_files(t_minishell *minishell, t_token *token);
 int		path_cmd(t_minishell *minishell, t_token *token, char **all_paths);
-void	free_double(char **tab, int len);
+void	cmd_explicit(t_minishell *minishell, t_token *token);
+int		init_infile(t_minishell *minishell, t_token *token);
+char	*is_path(t_minishell *minishell, char **envp);
+void	is_build_in(t_minishell *minishell, t_token *token);
+void	print_pauline(t_minishell *minishell);
 
 /************************************************************ built-in */
-
 int     echo(t_exec *exec);
 
 /********************************************************** struct env */
 // void    init_struct_env(t_env *env);
 // void	free_struct_env(t_env *env);
 /**************************************************************** term */
-int term_raw_mode(struct termios *oldt, struct termios *newt);
+int		term_raw_mode(struct termios *oldt, struct termios *newt);
 /********************************************************** error_free */
 void	print_error_free(t_minishell *minishell, char *str, int error);
+void	free_double(char **tab);
+void	strerror_print(char *filename);
+
 /*************************************************************** utils */
-int	len_double(char **tab);
-int	len_cmd_no_endspace(char *str);
+int		len_double(char **tab);
+int		len_cmd_no_endspace(char *str);
 
 /************************************************************* parsing */
 void	handle_quotes(char *line, t_token **token_list, int *index, char quote);
