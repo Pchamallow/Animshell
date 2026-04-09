@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/08 22:08:20 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/09 14:12:43 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,11 @@ static void tmp_free(t_minishell *minishell)
 		// ft_printf_fd(2, "la\n");
 		tmp = minishell->token;
 		minishell->token = minishell->token->next;
+		if (tmp->cmd_args != NULL)
+			free_double(tmp->cmd_args);
 		free(tmp->value);
-		free(tmp->cmd_path);
+		if (tmp->cmd_path)
+			free(tmp->cmd_path);
 		free(tmp);
 		// minishell->token = minishell->token->next;
 	}
@@ -53,12 +56,18 @@ void	init_exec(t_minishell *minishell)
 	
 	minishell->exec.file_input = NULL;
 	minishell->exec.file_output = NULL;
-	minishell->exec.built_in = 0;
+	// minishell->exec.cmd->value = NULL;
 	minishell->exec.input = 0;
 	minishell->exec.output = 0;
+	minishell->exec.built_in = 0;
+	minishell->exec.nb_args = 0;
+	minishell->exec.index_pipe = 0;
+	minishell->exec.last_pipe = minishell->token;
 	tmp = minishell->token;
 	while (tmp != NULL)
 	{
+		tmp->cmd_path = NULL;
+		tmp->cmd_args = NULL;
 		tmp->input = 0;
 		tmp->output = 0;
 		tmp->close = 0;
@@ -68,12 +77,14 @@ void	init_exec(t_minishell *minishell)
 
 int execute(t_minishell *minishell, char **envp)
 {
-	
 	init_exec(minishell);
+	
+	read_tokens(minishell, &minishell->exec.pipe_a,
+		minishell->token, envp);
+	ft_printf_fd(2, "------------------\n");
+	read_tokens(minishell, &minishell->exec.pipe_b,
+		minishell->token, envp);
 	print_pauline(minishell);//TO DELETE
-	
-	read_tokens(minishell, minishell->token, envp);
-	
 	// ft_printf_fd(2, "%sici\n", minishell->token->value);
 		
 	/*  BOUCLE WHILE  */

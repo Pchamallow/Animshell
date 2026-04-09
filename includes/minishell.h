@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/08 22:02:43 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/09 13:46:24 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef struct s_token
 	char			*value;
 	char			*cmd_path;
 	char			*path_explicite;
-	char			**options;
+	char			**cmd_args;
 	char			**args_execve;
 	int				file_null;
 	int				nb_opt;
@@ -86,8 +86,13 @@ typedef struct s_exec
 	char		*file_input;
 	char		*file_output;
 	int			error;
+	int			nb_args;
 	int			input; // -1 file invalide, 0 pas de input, 1 = file, 2 = pipe
 	int			output; // 0 pas de output(donc terminal), 1 = file, 2 = pipe
+	int			index_pipe;
+	t_token		*pipe_a; // cmd
+	t_token		*pipe_b; // cmd
+	t_token		*last_pipe;
 	t_built_in	built_in;
 }			t_exec;
 
@@ -107,13 +112,13 @@ typedef struct s_minishell
 int		main(int argc, char **argv, char **envp);
 /************************************************************* execute */
 int		execute(t_minishell *minishell, char **envp);
-int		read_tokens(t_minishell *minishell, t_token *token, char **envp);
+int read_tokens(t_minishell *minishell, t_token **pipe, t_token *token, char **envp);
 void	read_files(t_minishell *minishell, t_token *token);
 int		path_cmd(t_minishell *minishell, t_token *token, char **all_paths);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
 int		init_infile(t_minishell *minishell, t_token *token);
 char	*is_path(t_minishell *minishell, char **envp);
-void	is_build_in(t_minishell *minishell, t_token *token);
+void	is_built_in(t_minishell *minishell, t_token *token);
 void	print_pauline(t_minishell *minishell);
 
 /************************************************************ built-in */
@@ -122,6 +127,10 @@ int     echo(t_exec *exec);
 /********************************************************** struct env */
 // void    init_struct_env(t_env *env);
 // void	free_struct_env(t_env *env);
+/********************************************************** read token */
+void	init_cmd_args(t_minishell *minishell, t_token **pipe, int nb_args);
+void	add_args(t_minishell *minishell, t_token **pipe, t_token *token);
+
 /**************************************************************** term */
 int		term_raw_mode(struct termios *oldt, struct termios *newt);
 /********************************************************** error_free */
@@ -132,6 +141,9 @@ void	strerror_print(char *filename);
 /*************************************************************** utils */
 int		len_double(char **tab);
 int		len_cmd_no_endspace(char *str);
+/*************************************************************** TODELETE */
+void print_double(char **str);
+
 
 /************************************************************* parsing */
 void	handle_quotes(char *line, t_token **token_list, int *index, char quote);

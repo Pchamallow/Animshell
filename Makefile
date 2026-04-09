@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/08 21:28:58 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/04/09 11:37:40 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,9 @@ NC			:='\033[0m'
 # Sources
 SRCS		:= 											\
 			src/execute/read/init_files.c				\
+			src/execute/TO_DELETE.c						\
 			src/execute/read/read_token.c				\
+			src/execute/is_cmd/init_cmd_args.c			\
 			src/execute/is_cmd/is_path.c				\
 			src/execute/is_cmd/path_explicit.c			\
 			src/execute/utils.c							\
@@ -45,7 +47,8 @@ SRCS		:= 											\
 			src/parsing/handle_token_types.c			\
 			src/parsing/separate_into_tokens.c			\
 			src/parsing/parsing.c						\
-			src/execute/build_in/echo.c					\
+			src/execute/built_in/echo.c					\
+			src/execute/built_in/exec_built_in.c		\
 			src/main.c									\
 
 
