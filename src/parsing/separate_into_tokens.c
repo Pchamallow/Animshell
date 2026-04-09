@@ -6,7 +6,7 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/08 19:45:12 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/09 10:18:14 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ void	print_tokens(t_token *token)// pour tester
 }
 
 /*	******************************************************		*/
-/*		This function:											*/
-/* 1.Trim spaces at the beginning of the input line				*/
-/* 2.Separate the line into tokens:								*/
+/*	separate_into_tokens:										*/
+/* 1.Trims spaces at the beginning of the input line			*/
+/* 2.Separates the line into tokens:							*/
 /* Types of tokens:												*/
 /*		- SPACE: spaces, tabs -> become 1 space					*/
 /*		- PIPE: |												*/
@@ -69,6 +69,8 @@ void	print_tokens(t_token *token)// pour tester
 /*			- a sequence of characters enclosed by "" or ''		*/
 /*			- a sequence of characters separated by spaces,		*/
 /* 				tabs, or any character listed above				*/
+/*	NOTE: only handle_quotes can return an error				*/
+/*	-> in that case, separate_into_tokens returns 1				*/
 /*	******************************************************		*/
 int	separate_into_tokens(char *line, t_token **token_list)
 {
@@ -80,7 +82,10 @@ int	separate_into_tokens(char *line, t_token **token_list)
 	while (line[i])
 	{
 		if (line[i] == '\"' || line[i] == '\'')
-			handle_quotes(line, token_list, &i, line[i]);
+		{
+			if (handle_quotes(line, token_list, &i, line[i]) != 0)
+				return (1);
+		}
 		handle_spaces(line, token_list, &i);
 		if (line[i] == '|')
 			handle_pipe(line, token_list, &i);

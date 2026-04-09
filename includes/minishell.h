@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/08 22:31:36 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/09 10:20:30 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <termios.h>
-//ajout steph:
 # include <signal.h>
 # include <stdbool.h>
 
 /***********************************************************************/
-//ajout steph pour parsing :
 typedef enum e_token_type
 {
 	WORD,
@@ -106,7 +104,7 @@ int	len_double(char **tab);
 int	len_cmd_no_endspace(char *str);
 
 /************************************************************* parsing */
-void	handle_quotes(char *line, t_token **token_list, int *index, char quote);
+int		handle_quotes(char *line, t_token **token_list, int *index, char quote);
 void	handle_pipe(char *line, t_token **token_list, int *index);
 void	handle_redirection(char *line, t_token **token_list,
 			int *index, char angle_bracket);

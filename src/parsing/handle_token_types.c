@@ -6,13 +6,13 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/08 19:40:59 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/09 10:21:35 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*	This function stores in token->quote	*/
+/*	add_quote_type stores in @token->quote	*/
 /*	the type of quotes						*/
 /*	used in the original input and			*/
 /*	removed by the handle_quotes function	*/
@@ -24,11 +24,11 @@ void	add_quote_type(t_token *token, char quote)
 		token->quote = DOUBLE;
 }
 
-/*	This function creates a token							*/
+/*	handle_quotes creates a token							*/
 /*	with the text inside quotes,							*/
 /*	removing the quotes.									*/
-/*	It prints an error and exits in case of unclosed quotes	*/
-void	handle_quotes(char *line, t_token **token_list, int *index, char quote)
+/*	It stops and returns 1 in case of unclosed quotes		*/
+int	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 {
 	int	i;
 	int	start;
@@ -44,8 +44,7 @@ void	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 		{
 			ft_printf_fd(2, "Error: unclosed quotes\n");
 			ft_token_lstclear(token_list);
-			free(line);
-			exit(2);//pas besoin de tout quitter ici, juste afficher une erreur et revenir a l'input
+			return (1);
 		}
 	}
 	len = i - start;
@@ -54,6 +53,7 @@ void	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 	add_quote_type(ft_token_last(*token_list), quote);
 	i++;//pour passer le quote de fin
 	*index = i;
+	return (0);
 }
 
 void	handle_pipe(char *line, t_token **token_list, int *index)
@@ -67,8 +67,6 @@ void	handle_pipe(char *line, t_token **token_list, int *index)
 	*index = i;
 }
 
-/*	This function creates a token			*/
-/*	with the redirection operator.			*/
 void	handle_redirection(char *line, t_token **token_list,
 		int *index, char angle_bracket)
 {
@@ -90,10 +88,10 @@ void	handle_redirection(char *line, t_token **token_list,
 	*index = i;
 }
 
-/*	This function creates a token					*/
+/*	handle_words_no_quotes creates a token			*/
 /*	with a word not enclosed with quotes.			*/
 /*	A word is a sequence of characters separated 	*/
-/*	by spaces, tabs, <, <<, >, >>, |, ", '			*/
+/*	by spaces, tabs, <, <<, >, >>, |, " or '		*/
 void	handle_words_no_quotes(char *line, t_token **token_list, int *index)
 {
 	int	i;
@@ -110,7 +108,7 @@ void	handle_words_no_quotes(char *line, t_token **token_list, int *index)
 	*index = i;
 }
 
-/*	This function creates a token with one space	*/
+/*	handle_spaces creates a token with one space	*/
 /*	each time spaces and/or tabs are encountered.	*/
 /*	No matter the number of spaces/tabs,			*/
 /*	the token will contain only one space			*/
