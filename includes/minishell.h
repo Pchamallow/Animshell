@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/09 13:46:24 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/09 21:15:02 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,18 +80,37 @@ typedef enum e_built_in
 	EXIT
 }			t_built_in;
 
+typedef enum e_put
+{
+	ERROR,
+	TERMINAL,
+	IS_FILE,
+	IS_PIPE
+}			t_put;
+
+typedef struct s_pipe
+{
+	t_token *infile;
+	t_token *outfile;
+	t_token	*token;
+	t_token	*cmd;
+	int		is_cmd;
+	int		nb_args;
+	t_put	input; // -1 file invalide, 0 pas de input, 1 = file, 2 = pipe
+	t_put	output; // -1 file invalide, 0 pas de output(donc terminal), 1 = file, 2 = pipe
+}				t_pipe;
+
 typedef struct s_exec
 {
 	char		*line;
 	char		*file_input;
 	char		*file_output;
 	int			error;
-	int			nb_args;
 	int			input; // -1 file invalide, 0 pas de input, 1 = file, 2 = pipe
 	int			output; // 0 pas de output(donc terminal), 1 = file, 2 = pipe
 	int			index_pipe;
-	t_token		*pipe_a; // cmd
-	t_token		*pipe_b; // cmd
+	t_pipe		*pipe_a; // cmd
+	t_pipe		*pipe_b; // cmd
 	t_token		*last_pipe;
 	t_built_in	built_in;
 }			t_exec;
@@ -112,24 +131,29 @@ typedef struct s_minishell
 int		main(int argc, char **argv, char **envp);
 /************************************************************* execute */
 int		execute(t_minishell *minishell, char **envp);
-int read_tokens(t_minishell *minishell, t_token **pipe, t_token *token, char **envp);
-void	read_files(t_minishell *minishell, t_token *token);
+int		read_tokens(t_minishell *minishell, t_pipe *pipe, t_token *token, char **envp);
+void	read_files(t_minishell *minishell, t_pipe *pipe, t_token *token);
 int		path_cmd(t_minishell *minishell, t_token *token, char **all_paths);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
-int		init_infile(t_minishell *minishell, t_token *token);
 char	*is_path(t_minishell *minishell, char **envp);
 void	is_built_in(t_minishell *minishell, t_token *token);
 void	print_pauline(t_minishell *minishell);
 
 /************************************************************ built-in */
 int     echo(t_exec *exec);
+/***************************************************** tabs for execve */
+void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
+/**************************************************** execute commands */
+void	exec_cmds_pipe(t_minishell *minishell, char **envp);
+void	exec_cmd(t_minishell *minishell, char **envp);
 
 /********************************************************** struct env */
 // void    init_struct_env(t_env *env);
 // void	free_struct_env(t_env *env);
 /********************************************************** read token */
-void	init_cmd_args(t_minishell *minishell, t_token **pipe, int nb_args);
-void	add_args(t_minishell *minishell, t_token **pipe, t_token *token);
+void	init_cmd_args(t_minishell *minishell, t_pipe *pipe, int nb_args);
+void	add_args(t_minishell *minishell, t_pipe *pipe, t_token *token);
+void	free_cpy(char **dst, char *src);
 
 /**************************************************************** term */
 int		term_raw_mode(struct termios *oldt, struct termios *newt);
@@ -137,12 +161,16 @@ int		term_raw_mode(struct termios *oldt, struct termios *newt);
 void	print_error_free(t_minishell *minishell, char *str, int error);
 void	free_double(char **tab);
 void	strerror_print(char *filename);
+void	strerror_free_structure(t_minishell *minishell, char *filename, int error);
 
 /*************************************************************** utils */
 int		len_double(char **tab);
 int		len_cmd_no_endspace(char *str);
+void	close_fds(t_minishell *minishell);
+int		is_sign(char c);
 /*************************************************************** TODELETE */
 void print_double(char **str);
+void tmp_free(t_minishell *minishell);
 
 
 /************************************************************* parsing */

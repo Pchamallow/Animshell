@@ -6,25 +6,28 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/08 18:21:00 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/09 21:09:45 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	close_fds(t_parse *parse)
-// {
-// 	if (parse->in.close == 0)
-// 	{
-// 		close(parse->in.fd);
-// 		parse->in.close = 1;
-// 	}
-// 	if (parse->out.close == 0)
-// 	{
-// 		close(parse->out.fd);
-// 		parse->out.close = 1;
-// 	}
-// }
+void	close_fds(t_minishell *minishell)
+{
+	t_pipe *line;
+
+	line = minishell->exec.pipe_a;
+	if (line->infile->close == 0)
+	{
+		close(line->infile->fd);
+		line->infile->close = 1;
+	}
+	if (line->outfile->close == 0)
+	{
+		close(line->outfile->fd);
+		line->outfile->close = 1;
+	}
+}
 
 // /* cmd without spaces */
 // int	len_cmd(char *str)
@@ -85,27 +88,27 @@ int	len_cmd_no_endspace(char *str)
 	return (i);
 }
 
-// int	is_sign(char c)
-// {
-// 	if (c == '<' || c == '>' || c == '|' || c == '&' || c == '-')
-// 		return (1);
-// 	return (0);
-// }
+int	is_sign(char c)
+{
+	if (c == '<' || c == '>' || c == '|' || c == '&' || c == '-')
+		return (1);
+	return (0);
+}
 
-// int	is_space(char *str, int not)
-// {
-// 	int	i;
+int	is_space(char *str, int not)
+{
+	int	i;
 
-// 	i = 0;
-// 	if (not == 1)
-// 	{
-// 		while (str[i] && str[i] != ' ')
-// 			i++;
-// 	}
-// 	else
-// 	{
-// 		while (str[i] && str[i] == ' ')
-// 			i++;
-// 	}
-// 	return (i);
-// }
+	i = 0;
+	if (not == 1)
+	{
+		while (str[i] && str[i] != ' ')
+			i++;
+	}
+	else
+	{
+		while (str[i] && str[i] == ' ')
+			i++;
+	}
+	return (i);
+}

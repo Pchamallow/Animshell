@@ -6,30 +6,17 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/09 14:50:52 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/09 20:38:10 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_cpy(char *dst, char *src)
+void	free_cpy(char **dst, char *src)
 {
-	if (dst != NULL)
-		free(dst);
-	dst = ft_strdup(src);
-}
-
-void	read_files(t_minishell *minishell, t_token *token)
-{
-	/*garder les erreurs de tests */
-	/* permission OK, exit ou est creer pour un outfile*/
-	if (token->input == 1)
-	{
-		if (init_infile(minishell, token) == 0)
-			free_cpy(minishell->exec.file_input, token->value);
-	}
-	if (token->output == 1)
-		free_cpy(minishell->exec.file_output, token->value);
+	if (*dst != NULL)
+		free(*dst);
+	*dst = ft_strdup(src);
 }
 
 /*
@@ -102,7 +89,7 @@ int	nb_args(t_token *token)
 	return (args);
 }
 
-static void	init_cmd(t_minishell *minishell, t_token **pipe,
+static void	init_cmd(t_minishell *minishell, t_pipe *pipe,
 	char **all_paths, int pipes)
 {
 	t_token *token;
@@ -112,22 +99,22 @@ static void	init_cmd(t_minishell *minishell, t_token **pipe,
 	i = 0;
 	token = minishell->exec.last_pipe;
 	nb_cmd_args = nb_args(token);
-	ft_printf_fd(2, "ICI = %d\n", nb_cmd_args);
-	while ((token != NULL && pipes == 0)
-			|| (pipes > 0 && token != NULL && i <= pipes))
+	while (token != NULL && (pipes == 0 || i <= pipes))
 	{
 		// ft_printf_fd(2, "read token : %s\n", token->value);
-		// ft_printf_fd(2, "%d\n", i);
+		// ft_printf_fd(2, "%d\n", nb_cmd_args);
 		if (token->type == IS_CMD)
 		{
 			path_cmd(minishell, token, all_paths);
-			*pipe = token;
-			// ft_printf_fd(2, "cmd pipe value : %s\n", (*pipe)->value);
+			pipe->cmd = token;
+			pipe->is_cmd = 1;
+			ft_printf_fd(2, "cmd pipe value : %s\n", pipe->cmd->value);
 		}
 		else if (token->type == IS_BUILT_IN)
 		{
 			is_built_in(minishell, token);	
-			*pipe = token;
+			pipe->cmd = token;
+			pipe->is_cmd = 1;
 		}
 		token = token->next;
 		i++;
@@ -148,23 +135,28 @@ Or path is to search
 B. IS_BUILT_IN
 1. what built in is ? 
 
+- input_pipe = input is pipe in
 */
 
 /*!SECTION
 -> avoir le prochain pipe en token + en index
 
 */
-int read_tokens(t_minishell *minishell, t_token **pipe,
-	t_token *token, char **envp)
+int read_tokens(t_minishell *minishell, t_pipe *pipe, t_token *token, char **envp)
 {
 	char	**all_paths;
 	char	*paths_one_line;
 	int		i;
 	int		index_pipes;
+	int		input_pipe;
 
 	// print_pauline(minishell);
 	i = 0;
 	token = minishell->exec.last_pipe;
+	input_pipe = 0;
+	if (minishell->exec.last_pipe->type == PIPE)
+		input_pipe = 1;
+	// ft_printf_fd(2, "ICI : %s\n", token->value);
 	index_pipes = find_pipe(token, minishell->exec.index_pipe);
 	minishell->exec.index_pipe = index_pipes;
 	paths_one_line = is_path(minishell, envp);
@@ -175,18 +167,25 @@ int read_tokens(t_minishell *minishell, t_token **pipe,
 		|| (index_pipes > 0 && token != NULL && i <= index_pipes))
 	{
 		ft_printf_fd(2, "pipe = %s\n", token->value);
-		if (token->type == IS_BUILT_IN)
-			is_built_in(minishell, token);
-		else if (token->type == IS_ARG)
+		// if (token->type == IS_BUILT_IN)
+		// 	is_built_in(minishell, token);
+		if (token->type == IS_ARG)
 			add_args(minishell, pipe, token);
 		else if (token->type == IS_FILENAME)
-			read_files(minishell, token);
+			read_files(minishell, pipe, token);
 		else if (token->type == IS_INPUT && token->next != NULL)
 			token->next->input = 1;
 		else if (token->type == IS_OUTPUT && token->next != NULL)
 			token->next->output = 1;
 		token = token->next;
 		i++;
+	}
+	if (!pipe->infile)
+	{
+		if (input_pipe == 1)
+			pipe->input = IS_PIPE;
+		else
+			pipe->input = 0;
 	}
 	// il y a un dernier infile, mais il y a une erreure
 	// donc une erreure a print apres echo

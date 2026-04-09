@@ -6,17 +6,25 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/09 14:12:43 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/09 21:14:08 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	tmp_free_pipe(t_pipe *pipe)
+{
+	if (pipe->infile->close == 0)
+		close(pipe->infile->fd);
+	if (pipe->outfile->close == 0)
+		close(pipe->outfile->fd);
+}
+
 /*
 temporaire pour les tests de l execute,
 a remplacer par la function de Steph
 */
-static void tmp_free(t_minishell *minishell)
+void tmp_free(t_minishell *minishell)
 {
 	t_token *tmp;
 
@@ -27,6 +35,7 @@ static void tmp_free(t_minishell *minishell)
 		// ft_printf_fd(2, "la\n");
 		tmp = minishell->token;
 		minishell->token = minishell->token->next;
+		
 		if (tmp->cmd_args != NULL)
 			free_double(tmp->cmd_args);
 		free(tmp->value);
@@ -35,6 +44,10 @@ static void tmp_free(t_minishell *minishell)
 		free(tmp);
 		// minishell->token = minishell->token->next;
 	}
+	// tmp_free_pipe(minishell->exec.pipe_a);
+	// tmp_free_pipe(minishell->exec.pipe_b);
+	free(minishell->exec.pipe_a);
+	free(minishell->exec.pipe_b);
 }
 
 void handle_sigint(int sig)
@@ -54,13 +67,16 @@ void	init_exec(t_minishell *minishell)
 {
 	t_token *tmp;
 	
-	minishell->exec.file_input = NULL;
-	minishell->exec.file_output = NULL;
+	minishell->exec.pipe_a = ft_calloc(1, sizeof(t_pipe));
+	minishell->exec.pipe_b = ft_calloc(1, sizeof(t_pipe));
+	minishell->exec.pipe_a->is_cmd = 0;
+	minishell->exec.pipe_b->is_cmd = 0;
+	minishell->exec.pipe_a->nb_args = 0;
+	minishell->exec.pipe_b->nb_args = 0;
 	// minishell->exec.cmd->value = NULL;
 	minishell->exec.input = 0;
 	minishell->exec.output = 0;
 	minishell->exec.built_in = 0;
-	minishell->exec.nb_args = 0;
 	minishell->exec.index_pipe = 0;
 	minishell->exec.last_pipe = minishell->token;
 	tmp = minishell->token;
@@ -79,11 +95,13 @@ int execute(t_minishell *minishell, char **envp)
 {
 	init_exec(minishell);
 	
-	read_tokens(minishell, &minishell->exec.pipe_a,
+	read_tokens(minishell, minishell->exec.pipe_a,
 		minishell->token, envp);
 	ft_printf_fd(2, "------------------\n");
-	read_tokens(minishell, &minishell->exec.pipe_b,
+	read_tokens(minishell, minishell->exec.pipe_b,
 		minishell->token, envp);
+
+	exec_cmd(minishell, envp);
 	print_pauline(minishell);//TO DELETE
 	// ft_printf_fd(2, "%sici\n", minishell->token->value);
 		

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/08 21:17:22 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/09 21:14:14 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,18 @@ void	free_double(char **tab)
 // 	free_structure(&parse->out, parse, 1);
 // }
 
-// void	strerror_free_structure(t_parse *parse, char *filename, int error)
-// {
-// 	char	*err;
+void	strerror_free_structure(t_minishell *minishell, char *filename, int error)
+{
+	char	*err;
 
-// 	err = strerror(errno);
-// 	write(2, err, strlen(err));
-// 	write(2, ": ", 2);
-// 	write(2, filename, strlen(filename));
-// 	write(2, "\n", 1);
-// 	free_structure(&parse->in, parse, 0);
-// 	exit(error);
-// }
+	err = strerror(errno);
+	write(2, err, strlen(err));
+	write(2, ": ", 2);
+	write(2, filename, strlen(filename));
+	write(2, "\n", 1);
+	tmp_free(minishell);
+	exit(error);
+}
 
 void	strerror_print(char *filename)
 {

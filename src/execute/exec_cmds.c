@@ -1,0 +1,117 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_cmds.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
+/*   Updated: 2026/04/09 21:16:05 by pswirgie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+// static void	close_all(t_minishell *minishell, int *pipefd)
+// {
+// 	close_fds(minishell);
+// 	close(pipefd[0]);
+// 	close(pipefd[1]);
+// }
+
+// static void	wrong_pid(t_minishell *minishell, int *pipefd)
+// {
+// 	close_all(minishell, pipefd);
+// 	strerror_free_structure(minishell, "fork", 2);
+// }
+
+// static void	exec_child(t_parse *parse, int *pipefd, char **envp)
+// {
+// 	int	error;
+
+// 	error = 0;
+// 	if (dup2(parse->in.fd, STDIN_FILENO) == -1)
+// 		strerror_free_structure(parse, "dup2", 2);
+// 	if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+// 		strerror_free_structure(parse, "dup2", 2);
+// 	close_all(parse, pipefd);
+// 	error = execve(parse->in.cmd_path, parse->in.args_execve, envp);
+// 	if (error == -1)
+// 		strerror_free_structure(parse, parse->in.cmd, 127);
+// }
+
+// static void	exec_parent(t_parse *parse, int *pipefd, char **envp)
+// {
+// 	int	error;
+
+// 	error = 0;
+// 	if (dup2(pipefd[0], STDIN_FILENO) == -1)
+// 		strerror_free_structure(parse, "dup2", 2);
+// 	if (dup2(parse->out.fd, STDOUT_FILENO) == -1)
+// 		strerror_free_structure(parse, "dup2", 2);
+// 	close_fds(minishell);
+// 	error = execve(parse->out.cmd_path, parse->out.args_execve, envp);
+// 	if (error == -1)
+// 		strerror_free_structure(parse, parse->out.cmd, 127);
+// }
+
+/*
+
+
+
+*/
+// void	exec_cmds_pipe(t_minishell *minishell, char **envp)
+// {
+// 	int	pid;
+// 	int	pipefd[2];
+
+// 	pipe(pipefd);
+// 	pid = fork();
+// 	if (pid == -1)
+// 		wrong_pid(minishell, pipefd);
+// 	if (pid == 0)
+// 	{
+// 		if (minishell->exec.pipe_a->is_cmd == 1)
+// 			exec_child(minishell, pipefd, envp);
+// 		else
+// 			close_all(minishell, pipefd);
+// 	}
+// 	else
+// 	{
+// 		if (minishell->exec.pipe_b->is_cmd == 1)
+// 			exec_parent(minishell, pipefd, envp);
+// 		else
+// 			close_all(minishell, pipefd);
+// 	}
+// 	close_fds(minishell);
+// 	waitpid(pid, NULL, 0);
+// }
+
+/*
+inputs : 
+-1 : issue with infile = return
+0 : no infile = actual folder
+*/
+void	exec_cmd(t_minishell *minishell, char **envp)
+{
+	t_pipe *line;
+	int	error;
+
+	error = 0;
+	line = minishell->exec.pipe_a;
+	if (line->input == ERROR || line->output == ERROR)
+		return ;
+	// else if (cmd->input == TERMINAL && cmd->output == TERMINAL)
+	// 	/*actuel folder*/
+	// else if (cmd->input == TERMINAL && cmd->output == IS_FILE)
+	else if (line->input == IS_FILE && line->output == TERMINAL)
+	{
+		if (dup2(minishell->exec.pipe_a->infile->fd, STDIN_FILENO) == -1)
+			strerror_free_structure(minishell, "dup2", 2);
+		close_fds(minishell);
+		error = execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
+		if (error == -1)
+			strerror_free_structure(minishell, line->cmd->value, 127);
+	}
+	// else if (line->input == IS_FILE && line->output == IS_FILE)
+}

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 15:42:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/03/28 13:36:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/09 21:07:34 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 5)
 		print_error("Error\nNot 4 arguments.\n", 2);
 	parsing(&parse, argv);
-	init_args_execve(&parse, envp);
+	init_args_execve(&parse);
 	exec_cmds(&parse, envp);
 	free_structure(&parse.in, &parse, 0);
 	return (parse.error);
