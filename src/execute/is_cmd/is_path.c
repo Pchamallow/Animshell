@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/09 11:51:10 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/10 12:06:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,25 +36,18 @@ static void	is_valid_path(t_minishell *minishell,
 {
 	char	*tmp;
 	int		i;
-	int		is_find;
 
 	i = 0;
-	is_find = 0;
 	while (all_paths[i] && i <= len)
 	{
 		tmp = ft_strjoin(all_paths[i], "/");
 		token->cmd_path = ft_strjoin(tmp, token->value);
 		free(tmp);
 		if (access(token->cmd_path, X_OK) == 0)
-		{
-			is_find = 1;
 			break ;
-		}
 		free(token->cmd_path);
 		i++;
 	}
-	if (is_find == 0)
-		token->cmd_path = NULL;
 	if (i >= len + 1)
 		no_cmd(token, &minishell->exec.error);
 }

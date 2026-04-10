@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/09 21:15:02 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/10 12:31:28 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ typedef struct s_token
 	int				nb_opt;
 	int				fd;
 	int				close;
-	int				input; // savoir si c est un file type infile
-	int				output;// savoir si c est un file type outfile
+	int				file_input; // savoir si c est un file type infile
+	int				file_output;// savoir si c est un file type outfile
 	t_token_type	type;
 	t_quote_type	quote;
 	struct s_token	*next;
@@ -96,8 +96,8 @@ typedef struct s_pipe
 	t_token	*cmd;
 	int		is_cmd;
 	int		nb_args;
-	t_put	input; // -1 file invalide, 0 pas de input, 1 = file, 2 = pipe
-	t_put	output; // -1 file invalide, 0 pas de output(donc terminal), 1 = file, 2 = pipe
+	t_put	input;
+	t_put	output;
 }				t_pipe;
 
 typedef struct s_exec

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/09 21:14:14 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/10 12:15:55 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,11 @@
 void	free_double(char **tab)
 {
 	int	i;
-	int	len;
 
 	i = 0;
-	len = 0;
 	if (!tab)
 		return ;
-	while (tab[len] != NULL)
-		len++;
-	while (i < len)
+	while (tab[i])
 	{
 		free(tab[i]);
 		i++;

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/09 20:38:10 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/10 12:43:30 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	find_pipe(t_token *token, int lastpipe)
 			i++;
 		skip++;
 	}
-	if (tmp->type == PIPE)
+	if (tmp != NULL && tmp->type == PIPE)
 	{
 		pipe = 1;
 		if (i > 0)
@@ -139,7 +139,9 @@ B. IS_BUILT_IN
 */
 
 /*!SECTION
--> avoir le prochain pipe en token + en index
+Pipe : 
+-> input pipe : input from previous pipe
+-> ouput pipe : output to next pipe
 
 */
 int read_tokens(t_minishell *minishell, t_pipe *pipe, t_token *token, char **envp)
@@ -152,17 +154,23 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, t_token *token, char **env
 
 	// print_pauline(minishell);
 	i = 0;
+
 	token = minishell->exec.last_pipe;
 	input_pipe = 0;
 	if (minishell->exec.last_pipe->type == PIPE)
 		input_pipe = 1;
 	// ft_printf_fd(2, "ICI : %s\n", token->value);
+
 	index_pipes = find_pipe(token, minishell->exec.index_pipe);
 	minishell->exec.index_pipe = index_pipes;
 	paths_one_line = is_path(minishell, envp);
 	all_paths = ft_split(paths_one_line, ':');
+
 	init_cmd(minishell, pipe, all_paths, index_pipes);
+
 	next_pipe(minishell, token, index_pipes);
+	// printf("OUPUUUUUT : %d\n", pipe->output);
+
 	while ((token != NULL && index_pipes == 0)
 		|| (index_pipes > 0 && token != NULL && i <= index_pipes))
 	{
@@ -174,12 +182,13 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, t_token *token, char **env
 		else if (token->type == IS_FILENAME)
 			read_files(minishell, pipe, token);
 		else if (token->type == IS_INPUT && token->next != NULL)
-			token->next->input = 1;
+			token->next->file_input = 1;
 		else if (token->type == IS_OUTPUT && token->next != NULL)
-			token->next->output = 1;
+			token->next->file_output = 1;
 		token = token->next;
 		i++;
 	}
+
 	if (!pipe->infile)
 	{
 		if (input_pipe == 1)

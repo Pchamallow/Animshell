@@ -39,3 +39,37 @@ void	print_pauline(t_minishell *minishell)
 	print_pauline_type(minishell->exec.pipe_a);
 	print_pauline_type(minishell->exec.pipe_b);
 }
+
+/*
+temporaire pour les tests de l execute,
+a remplacer par la function de Steph
+*/
+void tmp_free(t_minishell *minishell)
+{
+	t_token *tmp;
+
+	// ft_printf_fd(2, "ici\n");
+	while (minishell->token != NULL)
+	{
+		// ft_printf_fd(2, "la\n");
+		tmp = minishell->token;
+		minishell->token = minishell->token->next;
+		
+		free(tmp->value);
+		if (tmp->args_execve)
+			free_double(tmp->args_execve);
+		if (tmp->cmd_args)
+		{
+			// printf("free\n");
+			free_double(tmp->cmd_args);
+		}
+		if (tmp->cmd_path)
+			free(tmp->cmd_path);
+		free(tmp);
+		// minishell->token = minishell->token->next;
+	}
+	// tmp_free_pipe(minishell->exec.pipe_a);
+	// tmp_free_pipe(minishell->exec.pipe_b);
+	free(minishell->exec.pipe_a);
+	free(minishell->exec.pipe_b);
+}

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/09 21:14:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/10 12:50:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,36 +20,6 @@ void	tmp_free_pipe(t_pipe *pipe)
 		close(pipe->outfile->fd);
 }
 
-/*
-temporaire pour les tests de l execute,
-a remplacer par la function de Steph
-*/
-void tmp_free(t_minishell *minishell)
-{
-	t_token *tmp;
-
-	tmp = minishell->token;
-	// ft_printf_fd(2, "ici\n");
-	while (minishell->token != NULL)
-	{
-		// ft_printf_fd(2, "la\n");
-		tmp = minishell->token;
-		minishell->token = minishell->token->next;
-		
-		if (tmp->cmd_args != NULL)
-			free_double(tmp->cmd_args);
-		free(tmp->value);
-		if (tmp->cmd_path)
-			free(tmp->cmd_path);
-		free(tmp);
-		// minishell->token = minishell->token->next;
-	}
-	// tmp_free_pipe(minishell->exec.pipe_a);
-	// tmp_free_pipe(minishell->exec.pipe_b);
-	free(minishell->exec.pipe_a);
-	free(minishell->exec.pipe_b);
-}
-
 void handle_sigint(int sig)
 {
     // struct termios oldt, newt;
@@ -60,8 +30,20 @@ void handle_sigint(int sig)
 	write(1, "\nminishell$ ", 12); // réaffiche le prompt
 }
 
+// static void	init_pipe(t_pipe *pipe)
+// {
+// 	pipe = ft_calloc(1, sizeof(t_pipe));
+// 	pipe->is_cmd = 0;
+// 	pipe->nb_args = 0;
+// 	pipe->input = TERMINAL;
+// 	pipe->output = TERMINAL;
+// 	pipe->infile = NULL;
+// 	pipe->outfile = NULL;
+// }
+
 /*
 Put values 0 or NULL in order to reuse after
+1 for input and output for terminal by default
 */
 void	init_exec(t_minishell *minishell)
 {
@@ -73,6 +55,10 @@ void	init_exec(t_minishell *minishell)
 	minishell->exec.pipe_b->is_cmd = 0;
 	minishell->exec.pipe_a->nb_args = 0;
 	minishell->exec.pipe_b->nb_args = 0;
+	minishell->exec.pipe_a->input = TERMINAL;
+	minishell->exec.pipe_a->output = TERMINAL;
+	minishell->exec.pipe_b->input = TERMINAL;
+	minishell->exec.pipe_b->output = TERMINAL;
 	// minishell->exec.cmd->value = NULL;
 	minishell->exec.input = 0;
 	minishell->exec.output = 0;
@@ -82,10 +68,11 @@ void	init_exec(t_minishell *minishell)
 	tmp = minishell->token;
 	while (tmp != NULL)
 	{
+		tmp->args_execve = NULL;
 		tmp->cmd_path = NULL;
 		tmp->cmd_args = NULL;
-		tmp->input = 0;
-		tmp->output = 0;
+		tmp->file_input = 0;
+		tmp->file_output = 0;
 		tmp->close = 0;
 		tmp = tmp->next;
 	}
@@ -94,13 +81,13 @@ void	init_exec(t_minishell *minishell)
 int execute(t_minishell *minishell, char **envp)
 {
 	init_exec(minishell);
-	
+
 	read_tokens(minishell, minishell->exec.pipe_a,
 		minishell->token, envp);
 	ft_printf_fd(2, "------------------\n");
-	read_tokens(minishell, minishell->exec.pipe_b,
-		minishell->token, envp);
-
+	// read_tokens(minishell, minishell->exec.pipe_b,
+	// 	minishell->token, envp);
+	init_args_execve(minishell, minishell->exec.pipe_a);
 	exec_cmd(minishell, envp);
 	print_pauline(minishell);//TO DELETE
 	// ft_printf_fd(2, "%sici\n", minishell->token->value);

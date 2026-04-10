@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/09 21:09:45 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/10 12:45:52 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	close_fds(t_minishell *minishell)
 		close(line->infile->fd);
 		line->infile->close = 1;
 	}
-	if (line->outfile->close == 0)
+	if (line->outfile)
 	{
 		close(line->outfile->fd);
 		line->outfile->close = 1;

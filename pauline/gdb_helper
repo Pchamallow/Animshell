@@ -2,3 +2,6 @@ display src[i + j]
 display little[j]
 
 display minishell.token->next.value
+
+
+display cmd->cmd_args[1]

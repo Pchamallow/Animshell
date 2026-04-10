@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/09 20:37:38 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/10 12:39:56 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,15 @@ void	read_files(t_minishell *minishell, t_pipe *pipe, t_token *token)
 {
 	/*garder les erreurs de tests */
 	/* permission OK, exit ou est creer pour un outfile*/
-	if (token->input == 1 && (init_infile(minishell, pipe, token) == 0))
+	if (token->file_input == 1 && (init_infile(minishell, pipe, token) == 0))
 	{
 		pipe->infile = token;
 		pipe->input = IS_FILE;
 			// free_cpy(&pipe->infile->value, token->value);
 	}
-	if (token->output == 1 && (init_outfile(minishell, pipe, token) == 0))
+	if (token->file_output == 1 && (init_outfile(minishell, pipe, token) == 0))
 	{
+		// printf("\nICI\n");
 		pipe->outfile = token;
 		pipe->output = IS_FILE;
 			// free_cpy(&pipe->outfile->value, token->value);
