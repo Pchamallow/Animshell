@@ -6,12 +6,16 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/06 17:28:51 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/09 10:21:35 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*	add_quote_type stores in @token->quote	*/
+/*	the type of quotes						*/
+/*	used in the original input and			*/
+/*	removed by the handle_quotes function	*/
 void	add_quote_type(t_token *token, char quote)
 {
 	if (quote == '\'')
@@ -20,7 +24,11 @@ void	add_quote_type(t_token *token, char quote)
 		token->quote = DOUBLE;
 }
 
-void	handle_quotes(char *line, t_token **token_list, int *index, char quote)
+/*	handle_quotes creates a token							*/
+/*	with the text inside quotes,							*/
+/*	removing the quotes.									*/
+/*	It stops and returns 1 in case of unclosed quotes		*/
+int	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 {
 	int	i;
 	int	start;
@@ -36,16 +44,16 @@ void	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 		{
 			ft_printf_fd(2, "Error: unclosed quotes\n");
 			ft_token_lstclear(token_list);
-			free(line);
-			exit(2);//pas besoin de tout quitter ici, juste afficher une erreur
+			return (1);
 		}
 	}
 	len = i - start;
 	ft_token_add_back(token_list,
 		ft_token_new(ft_substr(line, start, len), WORD), line);
 	add_quote_type(ft_token_last(*token_list), quote);
-	i++;//pour enlever le quote de fin
+	i++;//pour passer le quote de fin
 	*index = i;
+	return (0);
 }
 
 void	handle_pipe(char *line, t_token **token_list, int *index)
@@ -65,7 +73,6 @@ void	handle_redirection(char *line, t_token **token_list,
 	int	i;
 	int	start;
 	int	len;
-	int	type;
 
 	i = *index;
 	start = i;
@@ -75,16 +82,16 @@ void	handle_redirection(char *line, t_token **token_list,
 		len++;
 		i++;
 	}
-	if (angle_bracket == '<' && len == 2)
-		type = HEREDOC;
-	else
-		type = REDIRECTION;
 	ft_token_add_back(token_list,
-		ft_token_new(ft_substr(line, start, len), type), line);
+		ft_token_new(ft_substr(line, start, len), REDIRECTION), line);
 	i++;
 	*index = i;
 }
 
+/*	handle_words_no_quotes creates a token			*/
+/*	with a word not enclosed with quotes.			*/
+/*	A word is a sequence of characters separated 	*/
+/*	by spaces, tabs, <, <<, >, >>, |, " or '		*/
 void	handle_words_no_quotes(char *line, t_token **token_list, int *index)
 {
 	int	i;
@@ -101,6 +108,10 @@ void	handle_words_no_quotes(char *line, t_token **token_list, int *index)
 	*index = i;
 }
 
+/*	handle_spaces creates a token with one space	*/
+/*	each time spaces and/or tabs are encountered.	*/
+/*	No matter the number of spaces/tabs,			*/
+/*	the token will contain only one space			*/
 void	handle_spaces(char *line, t_token **token_list, int *index)
 {
 	int	i;

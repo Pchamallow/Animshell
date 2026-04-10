@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 15:52:43 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/06 20:41:39 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,15 @@ int	len_double(char **tab)
 int	len_cmd_no_endspace(char *str)
 {
 	int	i;
-	int	cmd;
+	/*int	cmd;*/
 
 	i = 0;
-	cmd = 0;
+	/*cmd = 0;*/
 	while (str[i])
 	{
 		if (str[i] != ' ')
 		{
-			cmd = 1;
+			/*cmd = 1;*/
 			while (str[i] && str[i] != ' ')
 				i++;
 			break ;

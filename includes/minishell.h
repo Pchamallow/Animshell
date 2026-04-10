@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/06 17:18:46 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/09 10:20:30 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,51 +18,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <termios.h>
-//ajout steph:
 # include <signal.h>
 # include <stdbool.h>
 
-typedef enum e_token_type
-{
-	WORD,
-	REDIRECTION,
-	PIPE,
-	EQUAL,
-	IS_CMD,
-	IS_BUILT_IN,
-	IS_FILE
-}   t_token_type;
-
-typedef struct s_token
-{
-	char				*value;
-	char				*cmd_path;
-	char				*path_explicite;
-	char				**options;
-	char				**args_execve;
-	int					file_null;
-	int					nb_opt;
-	int					fd;
-	int					close;
-	t_token_type		type;
-	struct s_token		*next;
-}				t_token;
-
-typedef struct s_exec
-{
-	char	*line;
-	int		error;
-}			t_exec;
-
-typedef struct s_minishell
-{
-	t_exec		exec;
-	t_token		token;
-}				t_minishell;
-
-
 /***********************************************************************/
-//ajout steph pour parsing :
 typedef enum e_token_type
 {
 	WORD,
@@ -103,6 +62,18 @@ typedef struct s_token
 	struct s_token	*next;
 }				t_token;
 
+typedef struct s_exec
+{
+	char	*line;
+	int		error;
+}			t_exec;
+
+typedef struct s_minishell
+{
+	t_exec		exec;
+	t_token		token;
+}				t_minishell;
+
 # define CMD_LIST "echo, cd, pwd, export, unset, env, exit"
 
 /***********************************************************************/
@@ -133,7 +104,7 @@ int	len_double(char **tab);
 int	len_cmd_no_endspace(char *str);
 
 /************************************************************* parsing */
-void	handle_quotes(char *line, t_token **token_list, int *index, char quote);
+int		handle_quotes(char *line, t_token **token_list, int *index, char quote);
 void	handle_pipe(char *line, t_token **token_list, int *index);
 void	handle_redirection(char *line, t_token **token_list,
 			int *index, char angle_bracket);
@@ -142,6 +113,12 @@ void	handle_spaces(char *line, t_token **token_list, int *index);
 bool	is_whitespace(char c);
 bool	is_separator(char c);
 int		separate_into_tokens(char *line, t_token **token_list);
+void	delete_next(t_token *token);
+t_token	*case_heredoc(t_token *token, int *error);
+t_token	*case_redirection(t_token *token, int *error);
+t_token	*case_command(t_token *token, bool *cmd_found);
+t_token	*case_arg(t_token *token);
+t_token	*case_pipe(t_token *token, bool *cmd_found, int *error, t_token **head);
 int		parse_tokens(t_token **token_list);
 /********************************************************** token_list */
 t_token	*ft_token_new(char *str, t_token_type token_type);
