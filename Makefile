@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/10 14:53:36 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/04/10 14:58:16 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ CFLAGS		:= -Wall -Wextra -Werror -g
 LDFLAGS		:= -lreadline
 MAKEFLAGS	+= --no-print-directory
 DATE		:= $(shell date +"%y_%m_%d_%H-%M-%S")
-BUILD_DIR	:= .minishell
+BUILD_DIR	:= .minishellga 
 
 # Includes
 INCLUDES	:=							\
