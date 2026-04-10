@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/10 12:50:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/10 13:00:11 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,16 @@ void handle_sigint(int sig)
 	write(1, "\nminishell$ ", 12); // réaffiche le prompt
 }
 
-// static void	init_pipe(t_pipe *pipe)
-// {
-// 	pipe = ft_calloc(1, sizeof(t_pipe));
-// 	pipe->is_cmd = 0;
-// 	pipe->nb_args = 0;
-// 	pipe->input = TERMINAL;
-// 	pipe->output = TERMINAL;
-// 	pipe->infile = NULL;
-// 	pipe->outfile = NULL;
-// }
+static void init_pipe(t_pipe **pipe)
+{
+    *pipe = ft_calloc(1, sizeof(t_pipe));
+    (*pipe)->is_cmd = 0;
+    (*pipe)->nb_args = 0;
+    (*pipe)->input = TERMINAL;
+    (*pipe)->output = TERMINAL;
+    (*pipe)->infile = NULL;
+    (*pipe)->outfile = NULL;
+}
 
 /*
 Put values 0 or NULL in order to reuse after
@@ -49,17 +49,9 @@ void	init_exec(t_minishell *minishell)
 {
 	t_token *tmp;
 	
-	minishell->exec.pipe_a = ft_calloc(1, sizeof(t_pipe));
-	minishell->exec.pipe_b = ft_calloc(1, sizeof(t_pipe));
-	minishell->exec.pipe_a->is_cmd = 0;
-	minishell->exec.pipe_b->is_cmd = 0;
-	minishell->exec.pipe_a->nb_args = 0;
-	minishell->exec.pipe_b->nb_args = 0;
-	minishell->exec.pipe_a->input = TERMINAL;
-	minishell->exec.pipe_a->output = TERMINAL;
-	minishell->exec.pipe_b->input = TERMINAL;
-	minishell->exec.pipe_b->output = TERMINAL;
-	// minishell->exec.cmd->value = NULL;
+	init_pipe(&minishell->exec.pipe_a);
+	init_pipe(&minishell->exec.pipe_b);
+
 	minishell->exec.input = 0;
 	minishell->exec.output = 0;
 	minishell->exec.built_in = 0;

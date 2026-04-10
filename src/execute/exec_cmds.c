@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/10 12:44:27 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/10 13:37:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,9 @@
 inputs : 
 -1 : issue with infile = return
 0 : no infile = actual folder
+
+soource input : infile, pipe, here_doc
+sources ouput : terminal, outfile, pipe
 */
 void	exec_cmd(t_minishell *minishell, char **envp)
 {
@@ -101,8 +104,13 @@ void	exec_cmd(t_minishell *minishell, char **envp)
 	ft_printf_fd(2, "input : %d\n", line->input);
 	ft_printf_fd(2, "ouput : %d\n", line->output);
 	ft_printf_fd(2, "cmd :\n", line->output);
+	ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->cmd_path);
+	ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->value);
+
+	
 	if (line->input == ERROR || line->output == ERROR)
 		return ;
+	
 	// else if (cmd->input == TERMINAL && cmd->output == TERMINAL)
 	// 	/*actuel folder*/
 	// else if (cmd->input == TERMINAL && cmd->output == IS_FILE)
@@ -111,11 +119,22 @@ void	exec_cmd(t_minishell *minishell, char **envp)
 		if (dup2(line->infile->fd, STDIN_FILENO) == -1)
 			strerror_free_structure(minishell, "dup2", 2);
 		close_fds(minishell);
-		ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->cmd_path);
 		error = execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
 		if (error == -1)
 			strerror_free_structure(minishell, line->cmd->value, 127);
 	}
+	
+	else if (line->input == IS_FILE && line->output == IS_FILE)
+	{
+		if (dup2(line->infile->fd, STDIN_FILENO) == -1)
+			strerror_free_structure(minishell, "dup2", 2);
+		if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
+			strerror_free_structure(minishell, "dup2", 2);
+		close_fds(minishell);
+		error = execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
+		if (error == -1)
+			strerror_free_structure(minishell, line->cmd->value, 127);
+	}
+	
 	ft_printf_fd(2, "\n--------------------------------------------\n");
-	// else if (line->input == IS_FILE && line->output == IS_FILE)
 }
