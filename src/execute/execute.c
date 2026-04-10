@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/10 13:00:11 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/10 14:14:57 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ void	tmp_free_pipe(t_pipe *pipe)
 
 void handle_sigint(int sig)
 {
-    // struct termios oldt, newt;
-	// t_token	*first_token;
+    /*struct termios oldt, newt;*/
+	/*t_token	*first_token;*/
 
-	// first_token = NULL;
+	/*first_token = NULL;*/
 	(void)sig;
 	write(1, "\nminishell$ ", 12); // réaffiche le prompt
 }
@@ -84,37 +84,43 @@ int execute(t_minishell *minishell, char **envp)
 	print_pauline(minishell);//TO DELETE
 	// ft_printf_fd(2, "%sici\n", minishell->token->value);
 		
+	is_cmd(minishell);
+	
 	/*  BOUCLE WHILE  */
 	// signal(SIGINT, handle_sigint);
-
-	// char *line;
 	
-	// while (1)
-	// {
-	// 	line = readline("minishell$ ");
-	// 	if (!line)
-	// 		break;
+	//variables pour boucle while :
+	char	*line;
+	t_token	*first_token;
 
-	// 	if (*line)
-	// 		add_history(line);
+	first_token = NULL;
 
-	// 	// // PARSING ICI :************************
-	// 	// separate_into_tokens(line, &first_token);
-	// 	// parse_tokens(&first_token);
-	// 	// ft_token_lstclear(&first_token);
-	// 	// // *************************************
-	// 	// read(STDIN_FILENO, &c, 1);
+	while (1)
+	{
+		/*line = readline(env->username);*/
+		line = readline("minishell$ ");
+		if (!line)
+			break;
 
-	// 	// printf("Tu as tapé : %c\n", c);
+		if (*line)
+			add_history(line);
 
-	// 	free(line);
-	// }
+		// PARSING ICI :************************
+		separate_into_tokens(line, &first_token);
+		parse_tokens(&first_token);
+		ft_token_lstclear(&first_token);
+		// *************************************
+		// read(STDIN_FILENO, &c, 1);
 
-	/* 
-	free l history une fois tout fini
-	*/
+		// printf("Tu as tapé : %c\n", c);
 
-	tmp_free(minishell);
+		free(line);
+	}
 
+	
+
+	// revenir au terminal normal
+	
 	return (0);
+	// free_struct_env(&env);
 }
