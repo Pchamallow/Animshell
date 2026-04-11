@@ -74,3 +74,21 @@ void tmp_free(t_minishell *minishell)
 	free(minishell->exec.pipe_a);
 	free(minishell->exec.pipe_b);
 }
+
+void	tmp_token_delone(t_token *lst, void (*del)(void *))
+{
+	if (!lst || !del)
+		return ;
+	del(lst->value);
+	//il faudra free tout le reste aussi
+	if (lst->cmd_path)
+		free(lst->cmd_path);
+	if (lst->path_explicite)
+		free(lst->path_explicite);
+	if (lst->cmd_args)
+		free_double(lst->cmd_args);
+	if (lst->args_execve)
+		free_double(lst->args_execve);
+	free(lst);
+	return ;
+}

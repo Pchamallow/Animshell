@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_token_list.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:14:01 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/05 19:14:12 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/11 13:05:22 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,8 @@ void	ft_token_lstclear(t_token **head)
 	while (current)
 	{
 		next = current->next;
-		ft_token_delone(current, free);
+		// ft_token_delone(current, free);
+		tmp_token_delone(current, free);
 		current = next;
 	}
 	*head = NULL;

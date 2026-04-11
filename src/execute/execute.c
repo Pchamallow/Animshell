@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 11:00:28 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 13:05:49 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,9 @@ int execute(t_minishell *minishell, char **envp)
 		
 		free(line);
 		
-		
-		/* EXECUTION ICI ********************************/
+		(void)envp;
+		(void)minishell;
+		// /* EXECUTION ICI ********************************/
 		if (first_token)
    			minishell->token = first_token;
 		else
@@ -132,15 +133,14 @@ int execute(t_minishell *minishell, char **envp)
 				init_args_execve(minishell, minishell->exec.pipe_a);
 				exec_cmd(minishell, envp);
 			}
-			// else
-			// 	close_fds(minishell);
 		}
-		/************************************************/
+		// /************************************************/
 		
-		tmp_free(minishell);
-		
+		// tmp_free(minishell);
+		free(minishell->exec.pipe_a);
+		free(minishell->exec.pipe_b);
 		// PARSING ICI :************************
-		// ft_token_lstclear(&first_token);
+		ft_token_lstclear(&first_token);
 		// *************************************
 		
 		

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 11:14:01 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 13:04:40 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,10 +168,10 @@ int		len_double(char **tab);
 int		len_cmd_no_endspace(char *str);
 void	close_fds(t_minishell *minishell);
 int		is_sign(char c);
-/*************************************************************** TODELETE */
-void print_double(char **str);
+/*************************************************************** TO_DELETE */
+void print_double(char **str);// section to delete
 void tmp_free(t_minishell *minishell);
-
+void	tmp_token_delone(t_token *lst, void (*del)(void *));
 
 /************************************************************* parsing */
 int		handle_quotes(char *line, t_token **token_list, int *index, char quote);

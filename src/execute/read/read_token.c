@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 11:18:15 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 13:00:07 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,10 +182,12 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, t_token *token, char **env
 	minishell->exec.index_pipe = index_pipes;
 	paths_one_line = is_path(minishell, envp);
 	all_paths = ft_split(paths_one_line, ':');
-	if (read_files(minishell, pipe, index_pipes) == -1)
+	if (read_files(minishell, pipe, index_pipes) == -1
+		|| init_cmd(minishell, pipe, all_paths, index_pipes) == -1)
+	{
+		free_double(all_paths);
 		return (-1);
-	if (init_cmd(minishell, pipe, all_paths, index_pipes) == -1)
-		return (-1);
+	}
 	/**************************************************************/
 
 	next_pipe(minishell, token, index_pipes);
