@@ -6,13 +6,13 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/10 14:14:57 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 11:00:28 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	tmp_free_pipe(t_pipe *pipe)
+void	free_pipe(t_pipe *pipe)
 {
 	if (pipe->infile->close == 0)
 		close(pipe->infile->fd);
@@ -35,6 +35,7 @@ static void init_pipe(t_pipe **pipe)
     *pipe = ft_calloc(1, sizeof(t_pipe));
     (*pipe)->is_cmd = 0;
     (*pipe)->nb_args = 0;
+	(*pipe)->built_in = NONE;
     (*pipe)->input = TERMINAL;
     (*pipe)->output = TERMINAL;
     (*pipe)->infile = NULL;
@@ -54,7 +55,6 @@ void	init_exec(t_minishell *minishell)
 
 	minishell->exec.input = 0;
 	minishell->exec.output = 0;
-	minishell->exec.built_in = 0;
 	minishell->exec.index_pipe = 0;
 	minishell->exec.last_pipe = minishell->token;
 	tmp = minishell->token;
@@ -72,35 +72,37 @@ void	init_exec(t_minishell *minishell)
 
 int execute(t_minishell *minishell, char **envp)
 {
-	init_exec(minishell);
-
-	read_tokens(minishell, minishell->exec.pipe_a,
-		minishell->token, envp);
-	ft_printf_fd(2, "------------------\n");
-	// read_tokens(minishell, minishell->exec.pipe_b,
+	/*             EXECUTION       V001      */
+	// init_exec(minishell);
+	// read_tokens(minishell, minishell->exec.pipe_a,
 	// 	minishell->token, envp);
-	init_args_execve(minishell, minishell->exec.pipe_a);
-	exec_cmd(minishell, envp);
-	print_pauline(minishell);//TO DELETE
-	// ft_printf_fd(2, "%sici\n", minishell->token->value);
-		
-	is_cmd(minishell);
+	// ft_printf_fd(2, "------------------\n");
+	// // read_tokens(minishell, minishell->exec.pipe_b,
+	// // 	minishell->token, envp);
+	// init_args_execve(minishell, minishell->exec.pipe_a);
+	// exec_cmd(minishell, envp);
+	// print_pauline(minishell);//TO DELETE
+	/************************************************/
+
+	signal(SIGINT, handle_sigint);
 	
-	/*  BOUCLE WHILE  */
-	// signal(SIGINT, handle_sigint);
-	
+	/*  BOUCLE WHILE  **********************************/
 	//variables pour boucle while :
 	char	*line;
+	// bool	is_free;
 	t_token	*first_token;
 
 	first_token = NULL;
 
 	while (1)
 	{
-		/*line = readline(env->username);*/
 		line = readline("minishell$ ");
 		if (!line)
-			break;
+		{
+			printf("exit\n");
+			rl_clear_history();
+			exit (0);
+		}
 
 		if (*line)
 			add_history(line);
@@ -108,19 +110,45 @@ int execute(t_minishell *minishell, char **envp)
 		// PARSING ICI :************************
 		separate_into_tokens(line, &first_token);
 		parse_tokens(&first_token);
-		ft_token_lstclear(&first_token);
+		// ft_token_lstclear(&first_token);
 		// *************************************
-		// read(STDIN_FILENO, &c, 1);
-
-		// printf("Tu as tapé : %c\n", c);
-
+		
 		free(line);
+		
+		
+		/* EXECUTION ICI ********************************/
+		if (first_token)
+   			minishell->token = first_token;
+		else
+    		minishell->token = NULL;
+		
+		if (minishell->token)
+		{
+			init_exec(minishell);
+			read_tokens(minishell, minishell->exec.pipe_a,
+			minishell->token, envp);
+			if (minishell->exec.pipe_a->is_cmd == 1)
+			{
+				init_args_execve(minishell, minishell->exec.pipe_a);
+				exec_cmd(minishell, envp);
+			}
+			// else
+			// 	close_fds(minishell);
+		}
+		/************************************************/
+		
+		tmp_free(minishell);
+		
+		// PARSING ICI :************************
+		// ft_token_lstclear(&first_token);
+		// *************************************
+		
+		
+		// read(STDIN_FILENO, &c, 1);
+		
 	}
-
-	
 
 	// revenir au terminal normal
 	
 	return (0);
-	// free_struct_env(&env);
 }

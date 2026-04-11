@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/10 12:43:30 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 11:18:15 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,28 @@ int	nb_args(t_token *token)
 	return (args);
 }
 
-static void	init_cmd(t_minishell *minishell, t_pipe *pipe,
+/*
+Init_cmd 
+
+A. IS_CMD
+path_cmd : 
+1. is an environnement variable PATH ?
+2. is a explicit path, absolute path ? 
+Or path is to search
+3. is cmd valid ?
+	Path_cmd 
+		1. is an environnement variable PATH ?
+		2. is a explicit path, absolute path ? 
+		Or path is to search
+		3. is cmd valid ?
+
+B. IS_BUILT_IN
+1. what built in is ? 
+
+C. if there is a command and at least one arg 
+= initialisation tab args
+*/
+static int	init_cmd(t_minishell *minishell, t_pipe *pipe,
 	char **all_paths, int pipes)
 {
 	t_token *token;
@@ -105,40 +126,34 @@ static void	init_cmd(t_minishell *minishell, t_pipe *pipe,
 		// ft_printf_fd(2, "%d\n", nb_cmd_args);
 		if (token->type == IS_CMD)
 		{
-			path_cmd(minishell, token, all_paths);
-			pipe->cmd = token;
-			pipe->is_cmd = 1;
-			ft_printf_fd(2, "cmd pipe value : %s\n", pipe->cmd->value);
+			if (path_cmd(minishell, token, all_paths) == 0)
+			{
+				pipe->cmd = token;
+				pipe->is_cmd = 1;
+			}
+			else
+				return (-1);
 		}
 		else if (token->type == IS_BUILT_IN)
 		{
-			is_built_in(minishell, token);	
+			is_built_in(pipe, token);	
 			pipe->cmd = token;
 			pipe->is_cmd = 1;
 		}
 		token = token->next;
 		i++;
 	}
-	if (nb_cmd_args != 0)
+	if (pipe-> is_cmd == 1 && nb_cmd_args > 0)
 		init_cmd_args(minishell, pipe, nb_cmd_args);
-
+	return (0);
 }
 
 /*
-A. IS_CMD
-path_cmd : 
-1. is an environnement variable PATH ?
-2. is a explicit path, absolute path ? 
-Or path is to search
-3. is cmd valid ?
+1. read files
+- error files before command
 
-B. IS_BUILT_IN
-1. what built in is ? 
+2. init command
 
-- input_pipe = input is pipe in
-*/
-
-/*!SECTION
 Pipe : 
 -> input pipe : input from previous pipe
 -> ouput pipe : output to next pipe
@@ -161,30 +176,34 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, t_token *token, char **env
 		input_pipe = 1;
 	// ft_printf_fd(2, "ICI : %s\n", token->value);
 
+
+	/* CMD et Infile et Outfile valides **************************/
 	index_pipes = find_pipe(token, minishell->exec.index_pipe);
 	minishell->exec.index_pipe = index_pipes;
 	paths_one_line = is_path(minishell, envp);
 	all_paths = ft_split(paths_one_line, ':');
-
-	init_cmd(minishell, pipe, all_paths, index_pipes);
+	if (read_files(minishell, pipe, index_pipes) == -1)
+		return (-1);
+	if (init_cmd(minishell, pipe, all_paths, index_pipes) == -1)
+		return (-1);
+	/**************************************************************/
 
 	next_pipe(minishell, token, index_pipes);
 	// printf("OUPUUUUUT : %d\n", pipe->output);
 
-	while ((token != NULL && index_pipes == 0)
-		|| (index_pipes > 0 && token != NULL && i <= index_pipes))
+	while (token != NULL && ((index_pipes == 0) || (index_pipes > 0 && i <= index_pipes)))
 	{
 		ft_printf_fd(2, "pipe = %s\n", token->value);
 		// if (token->type == IS_BUILT_IN)
 		// 	is_built_in(minishell, token);
-		if (token->type == IS_ARG)
+		if (token->type == IS_ARG && pipe->is_cmd == 1)
 			add_args(minishell, pipe, token);
-		else if (token->type == IS_FILENAME)
-			read_files(minishell, pipe, token);
-		else if (token->type == IS_INPUT && token->next != NULL)
-			token->next->file_input = 1;
-		else if (token->type == IS_OUTPUT && token->next != NULL)
-			token->next->file_output = 1;
+		// else if (token->type == IS_FILENAME)
+		// 	read_files(minishell, pipe, token);
+		// else if (token->type == IS_INPUT && token->next != NULL)
+		// 	token->next->file_input = 1;
+		// else if (token->type == IS_OUTPUT && token->next != NULL)
+		// 	token->next->file_output = 1;
 		token = token->next;
 		i++;
 	}

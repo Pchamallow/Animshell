@@ -31,7 +31,7 @@ void	print_pauline(t_minishell *minishell)
 		ft_printf_fd(2, "%s\n", token->value);
 		token= token->next;
 	}
-	ft_printf_fd(2, "\nbuilt in : %d\n", minishell->exec.built_in);
+	ft_printf_fd(2, "\nbuilt in : %d\n", minishell->exec.pipe_a->built_in);
 	ft_printf_fd(2, "\ncmd : %s\n", minishell->exec.pipe_a->cmd->value);
 	ft_printf_fd(2, "\ncmd args :\n");
 	print_double(minishell->exec.pipe_a->cmd->cmd_args);
@@ -43,6 +43,11 @@ void	print_pauline(t_minishell *minishell)
 /*
 temporaire pour les tests de l execute,
 a remplacer par la function de Steph
+*/
+
+/*
+si je fusionne avec celle de steph 
+mettre les free pipes a part 
 */
 void tmp_free(t_minishell *minishell)
 {
@@ -56,20 +61,16 @@ void tmp_free(t_minishell *minishell)
 		minishell->token = minishell->token->next;
 		
 		free(tmp->value);
-		if (tmp->args_execve)
-			free_double(tmp->args_execve);
-		if (tmp->cmd_args)
-		{
-			// printf("free\n");
-			free_double(tmp->cmd_args);
-		}
 		if (tmp->cmd_path)
 			free(tmp->cmd_path);
+		if (tmp->path_explicite)
+			free(tmp->path_explicite);
+		if (tmp->cmd_args)
+			free_double(tmp->cmd_args);
+		if (tmp->args_execve)
+			free_double(tmp->args_execve);
 		free(tmp);
-		// minishell->token = minishell->token->next;
 	}
-	// tmp_free_pipe(minishell->exec.pipe_a);
-	// tmp_free_pipe(minishell->exec.pipe_b);
 	free(minishell->exec.pipe_a);
 	free(minishell->exec.pipe_b);
 }

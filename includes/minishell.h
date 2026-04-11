@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/10 14:22:04 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 11:14:01 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct s_pipe
 	int		nb_args;
 	t_put	input;
 	t_put	output;
+	t_built_in	built_in;
 }				t_pipe;
 
 typedef struct s_exec
@@ -110,13 +111,12 @@ typedef struct s_exec
 	t_pipe		*pipe_a; // cmd
 	t_pipe		*pipe_b; // cmd
 	t_token		*last_pipe;
-	t_built_in	built_in;
 }			t_exec;
 
 typedef struct s_minishell
 {
 	t_exec		exec;
-	t_token		token;
+	t_token		*token;
 }				t_minishell;
 
 # define CMD_LIST "echo, cd, pwd, export, unset, env, exit"
@@ -130,12 +130,13 @@ int		main(int argc, char **argv, char **envp);
 /************************************************************* execute */
 int		execute(t_minishell *minishell, char **envp);
 int		read_tokens(t_minishell *minishell, t_pipe *pipe, t_token *token, char **envp);
-void	read_files(t_minishell *minishell, t_pipe *pipe, t_token *token);
+int		read_files(t_minishell *minishell, t_pipe *pipe, int pipes);
 int		path_cmd(t_minishell *minishell, t_token *token, char **all_paths);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
 char	*is_path(t_minishell *minishell, char **envp);
-void	is_built_in(t_minishell *minishell, t_token *token);
+void	is_built_in(t_pipe *the_pipe, t_token *token);
 void	print_pauline(t_minishell *minishell);
+void	path_explicit(t_minishell *minishell, t_token *token);
 
 /************************************************************ built-in */
 int     echo(t_exec *exec);
