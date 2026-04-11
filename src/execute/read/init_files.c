@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 11:18:03 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 20:53:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 static int	init_infile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 {
 	token->fd = open(token->value, O_RDONLY);
+	// close(token->fd);
 	if (token->fd < 0)
 	{
 		pipe->input = ERROR;
-		token->close = 1;
 		minishell->exec.error = 2;
 		strerror_print(token->value); //NOTE -  print ici ou stocker pour print aprs echo [par exemple] ? 
 	}
@@ -38,7 +38,6 @@ static int	init_outfile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	if (token->fd < 0)
 	{
 		pipe->output = ERROR;
-		token->close = 1;
 		strerror_print(token->value);
 		minishell->exec.error = 2;
 	}

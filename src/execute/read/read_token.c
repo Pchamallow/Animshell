@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 18:23:15 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 20:52:24 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp)
 	if (read_files(minishell, pipe, index_pipes) == -1
 		|| init_cmd(minishell, pipe, all_paths, index_pipes) == -1)
 	{
+		close_fds(minishell);
 		free_double(all_paths);
 		return (-1);
 	}

@@ -6,19 +6,11 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 18:28:10 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 20:54:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_pipe(t_pipe *pipe)
-{
-	if (pipe->infile->close == 0)
-		close(pipe->infile->fd);
-	if (pipe->outfile->close == 0)
-		close(pipe->outfile->fd);
-}
 
 void handle_sigint(int sig)
 {
@@ -65,7 +57,6 @@ void	init_exec(t_minishell *minishell)
 		tmp->cmd_args = NULL;
 		tmp->file_input = 0;
 		tmp->file_output = 0;
-		tmp->close = 0;
 		tmp = tmp->next;
 	}
 }

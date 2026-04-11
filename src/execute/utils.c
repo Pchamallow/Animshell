@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 10:57:20 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 20:53:03 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,17 @@ void	close_fds(t_minishell *minishell)
 	t_pipe *line;
 
 	line = minishell->exec.pipe_a;
-	if (line->infile->close == 0)
+	if (line->infile)
 	{
+		// printf("ICI\n");
+		// ft_printf_fd(2, "FD : %d\n", line->infile->fd);
+		ft_printf_fd(2, "infile  : %s\n", line->infile->value);
+		// ft_printf_fd(2, "outfile : %s\n", line->outfile->value);
 		close(line->infile->fd);
-		line->infile->close = 1;
+		// ft_printf_fd(2, "FD : %d\n", line->infile->fd);
 	}
 	if (line->outfile)
-	{
 		close(line->outfile->fd);
-		line->outfile->close = 1;
-	}
 }
 
 // /* cmd without spaces */
