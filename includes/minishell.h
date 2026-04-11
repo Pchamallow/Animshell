@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 13:04:40 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 18:22:21 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ typedef struct s_exec
 	t_pipe		*pipe_a; // cmd
 	t_pipe		*pipe_b; // cmd
 	t_token		*last_pipe;
+	t_token		**first_token;
 }			t_exec;
 
 typedef struct s_minishell
@@ -129,7 +130,7 @@ typedef struct s_minishell
 int		main(int argc, char **argv, char **envp);
 /************************************************************* execute */
 int		execute(t_minishell *minishell, char **envp);
-int		read_tokens(t_minishell *minishell, t_pipe *pipe, t_token *token, char **envp);
+int		read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp);
 int		read_files(t_minishell *minishell, t_pipe *pipe, int pipes);
 int		path_cmd(t_minishell *minishell, t_token *token, char **all_paths);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
@@ -152,7 +153,6 @@ void	exec_cmd(t_minishell *minishell, char **envp);
 /********************************************************** read token */
 void	init_cmd_args(t_minishell *minishell, t_pipe *pipe, int nb_args);
 void	add_args(t_minishell *minishell, t_pipe *pipe, t_token *token);
-void	free_cpy(char **dst, char *src);
 
 /**************************************************************** term */
 int		term_raw_mode(struct termios *oldt, struct termios *newt);
@@ -162,6 +162,7 @@ void	free_double(char **tab);
 void	strerror_print(char *filename);
 void	strerror_free_structure(t_minishell *minishell, char *filename, int error);
 void	error_cmd_args(t_minishell *minishell, char *cmd, char *filename);
+void	free_all(t_minishell *minishell);
 
 /*************************************************************** utils */
 int		len_double(char **tab);
@@ -170,8 +171,6 @@ void	close_fds(t_minishell *minishell);
 int		is_sign(char c);
 /*************************************************************** TO_DELETE */
 void print_double(char **str);// section to delete
-void tmp_free(t_minishell *minishell);
-void	tmp_token_delone(t_token *lst, void (*del)(void *));
 
 /************************************************************* parsing */
 int		handle_quotes(char *line, t_token **token_list, int *index, char quote);

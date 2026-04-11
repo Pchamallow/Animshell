@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 13:00:07 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 18:23:15 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,13 +159,14 @@ Pipe :
 -> ouput pipe : output to next pipe
 
 */
-int read_tokens(t_minishell *minishell, t_pipe *pipe, t_token *token, char **envp)
+int read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp)
 {
 	char	**all_paths;
 	char	*paths_one_line;
 	int		i;
 	int		index_pipes;
 	int		input_pipe;
+	t_token	*token;
 
 	// print_pauline(minishell);
 	i = 0;
@@ -196,16 +197,8 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, t_token *token, char **env
 	while (token != NULL && ((index_pipes == 0) || (index_pipes > 0 && i <= index_pipes)))
 	{
 		ft_printf_fd(2, "pipe = %s\n", token->value);
-		// if (token->type == IS_BUILT_IN)
-		// 	is_built_in(minishell, token);
 		if (token->type == IS_ARG && pipe->is_cmd == 1)
 			add_args(minishell, pipe, token);
-		// else if (token->type == IS_FILENAME)
-		// 	read_files(minishell, pipe, token);
-		// else if (token->type == IS_INPUT && token->next != NULL)
-		// 	token->next->file_input = 1;
-		// else if (token->type == IS_OUTPUT && token->next != NULL)
-		// 	token->next->file_output = 1;
 		token = token->next;
 		i++;
 	}

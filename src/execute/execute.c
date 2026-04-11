@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 13:14:17 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 18:28:10 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,15 +119,17 @@ int execute(t_minishell *minishell, char **envp)
 		(void)minishell;
 		// /* EXECUTION ICI ********************************/
 		if (first_token)
-   			minishell->token = first_token;
+		{
+			minishell->token = first_token;
+			minishell->exec.first_token = &first_token;
+		}
 		else
     		minishell->token = NULL;
 		
 		if (minishell->token)
 		{
 			init_exec(minishell);
-			read_tokens(minishell, minishell->exec.pipe_a,
-			minishell->token, envp);
+			read_tokens(minishell, minishell->exec.pipe_a, envp);
 			if (minishell->exec.pipe_a->is_cmd == 1)
 			{
 				init_args_execve(minishell, minishell->exec.pipe_a);
@@ -136,18 +138,9 @@ int execute(t_minishell *minishell, char **envp)
 		}
 		// /************************************************/
 		
-		// tmp_free(minishell);
-		free(minishell->exec.pipe_a);
-		free(minishell->exec.pipe_b);
-		
-		// PARSING ICI :************************
-		ft_token_lstclear(&first_token); 
-		// modifié, est ce que je remet la version normale ? 
-		// *************************************
-		
+		free_all(minishell);
 		
 		// read(STDIN_FILENO, &c, 1);
-		
 	}
 
 	// revenir au terminal normal

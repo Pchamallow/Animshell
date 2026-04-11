@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/10 13:26:47 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 18:27:34 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,13 @@ void	free_double(char **tab)
 // 	free_structure(&parse->out, parse, 1);
 // }
 
+void	free_all(t_minishell *minishell)
+{
+	free(minishell->exec.pipe_a);
+	free(minishell->exec.pipe_b);
+	ft_token_lstclear(minishell->exec.first_token);
+}
+
 void	strerror_free_structure(t_minishell *minishell, char *filename, int error)
 {
 	char	*err;
@@ -58,7 +65,7 @@ void	strerror_free_structure(t_minishell *minishell, char *filename, int error)
 	write(2, ": ", 2);
 	write(2, filename, strlen(filename));
 	write(2, "\n", 1);
-	tmp_free(minishell);
+	free_all(minishell);
 	exit(error);
 }
 
@@ -70,7 +77,7 @@ void	error_cmd_args(t_minishell *minishell, char *cmd, char *filename)
 	write(2, ": ", 2);
 	write(2, filename, strlen(filename));
 	write(2, "\n", 1);
-	tmp_free(minishell);
+	free_all(minishell);
 	exit(minishell->exec.error);
 }
 

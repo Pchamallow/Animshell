@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:14:01 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/11 13:13:57 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 18:03:53 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,14 @@ void	ft_token_delone(t_token *lst, void (*del)(void *))
 	if (!lst || !del)
 		return ;
 	del(lst->value);
-	//il faudra free tout le reste aussi
+	if (lst->cmd_path)
+		free(lst->cmd_path);
+	if (lst->path_explicite)
+		free(lst->path_explicite);
+	if (lst->cmd_args)
+		free_double(lst->cmd_args);
+	if (lst->args_execve)
+		free_double(lst->args_execve);
 	free(lst);
 	return ;
 }
@@ -89,8 +96,7 @@ void	ft_token_lstclear(t_token **head)
 	while (current)
 	{
 		next = current->next;
-		// ft_token_delone(current, free); // version originale
-		tmp_token_delone(current, free); // version modifié
+		ft_token_delone(current, free);
 		current = next;
 	}
 	*head = NULL;
