@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 13:05:49 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 13:14:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,8 +139,10 @@ int execute(t_minishell *minishell, char **envp)
 		// tmp_free(minishell);
 		free(minishell->exec.pipe_a);
 		free(minishell->exec.pipe_b);
+		
 		// PARSING ICI :************************
-		ft_token_lstclear(&first_token);
+		ft_token_lstclear(&first_token); 
+		// modifié, est ce que je remet la version normale ? 
 		// *************************************
 		
 		

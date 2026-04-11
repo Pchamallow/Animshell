@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:14:01 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/11 13:05:22 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 13:13:57 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ void	ft_token_lstclear(t_token **head)
 	while (current)
 	{
 		next = current->next;
-		// ft_token_delone(current, free);
-		tmp_token_delone(current, free);
+		// ft_token_delone(current, free); // version originale
+		tmp_token_delone(current, free); // version modifié
 		current = next;
 	}
 	*head = NULL;
