@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/09 10:21:35 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/12 17:14:01 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ int	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 	int	len;
 
 	i = *index;
-	i++;//pour enlever le quote de debut
+	/*i++;//pour enlever le quote de debut*/
 	start = i;
+	i++;//pour garder le quote de debut
 	while (line[i] != quote)
 	{
 		i++;
@@ -44,14 +45,16 @@ int	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 		{
 			ft_printf_fd(2, "Error: unclosed quotes\n");
 			ft_token_lstclear(token_list);
+			free(line);
 			return (1);
 		}
 	}
+	i++;//pour garder le quote de fin
 	len = i - start;
 	ft_token_add_back(token_list,
 		ft_token_new(ft_substr(line, start, len), WORD), line);
 	add_quote_type(ft_token_last(*token_list), quote);
-	i++;//pour passer le quote de fin
+	/*i++;//pour passer le quote de fin*/
 	*index = i;
 	return (0);
 }
