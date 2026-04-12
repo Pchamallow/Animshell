@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/12 17:14:01 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/12 18:02:08 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	add_quote_type(t_token *token, char quote)
 	if (quote == '\"')
 		token->quote = DOUBLE;
 }
+
+void	handle_env_var()
 
 /*	handle_quotes creates a token							*/
 /*	with the text inside quotes,							*/
