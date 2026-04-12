@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 10:38:47 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/09 20:58:11 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/12 19:59:36 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,10 @@ void	add_args(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	cmd = pipe->cmd;
 	len = ft_strlen(token->value) + 1;
 	index = pipe->nb_args++;
-	// ft_printf_fd(2, "\nici\n");
-	// ft_printf_fd(2, "index = %d\n", index);
 	cmd->cmd_args[index] = ft_calloc(len, sizeof(char));
 	if (!cmd->cmd_args[index])
 		print_error_free(minishell, "Error\nMalloc options failed.\n", 1);
 	ft_strlcpy(cmd->cmd_args[index], token->value, len);
-	ft_printf_fd(2, "pipe cmd_args = %s\n", cmd->cmd_args[index]);
 }
 
 void	init_cmd_args(t_minishell *minishell, t_pipe *pipe, int nb_args)

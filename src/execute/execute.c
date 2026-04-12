@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/12 18:18:28 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/12 21:19:06 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,16 +123,16 @@ int execute(t_minishell *minishell, char **envp)
 		{
 			init_exec(minishell);
 			read_tokens(minishell, minishell->exec.pipe_a, envp);
-			if (minishell->exec.pipe_a->built_in != NONE)
-				//pour les built in faire pipe->cmd = le token du built in
-				// puis faire init args execve pour avoir les
-				// arguments dans pipe->cmd->cmd_args
-			else if (minishell->exec.pipe_a->is_cmd == 1)
+			if (minishell->exec.pipe_a->is_cmd == 1)
 			{
 				init_args_execve(minishell, minishell->exec.pipe_a);
-				exec_cmd(minishell, envp);
+				if (minishell->exec.pipe_a->built_in == NONE)
+					exec_cmd(minishell, envp);
+				// else
+					// execute build in
 			}
 		}
+		// print_pauline(minishell);// print la commande et les arguments
 		/************************************************/
 		
 		free_all(minishell);
