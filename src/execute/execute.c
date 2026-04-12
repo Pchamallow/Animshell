@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/12 17:57:06 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/12 17:45:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,6 @@ int execute(t_minishell *minishell, char **envp)
 		
 		(void)envp;
 		(void)minishell;
-
-
 		
 		/* PARSING **********************************/
 		if (first_token)
