@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 20:56:47 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/12 17:27:52 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,30 +94,29 @@ sources ouput : terminal, outfile, pipe
 void	exec_cmd(t_minishell *minishell, char **envp)
 {
 	t_pipe *line;
+	// int	pipefd[2];
 	pid_t	pid;
-	// int	error;
+	int	error;
 
+	// pipe(pipefd);
 	pid = fork();
-	// error = 0;
+	error = 0;
 	line = minishell->exec.pipe_a;
 	/*   PRINT    */
-	ft_printf_fd(2, "\n--------------EXEC CMD----------------------\n");
-	ft_printf_fd(2, "cmd_path %s\n", line->cmd->cmd_path);
-	ft_printf_fd(2, "input : %d\n", line->input);
+	// ft_printf_fd(2, "\n--------------EXEC CMD----------------------\n");
+	// ft_printf_fd(2, "cmd_path %s\n", line->cmd->cmd_path);
+	// ft_printf_fd(2, "input : %d\n", line->input);
 	// ft_printf_fd(2, "ouput : %d\n", line->output);
 	// ft_printf_fd(2, "cmd :\n", line->output);
-	ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->cmd_path);
-	ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->value);
-
+	// ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->cmd_path);
+	// ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->value);
+	// ajouter securite -1
 	if (pid == 0)
 	{
-		if (line->input == ERROR || line->output == ERROR)
-			return ;
-		
 		// else if (cmd->input == TERMINAL && cmd->output == TERMINAL)
 		// 	/*actuel folder*/
 		// else if (cmd->input == TERMINAL && cmd->output == IS_FILE)
-		else if (line->input == IS_FILE && line->output == TERMINAL)
+		if (line->input == IS_FILE && line->output == TERMINAL)
 		{
 			if (dup2(line->infile->fd, STDIN_FILENO) == -1)
 				strerror_free_structure(minishell, "dup2", 2);
@@ -125,7 +124,7 @@ void	exec_cmd(t_minishell *minishell, char **envp)
 			close_fds(minishell);
 			// ft_printf_fd(2, "FD : %d\n", line->infile->fd);
 			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
-			return ;
+			// return ;
 			// if (error == -1)
 			// 	strerror_free_structure(minishell, line->cmd->value, 127);
 		}
@@ -137,16 +136,19 @@ void	exec_cmd(t_minishell *minishell, char **envp)
 			if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
 				strerror_free_structure(minishell, "dup2", 2);
 			close_fds(minishell);
-			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
-			return;
+			print_double(line->cmd->args_execve);
+			error = execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
 			// if (error == -1)
+			// 	printf("problem\n");
+			// return;
 			// 	strerror_free_structure(minishell, line->cmd->value, 127);
 		}
+		exit(1);
 	}
 	else
 	{
 		close_fds(minishell);
 		waitpid(pid, NULL, 0);
 	}
-	ft_printf_fd(2, "\n--------------------------------------------\n");
+	ft_printf_fd(2, "--------------------------------------------\n");
 }

@@ -33,7 +33,7 @@ void	print_pauline(t_minishell *minishell)
 	}
 	ft_printf_fd(2, "\nbuilt in : %d\n", minishell->exec.pipe_a->built_in);
 	ft_printf_fd(2, "\ncmd : %s\n", minishell->exec.pipe_a->cmd->value);
-	ft_printf_fd(2, "\ncmd args :\n");
+	ft_printf_fd(2, "\nTABLEAU :\n");
 	print_double(minishell->exec.pipe_a->cmd->cmd_args);
 	ft_printf_fd(2, "------------------\n");
 	print_pauline_type(minishell->exec.pipe_a);
