@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/12 20:46:52 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/15 10:43:07 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	add_quote_type(t_token *token, char quote)
 	if (quote == '\"')
 		token->quote = DOUBLE;
 }
+
+void	handle_env_var()
 
 /*	handle_quotes creates a token							*/
 /*	with the text inside quotes,							*/
