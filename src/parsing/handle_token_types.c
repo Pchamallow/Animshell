@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/09 10:21:35 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/12 15:45:51 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 		{
 			ft_printf_fd(2, "Error: unclosed quotes\n");
 			ft_token_lstclear(token_list);
+			free(line);
 			return (1);
 		}
 	}
