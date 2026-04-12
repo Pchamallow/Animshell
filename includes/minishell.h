@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 18:22:21 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 20:54:03 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <errno.h>
 # include <signal.h>
 # include <stdbool.h>
+# include <sys/wait.h>
 
 /***********************************************************************/
 typedef enum e_token_type
@@ -58,7 +59,7 @@ typedef struct s_token
 	int				file_null;
 	int				nb_opt;
 	int				fd;
-	int				close;
+	// int				close;
 	int				file_input; // savoir si c est un file type infile
 	int				file_output;// savoir si c est un file type outfile
 	t_token_type	type;

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 18:01:18 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/11 20:56:47 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,47 +94,59 @@ sources ouput : terminal, outfile, pipe
 void	exec_cmd(t_minishell *minishell, char **envp)
 {
 	t_pipe *line;
-	int	error;
+	pid_t	pid;
+	// int	error;
 
-	error = 0;
+	pid = fork();
+	// error = 0;
 	line = minishell->exec.pipe_a;
 	/*   PRINT    */
 	ft_printf_fd(2, "\n--------------EXEC CMD----------------------\n");
 	ft_printf_fd(2, "cmd_path %s\n", line->cmd->cmd_path);
 	ft_printf_fd(2, "input : %d\n", line->input);
-	ft_printf_fd(2, "ouput : %d\n", line->output);
-	ft_printf_fd(2, "cmd :\n", line->output);
+	// ft_printf_fd(2, "ouput : %d\n", line->output);
+	// ft_printf_fd(2, "cmd :\n", line->output);
 	ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->cmd_path);
 	ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->value);
 
-	
-	if (line->input == ERROR || line->output == ERROR)
-		return ;
-	
-	// else if (cmd->input == TERMINAL && cmd->output == TERMINAL)
-	// 	/*actuel folder*/
-	// else if (cmd->input == TERMINAL && cmd->output == IS_FILE)
-	else if (line->input == IS_FILE && line->output == TERMINAL)
+	if (pid == 0)
 	{
-		if (dup2(line->infile->fd, STDIN_FILENO) == -1)
-			strerror_free_structure(minishell, "dup2", 2);
-		close_fds(minishell);
-		error = execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
-		if (error == -1)
-			strerror_free_structure(minishell, line->cmd->value, 127);
+		if (line->input == ERROR || line->output == ERROR)
+			return ;
+		
+		// else if (cmd->input == TERMINAL && cmd->output == TERMINAL)
+		// 	/*actuel folder*/
+		// else if (cmd->input == TERMINAL && cmd->output == IS_FILE)
+		else if (line->input == IS_FILE && line->output == TERMINAL)
+		{
+			if (dup2(line->infile->fd, STDIN_FILENO) == -1)
+				strerror_free_structure(minishell, "dup2", 2);
+			// ft_printf_fd(2, "FD : %d\n", line->infile->fd);
+			close_fds(minishell);
+			// ft_printf_fd(2, "FD : %d\n", line->infile->fd);
+			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
+			return ;
+			// if (error == -1)
+			// 	strerror_free_structure(minishell, line->cmd->value, 127);
+		}
+		
+		else if (line->input == IS_FILE && line->output == IS_FILE)
+		{
+			if (dup2(line->infile->fd, STDIN_FILENO) == -1)
+				strerror_free_structure(minishell, "dup2", 2);
+			if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
+				strerror_free_structure(minishell, "dup2", 2);
+			close_fds(minishell);
+			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
+			return;
+			// if (error == -1)
+			// 	strerror_free_structure(minishell, line->cmd->value, 127);
+		}
 	}
-	
-	else if (line->input == IS_FILE && line->output == IS_FILE)
+	else
 	{
-		if (dup2(line->infile->fd, STDIN_FILENO) == -1)
-			strerror_free_structure(minishell, "dup2", 2);
-		if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
-			strerror_free_structure(minishell, "dup2", 2);
 		close_fds(minishell);
-		error = execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
-		if (error == -1)
-			strerror_free_structure(minishell, line->cmd->value, 127);
+		waitpid(pid, NULL, 0);
 	}
-	
 	ft_printf_fd(2, "\n--------------------------------------------\n");
 }
