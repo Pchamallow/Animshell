@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 20:54:38 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/12 17:35:35 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ int execute(t_minishell *minishell, char **envp)
 
 	while (1)
 	{
+		printf("MAIN LOOP PID: %d\n", getpid());
 		line = readline("minishell$ ");
 		if (!line)
 		{
@@ -108,7 +109,7 @@ int execute(t_minishell *minishell, char **envp)
 		
 		(void)envp;
 		(void)minishell;
-		// /* EXECUTION ICI ********************************/
+		/* PARSING **********************************/
 		if (first_token)
 		{
 			minishell->token = first_token;
@@ -127,7 +128,7 @@ int execute(t_minishell *minishell, char **envp)
 				exec_cmd(minishell, envp);
 			}
 		}
-		// /************************************************/
+		/************************************************/
 		
 		free_all(minishell);
 		
