@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 20:52:24 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/12 23:35:46 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,79 @@ static int	init_cmd(t_minishell *minishell, t_pipe *pipe,
 	return (0);
 }
 
+bool is_redirection(t_token *token)
+{
+	if (ft_strchr(token->value, '<') == NULL
+		|| ft_strchr(token->value, '>') == NULL)
+		return (true);
+	return (false);
+}
+
+void	cpy_no_bzero(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < (size - 1) && src[i] != '\0')
+	{
+		dst[i] = src[i];
+		i++;
+	}
+}
+
+void	convert_to_single_quotes(t_minishell *minishell, t_token *token)
+{
+	t_token *tmp_modify;
+	char	*original;
+	int		len;
+
+	len = ft_strlen(token->value);
+	tmp_modify = token;
+	original = ft_calloc(len + 1, sizeof(char));
+	if (!tmp_modify->value)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	ft_strlcpy(original, token->value, len);
+	free(tmp_modify->value);
+	tmp_modify->value = ft_calloc(len + 1, sizeof(char));
+	if (!tmp_modify->value)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	tmp_modify->value[0] = '\'';
+	cpy_no_bzero(tmp_modify->value, &original[1], len - 1);
+	tmp_modify->value[len] = '\'';
+	free(original);
+}
+
+
+/*
+if a token is an infile or outfile and is double quoted
+-> replace double quotes to simple quotes
+else if token is an argument and we have a command
+-> add to char **cmd_args
+*/
+void	read_args(t_minishell* minishell, t_token *token, t_pipe *pipe)
+{
+	int	index_pipes;
+	int	i;
+
+	i = 0;
+	index_pipes = minishell->exec.index_pipe;
+	while (token != NULL && ((index_pipes == 0)
+		|| (index_pipes > 0 && i <= index_pipes)))
+	{
+		// ft_printf_fd(2, "pipe = %s\n", token->value);
+		if ((token->quote == DOUBLE || token->quote == SINGLE)
+			&& (is_redirection(token) == true))
+			convert_to_single_quotes(minishell, token);
+			// printf("ICI = %s\n", token->value);
+		if (token->type == IS_ARG && pipe->is_cmd == 1)
+			add_args(minishell, pipe, token);
+		token = token->next;
+		i++;
+	}
+}
+
+
+
 /*
 1. read files
 - error files before command
@@ -163,20 +236,14 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp)
 {
 	char	**all_paths;
 	char	*paths_one_line;
-	int		i;
 	int		index_pipes;
 	int		input_pipe;
 	t_token	*token;
-
-	// print_pauline(minishell);
-	i = 0;
 
 	token = minishell->exec.last_pipe;
 	input_pipe = 0;
 	if (minishell->exec.last_pipe->type == PIPE)
 		input_pipe = 1;
-	// ft_printf_fd(2, "ICI : %s\n", token->value);
-
 
 	/* CMD et Infile et Outfile valides **************************/
 	index_pipes = find_pipe(token, minishell->exec.index_pipe);
@@ -193,23 +260,15 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp)
 	/**************************************************************/
 
 	next_pipe(minishell, token, index_pipes);
-	// printf("OUPUUUUUT : %d\n", pipe->output);
 
-	while (token != NULL && ((index_pipes == 0) || (index_pipes > 0 && i <= index_pipes)))
-	{
-		ft_printf_fd(2, "pipe = %s\n", token->value);
-		if (token->type == IS_ARG && pipe->is_cmd == 1)
-			add_args(minishell, pipe, token);
-		token = token->next;
-		i++;
-	}
+	read_args(minishell, token, pipe);
 
 	if (!pipe->infile)
 	{
 		if (input_pipe == 1)
 			pipe->input = IS_PIPE;
-		else
-			pipe->input = 0;
+		// else
+			// pipe->input = 0;
 	}
 	// il y a un dernier infile, mais il y a une erreure
 	// donc une erreure a print apres echo

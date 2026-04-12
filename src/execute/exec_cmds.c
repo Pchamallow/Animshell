@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/12 17:27:52 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/12 23:38:32 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,11 @@ void	exec_cmd(t_minishell *minishell, char **envp)
 	t_pipe *line;
 	// int	pipefd[2];
 	pid_t	pid;
-	int	error;
+	// int	error;
 
 	// pipe(pipefd);
 	pid = fork();
-	error = 0;
+	// error = 0;
 	line = minishell->exec.pipe_a;
 	/*   PRINT    */
 	// ft_printf_fd(2, "\n--------------EXEC CMD----------------------\n");
@@ -111,22 +111,24 @@ void	exec_cmd(t_minishell *minishell, char **envp)
 	// ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->cmd_path);
 	// ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->value);
 	// ajouter securite -1
+	// ft_printf_fd(2, "ICI\n");
 	if (pid == 0)
 	{
-		// else if (cmd->input == TERMINAL && cmd->output == TERMINAL)
+		if (line->input == TERMINAL && line->output == TERMINAL)
+		{
+			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
+			perror("execve");
+		}
 		// 	/*actuel folder*/
 		// else if (cmd->input == TERMINAL && cmd->output == IS_FILE)
-		if (line->input == IS_FILE && line->output == TERMINAL)
+		else if (line->input == IS_FILE && line->output == TERMINAL)
 		{
 			if (dup2(line->infile->fd, STDIN_FILENO) == -1)
 				strerror_free_structure(minishell, "dup2", 2);
 			// ft_printf_fd(2, "FD : %d\n", line->infile->fd);
 			close_fds(minishell);
-			// ft_printf_fd(2, "FD : %d\n", line->infile->fd);
 			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
-			// return ;
-			// if (error == -1)
-			// 	strerror_free_structure(minishell, line->cmd->value, 127);
+			perror("execve");
 		}
 		
 		else if (line->input == IS_FILE && line->output == IS_FILE)
@@ -137,12 +139,10 @@ void	exec_cmd(t_minishell *minishell, char **envp)
 				strerror_free_structure(minishell, "dup2", 2);
 			close_fds(minishell);
 			print_double(line->cmd->args_execve);
-			error = execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
-			// if (error == -1)
-			// 	printf("problem\n");
-			// return;
-			// 	strerror_free_structure(minishell, line->cmd->value, 127);
+			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
+			perror("execve");
 		}
+		free_all(minishell);
 		exit(1);
 	}
 	else

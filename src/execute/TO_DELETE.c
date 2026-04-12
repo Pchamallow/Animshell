@@ -6,7 +6,7 @@ void print_double(char **str)
 	int i;
 
 	i = 0;
-	while (str[i] != NULL)
+	while (str[i])
 	{
 		ft_printf_fd(2, "%s\n", str[i]);
 		i++;
@@ -33,9 +33,9 @@ void	print_pauline(t_minishell *minishell)
 	}
 	ft_printf_fd(2, "\nbuilt in : %d\n", minishell->exec.pipe_a->built_in);
 	ft_printf_fd(2, "\ncmd : %s\n", minishell->exec.pipe_a->cmd->value);
-	ft_printf_fd(2, "\nTABLEAU :\n");
+	ft_printf_fd(2, "\ncmd args :\n");
 	print_double(minishell->exec.pipe_a->cmd->cmd_args);
-	ft_printf_fd(2, "------------------\n");
+	ft_printf_fd(2, "------------------------\n");
 	print_pauline_type(minishell->exec.pipe_a);
 	print_pauline_type(minishell->exec.pipe_b);
 }

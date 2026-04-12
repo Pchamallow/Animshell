@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 18:27:34 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/12 21:00:11 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	free_double(char **tab)
 
 void	free_all(t_minishell *minishell)
 {
+	// printf("ICI \n");
 	free(minishell->exec.pipe_a);
 	free(minishell->exec.pipe_b);
 	ft_token_lstclear(minishell->exec.first_token);
