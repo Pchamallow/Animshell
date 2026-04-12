@@ -99,9 +99,9 @@ int execute(t_minishell *minishell, char **envp)
 			add_history(line);
 
 		// PARSING ICI :************************
-		separate_into_tokens(line, &first_token);
+		if (separate_into_tokens(line, &first_token) == 1)
+			continue ;
 		parse_tokens(&first_token);
-		// ft_token_lstclear(&first_token);
 		// *************************************
 		
 		free(line);
