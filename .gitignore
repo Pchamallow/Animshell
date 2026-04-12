@@ -1,0 +1,16 @@
+# Temporary files
+*.swp
+tags
+
+# Object files
+*.o
+
+# Libraries
+*.a
+
+# Executables
+*.out
+minishell
+
+# Tests
+
