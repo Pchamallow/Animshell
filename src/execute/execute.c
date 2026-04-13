@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 15:28:35 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 16:56:16 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int execute(t_minishell *minishell, char **envp)
 
 	while (1)
 	{
-		printf("MAIN LOOP PID: %d\n", getpid());
+		// printf("MAIN LOOP PID: %d\n", getpid());
 		line = readline("minishell$ ");
 		if (!line)
 		{
@@ -128,10 +128,13 @@ int execute(t_minishell *minishell, char **envp)
 			{
 				init_args_execve(minishell, minishell->exec.pipe_a);
 				if (minishell->exec.pipe_a->built_in == NONE)
-					exec_cmd(minishell, envp);
+				{
+					exec_cmd_no_pipe(minishell, envp);
+				}
 				else
+				{
 					echo(minishell);
-					// execute build in
+				}
 			}
 		}
 		// print_pauline(minishell);// print la commande et les arguments

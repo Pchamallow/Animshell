@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 16:13:25 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 16:56:07 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ int echo(t_minishell *minishell);
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
 /**************************************************** execute commands */
 void	exec_cmds_pipe(t_minishell *minishell, char **envp);
-void	exec_cmd(t_minishell *minishell, char **envp);
+void	exec_cmd_no_pipe(t_minishell *minishell, char **envp);
 
 /********************************************************** struct env */
 // void    init_struct_env(t_env *env);

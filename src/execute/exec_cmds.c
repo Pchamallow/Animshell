@@ -6,13 +6,13 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 14:24:40 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 17:09:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// static void	close_all(t_minishell *minishell, int *pipefd)
+// static void	close_fds_pipefd(t_minishell *minishell, int *pipefd)
 // {
 // 	close_fds(minishell);
 // 	close(pipefd[0]);
@@ -25,34 +25,34 @@
 // 	strerror_free_structure(minishell, "fork", 2);
 // }
 
-// static void	exec_child(t_parse *parse, int *pipefd, char **envp)
+// static void	exec_child(t_minishell *minishell, int *pipefd, char **envp)
 // {
 // 	int	error;
 
 // 	error = 0;
 // 	if (dup2(parse->in.fd, STDIN_FILENO) == -1)
-// 		strerror_free_structure(parse, "dup2", 2);
+// 		strerror_free_structure(minishell, "dup2", 2);
 // 	if (dup2(pipefd[1], STDOUT_FILENO) == -1)
-// 		strerror_free_structure(parse, "dup2", 2);
-// 	close_all(parse, pipefd);
+// 		strerror_free_structure(minishell, "dup2", 2);
+// 	close_fds_pipefd(minishell, pipefd);
 // 	error = execve(parse->in.cmd_path, parse->in.args_execve, envp);
 // 	if (error == -1)
-// 		strerror_free_structure(parse, parse->in.cmd, 127);
+// 		strerror_free_structure(minishell, parse->in.cmd, 127);
 // }
 
-// static void	exec_parent(t_parse *parse, int *pipefd, char **envp)
+// static void	exec_parent(t_minishell *minishell, int *pipefd, char **envp)
 // {
 // 	int	error;
 
 // 	error = 0;
 // 	if (dup2(pipefd[0], STDIN_FILENO) == -1)
-// 		strerror_free_structure(parse, "dup2", 2);
+// 		strerror_free_structure(minishell, "dup2", 2);
 // 	if (dup2(parse->out.fd, STDOUT_FILENO) == -1)
-// 		strerror_free_structure(parse, "dup2", 2);
-// 	close_fds(minishell);
+// 		strerror_free_structure(minishell, "dup2", 2);
+// 	close_fds_pipefd(minishell, pipefd);
 // 	error = execve(parse->out.cmd_path, parse->out.args_execve, envp);
 // 	if (error == -1)
-// 		strerror_free_structure(parse, parse->out.cmd, 127);
+// 		strerror_free_structure(minishell, parse->out.cmd, 127);
 // }
 
 
@@ -70,14 +70,14 @@
 // 		if (minishell->exec.pipe_a->is_cmd == 1)
 // 			exec_child(minishell, pipefd, envp);
 // 		else
-// 			close_all(minishell, pipefd);
+// 			close_fds_pipefd(minishell, pipefd);
 // 	}
 // 	else
 // 	{
 // 		if (minishell->exec.pipe_b->is_cmd == 1)
 // 			exec_parent(minishell, pipefd, envp);
 // 		else
-// 			close_all(minishell, pipefd);
+// 			close_fds_pipefd(minishell, pipefd);
 // 	}
 // 	close_fds(minishell);
 // 	waitpid(pid, NULL, 0);
@@ -91,48 +91,51 @@ inputs :
 soource input : infile, pipe, here_doc
 sources ouput : terminal, outfile, pipe
 */
-void	exec_cmd(t_minishell *minishell, char **envp)
+
+
+
+
+// ft_printf_fd(2, "\n--------------EXEC CMD----------------------\n");
+// ft_printf_fd(2, "cmd_path %s\n", line->cmd->cmd_path);
+// ft_printf_fd(2, "input : %d\n", line->input);
+// ft_printf_fd(2, "ouput : %d\n", line->output);
+// ft_printf_fd(2, "cmd :\n", line->output);
+// ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->cmd_path);
+// ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->value);
+// ajouter securite -1
+// ft_printf_fd(2, "ICI\n");
+
+void	exec_cmd_no_pipe(t_minishell *minishell, char **envp)
 {
 	t_pipe *line;
-	// int	pipefd[2];
 	pid_t	pid;
-	// int	error;
 
-	// pipe(pipefd);
 	pid = fork();
-	// error = 0;
 	line = minishell->exec.pipe_a;
-	/*   PRINT    */
-	// ft_printf_fd(2, "\n--------------EXEC CMD----------------------\n");
-	// ft_printf_fd(2, "cmd_path %s\n", line->cmd->cmd_path);
-	// ft_printf_fd(2, "input : %d\n", line->input);
-	// ft_printf_fd(2, "ouput : %d\n", line->output);
-	// ft_printf_fd(2, "cmd :\n", line->output);
-	// ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->cmd_path);
-	// ft_printf_fd(2, "EXEC CMD = %s\n", line->cmd->value);
-	// ajouter securite -1
-	// ft_printf_fd(2, "ICI\n");
 	if (pid == 0)
 	{
 		if (line->input == TERMINAL && line->output == TERMINAL)
 		{
-			// printf("PRINT\n");
-			// print_double(line->cmd->args_execve);
-			// char *args[] = {"wc", "-c", "<infile", NULL};
-			// execve("/usr/bin/wc", args, envp);
 			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
 			perror("execve");
 		}
-		// 	/*actuel folder*/
-		// else if (cmd->input == TERMINAL && cmd->output == IS_FILE)
+		
+		else if (line->input == TERMINAL && line->output == IS_FILE)
+		{
+			if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
+				strerror_free_structure(minishell, "dup2", 2);
+			close_fds(minishell);
+			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
+			perror("execve");
+		}
+		
 		else if (line->input == IS_FILE && line->output == TERMINAL)
 		{
 			if (dup2(line->infile->fd, STDIN_FILENO) == -1)
 				strerror_free_structure(minishell, "dup2", 2);
-			// ft_printf_fd(2, "FD : %d\n", line->infile->fd);
 			close_fds(minishell);
 			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
-			// perror("execve");
+			perror("execve");
 		}
 		
 		else if (line->input == IS_FILE && line->output == IS_FILE)
@@ -142,9 +145,8 @@ void	exec_cmd(t_minishell *minishell, char **envp)
 			if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
 				strerror_free_structure(minishell, "dup2", 2);
 			close_fds(minishell);
-			print_double(line->cmd->args_execve);
 			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
-			// perror("execve");
+			perror("execve");
 		}
 		free_all(minishell);
 		exit(1);
