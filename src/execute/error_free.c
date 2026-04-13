@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 14:08:59 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 21:05:14 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,27 @@ void	free_double(char **tab)
 // 	free_structure(&parse->out, parse, 1);
 // }
 
+void	lst_pipe_clear(t_pipe **head)
+{
+	t_pipe	*current;
+	t_pipe	*next;
+
+	if (!head)
+		return ;
+	current = *head;
+	while (current)
+	{
+		next = current->next;
+		free(current);
+		current = next;
+	}
+	*head = NULL;
+}
 void	free_all(t_minishell *minishell)
 {
-	// printf("ICI \n");
-	free(minishell->exec.pipe_a);
-	free(minishell->exec.pipe_b);
 	ft_token_lstclear(minishell->exec.first_token);
+	lst_pipe_clear(&minishell->exec.pipe_lst);
+	// print_pauline(minishell);// print la commande et les arguments
 }
 
 void	strerror_free_structure(t_minishell *minishell, char *filename, int error)

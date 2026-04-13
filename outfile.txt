@@ -1,14 +1,1 @@
-Makefile
-README.md
-includes
-infile.txt
-lib
-minishell
-minishell.en.subject.pdf
-outfile.txt
-pauline
-readline.supp
-ressources
-src
-tests
-tmp_steph
+18

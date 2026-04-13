@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 16:56:07 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 19:22:40 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ typedef struct s_pipe
 	t_put	input;
 	t_put	output;
 	t_built_in	built_in;
+	struct s_pipe	*next;
 }				t_pipe;
 
 typedef struct s_exec
@@ -109,8 +110,8 @@ typedef struct s_exec
 	int			input; // -1 file invalide, 0 pas de input, 1 = file, 2 = pipe
 	int			output; // 0 pas de output(donc terminal), 1 = file, 2 = pipe
 	int			index_pipe;
-	t_pipe		*pipe_a; // cmd
-	t_pipe		*pipe_b; // cmd
+	int			nb_pipes;
+	t_pipe		*pipe_lst;
 	t_token		*last_pipe;
 	t_token		**first_token;
 }			t_exec;
@@ -168,7 +169,7 @@ void	free_all(t_minishell *minishell);
 /*************************************************************** utils */
 int		len_double(char **tab);
 int		len_cmd_no_endspace(char *str);
-void	close_fds(t_minishell *minishell);
+void	close_fds(t_minishell* minishell, t_pipe *pipe);
 int		is_sign(char c);
 /*************************************************************** TO_DELETE */
 void print_double(char **str);// section to delete
