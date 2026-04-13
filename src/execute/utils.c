@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 20:53:03 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 16:20:30 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,29 @@ int	is_space(char *str, int not)
 			i++;
 	}
 	return (i);
+}
+
+bool find_built_in(char *token)
+{
+	const char *builtins[7];
+	int	i;
+	int	len;
+
+	builtins[0] = "echo";
+	builtins[1] = "cd";
+	builtins[2] = "pwd";
+	builtins[3] = "export";
+	builtins[4] = "unset";
+	builtins[5] = "env";
+	builtins[6] = "exit";
+	i = 0;
+	len = ft_strlen(token);
+
+	while (i < 7)
+	{
+		if (ft_strncmp(token, builtins[i], len) == 0)
+			return (true);
+		i++;
+	}
+	return (false);
 }

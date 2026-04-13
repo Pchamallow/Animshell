@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/12 21:19:06 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 15:28:35 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int execute(t_minishell *minishell, char **envp)
 	t_token	*first_token;
 
 	first_token = NULL;
+	minishell->exec.error = 0;
 
 	while (1)
 	{
@@ -128,7 +129,8 @@ int execute(t_minishell *minishell, char **envp)
 				init_args_execve(minishell, minishell->exec.pipe_a);
 				if (minishell->exec.pipe_a->built_in == NONE)
 					exec_cmd(minishell, envp);
-				// else
+				else
+					echo(minishell);
 					// execute build in
 			}
 		}

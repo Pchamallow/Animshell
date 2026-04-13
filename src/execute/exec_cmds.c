@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/12 23:38:32 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 14:24:40 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,10 @@ void	exec_cmd(t_minishell *minishell, char **envp)
 	{
 		if (line->input == TERMINAL && line->output == TERMINAL)
 		{
+			// printf("PRINT\n");
+			// print_double(line->cmd->args_execve);
+			// char *args[] = {"wc", "-c", "<infile", NULL};
+			// execve("/usr/bin/wc", args, envp);
 			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
 			perror("execve");
 		}
@@ -128,7 +132,7 @@ void	exec_cmd(t_minishell *minishell, char **envp)
 			// ft_printf_fd(2, "FD : %d\n", line->infile->fd);
 			close_fds(minishell);
 			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
-			perror("execve");
+			// perror("execve");
 		}
 		
 		else if (line->input == IS_FILE && line->output == IS_FILE)
@@ -140,7 +144,7 @@ void	exec_cmd(t_minishell *minishell, char **envp)
 			close_fds(minishell);
 			print_double(line->cmd->args_execve);
 			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
-			perror("execve");
+			// perror("execve");
 		}
 		free_all(minishell);
 		exit(1);

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/12 23:35:46 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 14:15:53 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,7 @@ void	convert_to_single_quotes(t_minishell *minishell, t_token *token)
 if a token is an infile or outfile and is double quoted
 -> replace double quotes to simple quotes
 else if token is an argument and we have a command
+-> keep token intact if it s single quoted + double quoted
 -> add to char **cmd_args
 */
 void	read_args(t_minishell* minishell, t_token *token, t_pipe *pipe)
@@ -208,7 +209,8 @@ void	read_args(t_minishell* minishell, t_token *token, t_pipe *pipe)
 		|| (index_pipes > 0 && i <= index_pipes)))
 	{
 		// ft_printf_fd(2, "pipe = %s\n", token->value);
-		if ((token->quote == DOUBLE || token->quote == SINGLE)
+		if ((token->quote == DOUBLE ||
+			(token->quote == SINGLE && token->next && token->next->quote != DOUBLE))
 			&& (is_redirection(token) == true))
 			convert_to_single_quotes(minishell, token);
 			// printf("ICI = %s\n", token->value);

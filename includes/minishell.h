@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 20:54:03 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 16:13:25 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@ typedef enum e_token_type
 	IS_BUILT_IN,
 	IS_ARG,
 	IS_FILENAME,
-	IS_DELIMITER,
+	IS_DELIMITER,/* EOF */
 	ONE_SPACE,
 	PIPE,
 	REDIRECTION,
 	IS_INPUT,
 	IS_OUTPUT,
-	IS_APPEND,
-	HEREDOC
+	IS_APPEND,/* >> */
+	HEREDOC /* << */
 }			t_token_type;
 
 typedef enum e_quote_type
@@ -141,7 +141,7 @@ void	print_pauline(t_minishell *minishell);
 void	path_explicit(t_minishell *minishell, t_token *token);
 
 /************************************************************ built-in */
-int     echo(t_exec *exec);
+int echo(t_minishell *minishell);
 /***************************************************** tabs for execve */
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
 /**************************************************** execute commands */
@@ -160,7 +160,7 @@ int		term_raw_mode(struct termios *oldt, struct termios *newt);
 /********************************************************** error_free */
 void	print_error_free(t_minishell *minishell, char *str, int error);
 void	free_double(char **tab);
-void	strerror_print(char *filename);
+void	strerror_file(char *filename);
 void	strerror_free_structure(t_minishell *minishell, char *filename, int error);
 void	error_cmd_args(t_minishell *minishell, char *cmd, char *filename);
 void	free_all(t_minishell *minishell);
@@ -172,6 +172,7 @@ void	close_fds(t_minishell *minishell);
 int		is_sign(char c);
 /*************************************************************** TO_DELETE */
 void print_double(char **str);// section to delete
+bool find_built_in(char *token);
 
 /************************************************************* parsing */
 int		handle_quotes(char *line, t_token **token_list, int *index, char quote);

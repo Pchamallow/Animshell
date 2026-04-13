@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/08 19:54:28 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 15:55:03 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,26 +37,50 @@ int index_word(char *src)
 	return (0);
 }
 
-
-/*
-echo
-- print a given string
+// ECHO ****************
+/*- print a given string
 conditions
 
-*/
-int echo(t_exec *exec)
+- exit status to print
+- - if $? is find, 
+- - if $?word or word$? 
+- - no print with $ ?*/
+// *********************
+int echo(t_minishell *minishell)
 {
-	char	*tmp;
-	char	*result;
+	t_token *args;
 	int		i;
-	int		index;
+	int		j;
+	int		len;
 
 	i = 0;
-	tmp = ft_strnstr(exec->line, "echo",
-		ft_strlen(exec->line));
-	index = index_word(&exec->line[i]);
-	result = ft_substr(exec->line, index, ft_strlen(tmp) + 1);
-	ft_printf_fd(STDOUT_FILENO, "%s\n", result);
+	args = minishell->exec.pipe_a->cmd;
+	args = args->next;
+	while (args && (minishell->exec.index_pipe == 0 || i < minishell->exec.index_pipe))
+	{
+		len = ft_strlen(args->value);
+		if (ft_strnstr(args->value, "$?", len + 1) != NULL)
+		{
+			j = 0;
+			while (args->value[j])
+			{
+				if (args->value[j] == '$' && args->value[j + 1] == '?')
+				{
+					ft_printf_fd(1, "%d", minishell->exec.error);
+					j += 2;
+					continue;
+				}
+				ft_printf_fd(1, "%c", args->value[j]);
+				j++;
+			}
+		}
+		else
+			ft_printf_fd(1, "%s", args->value);
+		// ft_printf_fd(2, "%d", args->type);
+		args = args->next;
+		i++;
+	}
+	ft_printf_fd(1, "\n");
 	return (0);
 }
 

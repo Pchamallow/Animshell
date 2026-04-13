@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/08 22:07:46 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/08 22:38:21 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/13 16:19:53 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ t_token	*case_redirection(t_token *token, int *error)
 t_token	*case_command(t_token *token, bool *cmd_found)
 {
 	*cmd_found = true;
-	if (ft_strnstr(CMD_LIST, token->value, ft_strlen(CMD_LIST)) != NULL)
+	if (find_built_in(token->value) == true)
 		token->type = IS_BUILT_IN;
 	else
 		token->type = IS_CMD;

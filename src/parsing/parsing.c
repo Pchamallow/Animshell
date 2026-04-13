@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 21:18:24 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/08 22:36:24 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/13 15:59:29 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	parse_tokens(t_token **token_list)
 		if (!error && token && token->type == PIPE)
 			token = case_pipe(token, &cmd_found, &error, token_list);
 	}
-	ft_printf_fd(1, "token list after parsing:\n");//pour test
+	// ft_printf_fd(1, "token list after parsing:\n");//pour test
 	print_tokens_types(*token_list);//pour test
 	return (error);
 }
