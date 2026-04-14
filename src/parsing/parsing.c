@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 21:18:24 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/08 22:36:24 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/12 23:19:03 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	delete_next(t_token *token)
 /*					not be the last token				*/
 /*					not be the first token				*/
 /*	**********************************************		*/
-int	parse_tokens(t_token **token_list)
+int	parse_tokens(char *line, t_token **token_list)
 {
 	t_token	*token;
 	bool	cmd_found;
@@ -59,5 +59,10 @@ int	parse_tokens(t_token **token_list)
 	}
 	ft_printf_fd(1, "token list after parsing:\n");//pour test
 	print_tokens_types(*token_list);//pour test
+	if (error)
+	{
+		ft_token_lstclear(token_list);
+		free(line);
+	}
 	return (error);
 }
