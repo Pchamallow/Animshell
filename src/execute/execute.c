@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/15 10:56:18 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/15 17:28:33 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ int execute(t_minishell *minishell, char **envp)
 			add_history(line);
 
 		// PARSING ICI :************************
+		line = expand_line(line, envp);
 		if (separate_into_tokens(line, &first_token) != 0
 				|| parse_tokens(line, &first_token) != 0)
 			continue ;

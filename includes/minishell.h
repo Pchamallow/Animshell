@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/15 10:55:44 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/15 15:37:18 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,7 @@ void print_double(char **str);// section to delete
 bool find_built_in(char *token);
 
 /************************************************************* parsing */
+char	*expand_line(char *line, char **envp);
 int		handle_quotes(char *line, t_token **token_list, int *index, char quote);
 void	handle_pipe(char *line, t_token **token_list, int *index);
 void	handle_redirection(char *line, t_token **token_list,

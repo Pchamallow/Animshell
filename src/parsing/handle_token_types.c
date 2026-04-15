@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/15 11:02:51 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/15 11:16:47 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	add_quote_type(t_token *token, char quote)
 		token->quote = DOUBLE;
 }
 
+bool	is_quote_closed(char *line, t_token **token_list,
+		int *index, char quote)
 {
 	int	i;
 
@@ -41,53 +43,6 @@ void	add_quote_type(t_token *token, char quote)
 	}
 	*index = i;
 	return (true);
-}
-
-void	count_env_var(char *line, int len, int i, char **envp)
-{
-	int	j;
-	int	wd_len;
-	int	count;
-
-	count = 0;
-	while (i < len)
-	{
-		if (line[i] == '$' && i + 1 < len)
-		{
-			if (line[i + 1] == '?')
-			{
-				//$?
-				//if (exit_error < 10)
-				//	count += 1;
-				//else if (exit_error >= 100)
-				//	count += 3;
-				//else
-				//	exit error: format d'erreur inattendu
-				//i += 2;
-			}
-			else if (!is_whitespace(line[i + 1]))
-			{
-				wd_len = 0;
-				//count $ENV:
-				//1.find word:
-				//i++;
-				//while (i + wd_len < len && !is_whitespace(line[i + wd_len])
-				//			&& line[i + wd_len] != '$')
-				//	wd_len++;
-				//2.find word in envp:
-				//j = 0;
-				//while (envp[j] && ft_strncmp(line + i, envp[j], wd_len) != 0)
-				//	j++;
-				//3.count char:
-				//if (envp[j])
-				//{
-				//	count += count_env_var(envp[j] + wd_len + 1,
-				//		ft_strlen(envp[j] + wd_len + 1, 0, envp));
-				//}
-			}
-		}
-		i++;
-	}
 }
 
 /*	handle_quotes creates a token							*/

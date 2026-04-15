@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/10 15:02:07 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/04/15 15:38:07 by stkloutz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,7 @@ SRCS		:= 											\
 			src/execute/exec_cmds.c						\
 			src/execute/execute.c						\
 			src/execute/term.c							\
+			src/parsing/expand_line.c					\
 			src/parsing/ft_token_list.c					\
 			src/parsing/handle_token_types.c			\
 			src/parsing/separate_into_tokens.c			\
