@@ -6,7 +6,7 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/15 17:42:33 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/16 19:41:55 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,28 +82,33 @@ int	count_total_char(char *line, int len, char **envp)
 				&& line[i + 1] != '?' && !is_separator(line[i + 1]))
 		{
 			i++;
-			//1.find word:
-			/*while (i + wd_len < len && !is_separator(line[i + wd_len])*/
-						/*&& line[i + wd_len] != '$')*/
-				/*wd_len++;*/
 			wd_len = get_var_name(line + i);
 			ft_printf_fd(1, "wd_len: %d\n", wd_len);
-			//find word in envp:
-			/*j = 0;*/
-			/*while (envp[j] && ft_strncmp(line + i, envp[j], wd_len) != 0)*/
-				/*j++;*/
-			//3.count char:
 			j = get_var(line + i, envp, wd_len);
 			if (envp[j] != NULL)
 				count += (ft_strlen(envp[j]) - (wd_len + 1));
-			/*ft_printf_fd(1, "$ENV: %s\n", envp[j]);*/
-			/*ft_printf_fd(1, "count + $ENV: %d\n", count);*/
 			count -= (wd_len + 1);
-			/*ft_printf_fd(1, "count - wd_len: %d\n", count);*/
 		}
 		i++;
 	}
 	return (count);
+}
+
+size_t	ft_strlcat_minishell(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+	size_t	j;
+
+	j = ft_strlen(src);
+	i = ft_strlen(dst);
+	j = 0;
+	while ((i + j < (size)) && src[j])
+	{
+		dst[i + j] = src[j];
+		j++;
+	}
+	dst[i + j] = '\0';
+	return (i + j);
 }
 
 /*boucle principale avec calloc + strlcopy / strlcat*/
@@ -120,10 +125,7 @@ char	*expand_line(char *line, char **envp)
 		return (NULL);
 	ft_printf_fd(1, "---------------COUNT--------------\n");
 	if (!find_env_var(line, ft_strlen(line)))
-	{
-		ft_printf_fd(2, "pas trouvé de $ENV\n");
 		return (line);
-	}
 	count = count_total_char(line, ft_strlen(line), envp);
 	ft_printf_fd(1, "count final: %d\n", count);
 	if (count < 0)
@@ -137,24 +139,33 @@ char	*expand_line(char *line, char **envp)
 		ft_printf_fd(1, "Error calloc\n");
 		return (NULL);
 	}
-	ft_printf_fd(1, "calloc réussi\n");
 	i = 0;
-	while (line[i])
+	while (i < (int)ft_strlen(line))
 	{
 		len = find_env_var(line + i, ft_strlen(line + i));
 		if (len == 0 && line[i] != '$')
-			i = ft_strlcat(newline, line + i, count + 1);
+		{
+			ft_strlcat_minishell(newline, line + i, count + 1);
+			i += ft_strlen(line + i);
+		}
 		else if (len == 0 && line[i] == '$')
 		{
-			wd_len = get_var_name(line + i);
-			j = get_var(line + i, envp, wd_len);
-			ft_strlcat(newline, envp[j] + wd_len + 1, count + 1);
+			wd_len = get_var_name(line + i + 1);
+			j = get_var(line + i + 1, envp, wd_len);
+			if (envp[j] != NULL)
+				ft_strlcat_minishell(newline, envp[j] + wd_len + 1, count + 1);
 			i += (wd_len + 1);
 		}
 		else
-			i = ft_strlcat(newline, line + i, len);
+		{
+			ft_printf_fd(1, "len = %d\n", len);
+			ft_strlcat_minishell(newline, line + i, ft_strlen(newline) + len);
+			i += len;
+		}
 	}
 	free(line);
+	if (find_env_var(newline, ft_strlen(newline)))
+		newline = expand_line(newline, envp);
 	ft_printf_fd(1, "NEWLINE:\n%s\n", newline);
 	ft_printf_fd(1, "----------------------------------\n");
 	return (newline);
