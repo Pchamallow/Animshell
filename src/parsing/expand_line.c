@@ -6,7 +6,7 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/16 19:41:55 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/16 22:51:56 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,30 @@
 /*check si $ suivi de char != ? dans line*/
 int	find_env_var(char *line, int len)
 {
-	int	i;
+	int				i;
+	t_quote_type	quote;
 
 	if (!line)
 		return (0);
 	i = 0;
+	quote = NO;
 	while (i < len - 1)
 	{
-		if (line[i] == '$' && line[i + 1] != '$'
+		if (line[i] == '\"')
+		{
+			if (quote == NO)
+				quote = DOUBLE;
+			else if (quote == DOUBLE)
+				quote = NO;
+		}
+		if (line[i] == '\'')
+		{
+			if (quote == NO)
+				quote = SINGLE;
+			else if (quote == SINGLE)
+				quote = NO;
+		}
+		if (quote != SINGLE && line[i] == '$' && line[i + 1] != '$'
 				&& line[i + 1] != '?' && !is_separator(line[i + 1]))
 			return (i);
 		i++;
@@ -59,31 +75,38 @@ int	get_var(char *line, char **envp, int wd_len)
 /*compte nb char*/
 int	count_total_char(char *line, int len, char **envp)
 {
-	int		i;
-	int		j;
-	int		count;
-	int		wd_len;
-	bool	single_quote;
+	int				i;
+	int				j;
+	int				count;
+	int				wd_len;
+	t_quote_type	quote;
 
 	count = len;
-	ft_printf_fd(1, "count avant la boucle: %d\n", count);
+	/*ft_printf_fd(1, "count avant la boucle: %d\n", count);*/
 	i = 0;
-	single_quote = false;
+	quote = NO;
 	while (i < len)
 	{
+		if (line[i] == '\"')
+		{
+			if (quote == NO)
+				quote = DOUBLE;
+			else if (quote == DOUBLE)
+				quote = NO;
+		}
 		if (line[i] == '\'')
 		{
-			if (single_quote == false)
-				single_quote = true;
-			else
-				single_quote = false;
+			if (quote == NO)
+				quote = SINGLE;
+			else if (quote == SINGLE)
+				quote = NO;
 		}
-		if (line[i] == '$' && line[i + 1] != '$'
+		if (quote != SINGLE && line[i] == '$' && line[i + 1] != '$'
 				&& line[i + 1] != '?' && !is_separator(line[i + 1]))
 		{
 			i++;
 			wd_len = get_var_name(line + i);
-			ft_printf_fd(1, "wd_len: %d\n", wd_len);
+			/*ft_printf_fd(1, "wd_len: %d\n", wd_len);*/
 			j = get_var(line + i, envp, wd_len);
 			if (envp[j] != NULL)
 				count += (ft_strlen(envp[j]) - (wd_len + 1));
@@ -123,11 +146,11 @@ char	*expand_line(char *line, char **envp)
 
 	if (!line)
 		return (NULL);
-	ft_printf_fd(1, "---------------COUNT--------------\n");
 	if (!find_env_var(line, ft_strlen(line)))
 		return (line);
+	ft_printf_fd(1, "---------------EXPAND--------------\n");
 	count = count_total_char(line, ft_strlen(line), envp);
-	ft_printf_fd(1, "count final: %d\n", count);
+	/*ft_printf_fd(1, "count final: %d\n", count);*/
 	if (count < 0)
 	{
 		ft_printf_fd(2, "Problem with count_total_char\n");
@@ -158,7 +181,7 @@ char	*expand_line(char *line, char **envp)
 		}
 		else
 		{
-			ft_printf_fd(1, "len = %d\n", len);
+			/*ft_printf_fd(1, "len = %d\n", len);*/
 			ft_strlcat_minishell(newline, line + i, ft_strlen(newline) + len);
 			i += len;
 		}
