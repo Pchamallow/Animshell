@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/17 14:29:17 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:41:25 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,39 +75,51 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 {
 	t_pipe *line;
 	pid_t	pid;
-
+	int		pipefd[minishell->exec.nb_pipes];
+	int		already_output;
+	int		nb_pipes;
+	
+	nb_pipes = 
+	if (minishell->exec.nb_pipes >= 1)
+	{
+		while ()
+	}
+		pipe(pipefd);
 	pid = fork();
 	// printf("ICI = %s\n", minishell->exec.pipe_lst->cmd->value);
 	line = minishell->exec.pipe_lst;
+	already_output = 0;
 	if (pid == 0)
 	{
 		if (line->input != ERROR && line->output != ERROR)
 		{
+			/* INPUT               */
 			if (line->input == IS_FILE && line->output == IS_FILE)
 			{
 				if (dup2(line->infile->fd, STDIN_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
 				if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
-			}
-			
-			else if (line->output == IS_FILE)
-			{
-				if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+				already_output = 1;
 			}
 			
 			else if (line->input == IS_FILE)
 			{
 				if (dup2(line->infile->fd, STDIN_FILENO) == -1)
+				strerror_free_structure(minishell, "dup2", 2);
+			}
+			
+
+			/* OUTPUT                          */
+			if (line->output == IS_FILE && already_output == 0)
+			{
+				if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
 			}
 
-			else if (line->input == IS_FILE && line->output == PIPE)
+			else if (line->output == PIPE && already_output == 0)
 			{
-				if (dup2(line->infile->fd, STDIN_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
-				if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
+				if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
 			}
 
