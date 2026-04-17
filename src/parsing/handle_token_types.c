@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/12 20:46:52 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/15 11:16:47 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,30 @@ void	add_quote_type(t_token *token, char quote)
 		token->quote = DOUBLE;
 }
 
+bool	is_quote_closed(char *line, t_token **token_list,
+		int *index, char quote)
+{
+	int	i;
+
+	i = *index;
+	while (line[i] != quote)
+	{
+		i++;
+		if (line[i] == '\0')
+		{
+			ft_printf_fd(2, "Error: unclosed quotes\n");
+			ft_token_lstclear(token_list);
+			free(line);
+			return (false);
+		}
+	}
+	*index = i;
+	return (true);
+}
+
 /*	handle_quotes creates a token							*/
 /*	with the text inside quotes,							*/
-/*	removing the quotes.									*/
+/*	keeping the quotes.										*/
 /*	It stops and returns 1 in case of unclosed quotes		*/
 int	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 {
@@ -38,17 +59,8 @@ int	handle_quotes(char *line, t_token **token_list, int *index, char quote)
 	/*i++;//pour enlever le quote de debut*/
 	start = i;
 	i++;//pour garder le quote de debut
-	while (line[i] != quote)
-	{
-		i++;
-		if (line[i] == '\0')
-		{
-			ft_printf_fd(2, "Error: unclosed quotes\n");
-			ft_token_lstclear(token_list);
-			free(line);
-			return (1);
-		}
-	}
+	if (!is_quote_closed(line, token_list, &i, quote))
+		return (1);
 	i++;//pour garder le quote de fin
 	len = i - start;
 	ft_token_add_back(token_list,
