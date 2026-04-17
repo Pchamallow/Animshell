@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 14:06:09 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 20:54:16 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ static int	init_outfile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	}
 	if (access(token->value, W_OK) != 0)
 	{
-		// pipe->outfile = NULL;
 		pipe->output = ERROR;
 		minishell->exec.error = 1;
 		return (-1);

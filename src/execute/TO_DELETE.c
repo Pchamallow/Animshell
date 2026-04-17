@@ -13,12 +13,23 @@ void print_double(char **str)
 	}
 }
 
-void print_pauline_type(t_pipe *pipe)
+void print_pauline_pipe(t_pipe *pipe)
 {
+	ft_printf_fd(2, "\nbuilt in : %d\n", pipe->built_in);
+	if (pipe->cmd)
+	{
+		ft_printf_fd(2, "\ncmd : %s\n", pipe->cmd->value);
+		ft_printf_fd(2, "\ncmd args :\n");
+		if (pipe->cmd->cmd_args)
+			print_double(pipe->cmd->cmd_args);
+		else 
+			ft_printf_fd(2, "NONE\n");
+	}
 	if (pipe->infile && pipe->infile->value)
-		ft_printf_fd(2, "%s -> infile : %s\n", pipe->cmd->value, pipe->infile->value);
+		ft_printf_fd(2, "infile : %s\n", pipe->infile->value);
 	if (pipe->outfile && pipe->outfile->value)
-		ft_printf_fd(2, "%s -> outfile : %s\n", pipe->cmd->value, pipe->outfile->value);
+		ft_printf_fd(2, "outfile : %s\n", pipe->outfile->value);
+	ft_printf_fd(2, "------------------------\n");
 }
 
 void	print_pauline(t_minishell *minishell)
@@ -31,11 +42,10 @@ void	print_pauline(t_minishell *minishell)
 		ft_printf_fd(2, "%s\n", token->value);
 		token= token->next;
 	}
-	ft_printf_fd(2, "\nbuilt in : %d\n", minishell->exec.pipe_a->built_in);
-	ft_printf_fd(2, "\ncmd : %s\n", minishell->exec.pipe_a->cmd->value);
-	ft_printf_fd(2, "\ncmd args :\n");
-	print_double(minishell->exec.pipe_a->cmd->cmd_args);
-	ft_printf_fd(2, "------------------------\n");
-	print_pauline_type(minishell->exec.pipe_a);
-	print_pauline_type(minishell->exec.pipe_b);
+	ft_printf_fd(2, "\n\npipe_lst\n");
+	while (minishell->exec.pipe_lst)
+	{
+		print_pauline_pipe(minishell->exec.pipe_lst);
+		minishell->exec.pipe_lst = minishell->exec.pipe_lst->next;
+	}
 }

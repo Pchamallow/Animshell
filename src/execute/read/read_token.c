@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 14:15:53 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/13 20:54:29 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,6 @@ static int	init_cmd(t_minishell *minishell, t_pipe *pipe,
 	nb_cmd_args = nb_args(token);
 	while (token != NULL && (pipes == 0 || i <= pipes))
 	{
-		// ft_printf_fd(2, "read token : %s\n", token->value);
-		// ft_printf_fd(2, "%d\n", nb_cmd_args);
 		if (token->type == IS_CMD)
 		{
 			if (path_cmd(minishell, token, all_paths) == 0)
@@ -255,7 +253,7 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp)
 	if (read_files(minishell, pipe, index_pipes) == -1
 		|| init_cmd(minishell, pipe, all_paths, index_pipes) == -1)
 	{
-		close_fds(minishell);
+		close_fds(minishell, minishell->exec.pipe_lst);
 		free_double(all_paths);
 		return (-1);
 	}

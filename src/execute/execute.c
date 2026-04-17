@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/15 17:28:33 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/17 15:00:30 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,55 @@ void handle_sigint(int sig)
 	write(1, "\nminishell$ ", 12); // réaffiche le prompt
 }
 
-static void init_pipe(t_pipe **pipe)
+static void init_pipe(t_minishell *minishell)
 {
-    *pipe = ft_calloc(1, sizeof(t_pipe));
-    (*pipe)->is_cmd = 0;
-    (*pipe)->nb_args = 0;
-	(*pipe)->built_in = NONE;
-    (*pipe)->input = TERMINAL;
-    (*pipe)->output = TERMINAL;
-    (*pipe)->infile = NULL;
-    (*pipe)->outfile = NULL;
+	t_pipe	*current;
+	int	max;
+	int	i;
+
+	i = 0;
+	max = minishell->exec.nb_pipes;
+	// printf("max = %d\n", max);
+	minishell->exec.pipe_lst = ft_calloc(1, sizeof(t_pipe));
+	if (!minishell->exec.pipe_lst)
+		return ;
+	current = minishell->exec.pipe_lst;
+	while (i <= max)
+	{
+		// printf("ICI\n");
+		current->is_cmd = 0;
+		current->nb_args = 0;
+		current->built_in = NONE;
+		current->input = TERMINAL;
+		current->output = TERMINAL;
+		current->infile = NULL;
+		current->outfile = NULL;
+		if (i < max)
+		{
+			current->next = ft_calloc(1, sizeof(t_pipe));
+			if (!current->next)
+				return ;
+			current = current->next;
+		}
+		i++;
+	}
+}
+
+
+void	nb_pipes(t_minishell *minishell, t_token *first)
+{
+	t_token *token;
+	int		pipes;
+
+	pipes = 0;
+	token = first;
+	while (token)
+	{
+		if (token->type == PIPE)
+			pipes++;
+		token = token->next;
+	}
+	minishell->exec.nb_pipes = pipes;
 }
 
 /*
@@ -41,9 +80,11 @@ Put values 0 or NULL in order to reuse after
 void	init_exec(t_minishell *minishell)
 {
 	t_token *tmp;
-	
-	init_pipe(&minishell->exec.pipe_a);
-	init_pipe(&minishell->exec.pipe_b);
+
+	nb_pipes(minishell, minishell->token);
+	// printf("ICI\n");
+	init_pipe(minishell);
+	// ft_printf_fd(2, "test = %d\n", minishell->exec.pipe_lst->is_cmd);
 
 	minishell->exec.input = 0;
 	minishell->exec.output = 0;
@@ -61,16 +102,35 @@ void	init_exec(t_minishell *minishell)
 	}
 }
 
+void read_all_pipes(t_minishell *minishell, char **envp)
+{
+	t_pipe *pipe;
+	int	max;
+	int	i;
+
+	i = 0;
+	max = minishell->exec.nb_pipes;
+	pipe = minishell->exec.pipe_lst;
+	while (i <= max)
+	{
+		read_tokens(minishell, pipe, envp);
+		if (pipe->cmd)
+			init_args_execve(minishell, pipe);
+		pipe = pipe->next;
+		i++;
+	}
+}
+
 int execute(t_minishell *minishell, char **envp)
 {
 	/*             EXECUTION       V001      */
 	// init_exec(minishell);
-	// read_tokens(minishell, minishell->exec.pipe_a,
+	// read_tokens(minishell, minishell->exec.pipe_lst,
 	// 	minishell->token, envp);
 	// ft_printf_fd(2, "------------------\n");
 	// // read_tokens(minishell, minishell->exec.pipe_b,
 	// // 	minishell->token, envp);
-	// init_args_execve(minishell, minishell->exec.pipe_a);
+	// init_args_execve(minishell, minishell->exec.pipe_lst);
 	// exec_cmd(minishell, envp);
 	// print_pauline(minishell);//TO DELETE
 	/************************************************/
@@ -88,12 +148,13 @@ int execute(t_minishell *minishell, char **envp)
 
 	while (1)
 	{
-		printf("MAIN LOOP PID: %d\n", getpid());
+		// printf("MAIN LOOP PID: %d\n", getpid());
 		line = readline("minishell$ ");
 		if (!line)
 		{
-			printf("exit\n");
+			// free_all(minishell);
 			rl_clear_history();
+			printf("exit\n");
 			exit (0);
 		}
 
@@ -124,26 +185,24 @@ int execute(t_minishell *minishell, char **envp)
 		if (minishell->token)
 		{
 			init_exec(minishell);
-			read_tokens(minishell, minishell->exec.pipe_a, envp);
-			if (minishell->exec.pipe_a->is_cmd == 1)
+			read_all_pipes(minishell, envp);
+			if (minishell->exec.pipe_lst->is_cmd == 1)
 			{
-				init_args_execve(minishell, minishell->exec.pipe_a);
-				if (minishell->exec.pipe_a->built_in == NONE)
-					exec_cmd(minishell, envp);
-				else
+				if (minishell->exec.nb_pipes > 0)
+					exec_cmds_pipe(minishell, envp);
+				else if (minishell->exec.pipe_lst->built_in != NONE)
 					echo(minishell);
-					// execute build in
+				else
+					exec_cmds_pipe(minishell, envp);
+					// exec_cmd_no_pipe(minishell, envp);
 			}
 		}
-		// print_pauline(minishell);// print la commande et les arguments
 		/************************************************/
 		
 		free_all(minishell);
 		
-		// read(STDIN_FILENO, &c, 1);
+		// cat < infile.txt | wc -c > outfile.txt
+		
 	}
-
-	// revenir au terminal normal
-	
 	return (0);
 }
