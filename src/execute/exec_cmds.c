@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 21:56:45 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:29:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,104 +73,58 @@ parent = minishell
 */
 void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 {
-	t_pipe	*pipe_current;
+	t_pipe *line;
 	pid_t	pid;
-	int		pipefd[2];
-	int		prev_pipe;
 
-	pipe_current = minishell->exec.pipe_lst;
-	prev_pipe = -1;
-
-	while (pipe_current)
+	pid = fork();
+	// printf("ICI = %s\n", minishell->exec.pipe_lst->cmd->value);
+	line = minishell->exec.pipe_lst;
+	if (pid == 0)
 	{
-		if (pipe_current->next)
-			pipe(pipefd);
-
-		pid = fork();
-		if (pid == -1)
-			perror("fork");
-
-		if (pid == 0) // children
+		if (line->input != ERROR && line->output != ERROR)
 		{
-			printf("CHILD\n");
-			// STDIN
-			if (pipe_current->infile)
-				dup2(pipe_current->infile->fd, STDIN_FILENO);
-			else if (prev_pipe != -1)
-				dup2(prev_pipe, STDIN_FILENO);
-
-			// STDOUT
-			if (pipe_current->outfile)
-				dup2(pipe_current->outfile->fd, STDOUT_FILENO);
-			else if (pipe_current->next)
-				dup2(pipefd[1], STDOUT_FILENO);
-
-			if (pipe_current->infile)
-				close(pipe_current->infile->fd);
-
-			if (pipe_current->outfile)
+			if (line->input == IS_FILE && line->output == IS_FILE)
 			{
-				ft_printf_fd(2, "close fd\n");
-				close(pipe_current->outfile->fd);
+				if (dup2(line->infile->fd, STDIN_FILENO) == -1)
+					strerror_free_structure(minishell, "dup2", 2);
+				if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
+					strerror_free_structure(minishell, "dup2", 2);
+			}
+			
+			else if (line->output == IS_FILE)
+			{
+				if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
+					strerror_free_structure(minishell, "dup2", 2);
+			}
+			
+			else if (line->input == IS_FILE)
+			{
+				if (dup2(line->infile->fd, STDIN_FILENO) == -1)
+					strerror_free_structure(minishell, "dup2", 2);
 			}
 
-			if (prev_pipe != -1)
-				close(prev_pipe);
-
-			if (pipe_current->next)
+			else if (line->input == IS_FILE && line->output == PIPE)
 			{
-				close(pipefd[0]);
-				close(pipefd[1]);
-				// if (pipe_current->outfile)
-				// 	close(pipe_current->outfile->fd);
+				if (dup2(line->infile->fd, STDIN_FILENO) == -1)
+					strerror_free_structure(minishell, "dup2", 2);
+				if (dup2(line->outfile->fd, STDOUT_FILENO) == -1)
+					strerror_free_structure(minishell, "dup2", 2);
 			}
 
-			execve(pipe_current->cmd->cmd_path,
-				pipe_current->cmd->args_execve, envp);
-
-			perror(pipe_current->cmd->value);
-			exit(127);
+			close_fds(minishell, minishell->exec.pipe_lst);
+			execve(line->cmd->cmd_path, line->cmd->args_execve, envp);
+			perror("execve");
+			
+			free_all(minishell);
+			exit(1);
 		}
-
-		// parent
-		printf("PARENT\n");
-		printf("%s\n", pipe_current->cmd->value);
-	
-		if (pipe_current->infile)
-			close(pipe_current->infile->fd);
-
-		if (pipe_current->outfile)
-		{
-			ft_printf_fd(2, "close fd\n");
-			close(pipe_current->outfile->fd);
-		}
-
-		if (prev_pipe != -1)
-			close(prev_pipe);
-
-		if (pipe_current->next)
-		{
-			close(pipefd[1]);
-			prev_pipe = pipefd[0];
-		}
-
-		pipe_current = pipe_current->next;
-
-		// if (pipe_current->outfile)
-		// {
-		// 	ft_printf_fd(2, "close fd\n");
-		// 	close(pipe_current->outfile->fd);
-		// }
 	}
-
-	// if (pipe_current->outfile->fd)
-	// 	close(pipe_current->outfile->fd);
-		
-	if (prev_pipe != -1)
-		close(prev_pipe);
-
-	while (wait(NULL) > 0)
-		;
+	else
+	{
+		close_fds(minishell, minishell->exec.pipe_lst);
+		waitpid(pid, NULL, 0);
+	}
+	ft_printf_fd(2, "--------------------------------------------\n");
 }
 
 /*

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 21:51:11 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:15:33 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static void init_pipe(t_minishell *minishell)
 	current = minishell->exec.pipe_lst;
 	while (i <= max)
 	{
+		// printf("ICI\n");
 		current->is_cmd = 0;
 		current->nb_args = 0;
 		current->built_in = NONE;
@@ -191,7 +192,8 @@ int execute(t_minishell *minishell, char **envp)
 				else if (minishell->exec.pipe_lst->built_in != NONE)
 					echo(minishell);
 				else
-					exec_cmd_no_pipe(minishell, envp);
+					exec_cmds_pipe(minishell, envp);
+					// exec_cmd_no_pipe(minishell, envp);
 			}
 		}
 		/************************************************/
