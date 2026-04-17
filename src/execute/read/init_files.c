@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 20:54:16 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/17 19:17:12 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ read_files
 
 - if a token in an input, next token is a file input
 - if a token in an output, next token is a file ouput
-
+- if we have a pipe, input = pipe, else if we have infile 
+input = file
 */
 int	read_files(t_minishell *minishell, t_pipe *pipe, int pipes)
 {
@@ -71,7 +72,10 @@ int	read_files(t_minishell *minishell, t_pipe *pipe, int pipes)
 			token->next->file_input = 1;
 		else if (token->type == IS_OUTPUT && token->next != NULL)
 			token->next->file_output = 1;
-		if (token->file_input == 1)
+		
+		if (i == 0 && token->type == PIPE)
+			pipe->input = IS_PIPE;
+		else if (token->file_input == 1)
 		{
 			if ((init_infile(minishell, pipe, token) == 0))
 			{
@@ -81,7 +85,17 @@ int	read_files(t_minishell *minishell, t_pipe *pipe, int pipes)
 			else
 				return (-1);
 		}
-		if (token->file_output == 1)
+		
+		if (i > 0 && i == pipes)
+		{
+			// printf("HOW MANY = %d\n", i);
+			if (token->type == PIPE)
+			{
+				pipe->output = IS_PIPE;
+				// printf("OUPUT PIPE = OUI\n");
+			}
+		}
+		else if (token->file_output == 1)
 		{
 			if (init_outfile(minishell, pipe, token) == 0)
 			{
@@ -91,8 +105,10 @@ int	read_files(t_minishell *minishell, t_pipe *pipe, int pipes)
 			else
 				return (-1);
 		}
+		
 		token = token->next;
 		i++;
 	}
+	printf("output of pipe == %d\n", pipe->output);
 	return (0);
 }

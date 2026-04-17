@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/17 15:00:30 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/17 19:27:05 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ int execute(t_minishell *minishell, char **envp)
 	{
 		// printf("MAIN LOOP PID: %d\n", getpid());
 		line = readline("minishell$ ");
+		// line = "cat < infile.txt | wc > yeay";
 		if (!line)
 		{
 			// free_all(minishell);
@@ -186,21 +187,22 @@ int execute(t_minishell *minishell, char **envp)
 		{
 			init_exec(minishell);
 			read_all_pipes(minishell, envp);
-			if (minishell->exec.pipe_lst->is_cmd == 1)
-			{
-				if (minishell->exec.nb_pipes > 0)
-					exec_cmds_pipe(minishell, envp);
-				else if (minishell->exec.pipe_lst->built_in != NONE)
-					echo(minishell);
-				else
-					exec_cmds_pipe(minishell, envp);
-					// exec_cmd_no_pipe(minishell, envp);
-			}
+			exec_cmds_pipe(minishell, envp);
+			// if (minishell->exec.pipe_lst->is_cmd == 1)
+			// {
+			// 	if (minishell->exec.nb_pipes > 0)
+			// 		exec_cmds_pipe(minishell, envp);
+			// 	else if (minishell->exec.pipe_lst->built_in != NONE)
+			// 		echo(minishell);
+			// 	else
+			// 		exec_cmds_pipe(minishell, envp);
+			// 		// exec_cmd_no_pipe(minishell, envp);
+			// }
 		}
 		/************************************************/
 		
 		free_all(minishell);
-		
+		// break;
 		// cat < infile.txt | wc -c > outfile.txt
 		
 	}

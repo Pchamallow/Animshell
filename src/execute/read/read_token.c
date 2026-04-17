@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 20:54:29 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/17 18:05:10 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,11 @@ int	find_pipe(t_token *token, int lastpipe)
 	if (tmp != NULL && tmp->type == PIPE)
 	{
 		pipe = 1;
-		if (i > 0)
-			i--;
+		// if (i > 0)
+		// 	i--;
 	}
-	// ft_printf_fd(2, "pipe : %d\n", i);
+	ft_printf_fd(2, "pipe index := %d\n", i);
+	// ft_printf_fd(2, "last pipe:= %d\n", lastpipe);
 	return (pipe ? i : 0);
 }
 
@@ -57,7 +58,7 @@ void	next_pipe(t_minishell *minishell, t_token *token, int lastpipe)
 
 	i = 0;
 	tmp = token;
-	while (tmp != NULL && i <= lastpipe)
+	while (tmp != NULL && i < lastpipe)
 	{
 		tmp = tmp->next;
 		i++;	
@@ -237,21 +238,28 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp)
 	char	**all_paths;
 	char	*paths_one_line;
 	int		index_pipes;
-	int		input_pipe;
+	int		error_files;
+	int		error_cmd;
+	// int		input_pipe;
 	t_token	*token;
 
 	token = minishell->exec.last_pipe;
-	input_pipe = 0;
-	if (minishell->exec.last_pipe->type == PIPE)
-		input_pipe = 1;
 
+	printf ("READ TOKENS\n");
+	
+	// input_pipe = 0;
+	// if (minishell->exec.last_pipe->type == PIPE)
+	// 	input_pipe = 1;
+	error_cmd = 0;
+	error_files = 0;
 	/* CMD et Infile et Outfile valides **************************/
 	index_pipes = find_pipe(token, minishell->exec.index_pipe);
 	minishell->exec.index_pipe = index_pipes;
 	paths_one_line = is_path(minishell, envp);
 	all_paths = ft_split(paths_one_line, ':');
-	if (read_files(minishell, pipe, index_pipes) == -1
-		|| init_cmd(minishell, pipe, all_paths, index_pipes) == -1)
+	error_files = read_files(minishell, pipe, index_pipes);
+	error_cmd = init_cmd(minishell, pipe, all_paths, index_pipes);
+	if (!(error_files == 0 && error_cmd == 0))
 	{
 		close_fds(minishell, minishell->exec.pipe_lst);
 		free_double(all_paths);
@@ -263,13 +271,13 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp)
 
 	read_args(minishell, token, pipe);
 
-	if (!pipe->infile)
-	{
-		if (input_pipe == 1)
-			pipe->input = IS_PIPE;
-		// else
-			// pipe->input = 0;
-	}
+	// if (!pipe->infile)
+	// {
+	// 	if (input_pipe == 1)
+	// 		pipe->input = IS_PIPE;
+	// 	// else
+	// 		// pipe->input = 0;
+	// }
 	// il y a un dernier infile, mais il y a une erreure
 	// donc une erreure a print apres echo
 	// if (minishell->exec.input == -1)
