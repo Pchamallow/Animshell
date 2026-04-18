@@ -6,82 +6,19 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/17 19:19:20 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/18 15:03:29 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// static void	close_fds_pipefd(t_minishell *minishell, int *pipefd)
-// {
-// 	close_fds(minishell, minishell->exec.pipe_lst);
-// 	close(pipefd[0]);
-// 	close(pipefd[1]);
-// }
-
-// static void	wrong_pid(t_minishell *minishell, int *pipefd)
-// {
-// 	close_fds_pipefd(minishell, pipefd);
-// 	strerror_free_structure(minishell, "fork", 2);
-// }
-
-// static void	exec_file_to_pipe(t_minishell *minishell, t_pipe *pipe,
-// 	int *pipefd, char **envp)
-// {
-// 	if (dup2(pipe->infile->fd, STDIN_FILENO) == -1)
-// 		strerror_free_structure(minishell, "dup2", 2);
-// 	if (dup2(pipefd[1], STDOUT_FILENO) == -1)
-// 		strerror_free_structure(minishell, "dup2", 2);
-// 	// close_fds(minishell, minishell->exec.pipe_lst);
-// 	// close_fds_pipefd(minishell, pipefd);
-// 	close(pipefd[0]);
-// 	close(pipefd[1]);
-// 	// ft_printf_fd(2, "pipe_lst %s\n", pipe_lst->cmd->value);
-// 	// ft_printf_fd(2, "pipe_lst %s\n", pipe_lst->cmd->cmd_path);
-// 	// ft_printf_fd(2, "pipe_lst %s\n", pipe_lst->cmd->args_execve[0]);
-// 	// print_double(pipe_lst->cmd->args_execve);
-// 	execve(pipe->cmd->cmd_path, pipe->cmd->args_execve, envp);
-// 	perror("execve");
-// 	exit(1);
-// }
-
-// static void	exec_pipe_to_file(t_minishell *minishell, t_pipe *pipe,
-// 	int *pipefd, char **envp)
-// {
-// 	if (dup2(pipefd[0], STDIN_FILENO) == -1)
-// 		strerror_free_structure(minishell, "dup2", 2);
-// 	if (dup2(pipe->outfile->fd, STDOUT_FILENO) == -1)
-// 		strerror_free_structure(minishell, "dup2", 2);
-// 	// close_fds(minishell, minishell->exec.pipe_lst);
-// 	// close_fds_pipefd(minishell, pipefd);
-// 	close(pipefd[0]);
-// 	close(pipefd[1]);
-// 	// ft_printf_fd(2, "pipe_b %s\n", pipe_b->cmd->value);
-// 	// ft_printf_fd(2, "pipe_b %s\n", pipe_b->cmd->cmd_path);
-// 	// ft_printf_fd(2, "pipe_b %s\n", pipe_b->cmd->args_execve[0]);
-// 	// print_double(pipe_b->cmd->args_execve);
-// 	execve(pipe->cmd->cmd_path, pipe->cmd->args_execve, envp);
-// 	perror("execve");
-// 	exit(1);
-// }
-
-/*
-1. 
-create 2 forks : 1st command + 2nd command = children
-parent = minishell
-
-*/
 void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 {
 	t_pipe *line;
-	// char *line;
 	pid_t	pid;
 	int		pipefd[2];
 	int		already_output;
 	int		input_fd;
-	// int		nb_pipes;
-	// int		input_pipe;
-	// int		output_pipe;
 	int		i;
 	int		pipe_to_execute;
 	
@@ -90,28 +27,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 	pipe_to_execute = minishell->exec.nb_pipes;
 
 	line = minishell->exec.pipe_lst;
-	// printf("cmd 1 = %s\n",  line->cmd->value);
-	// printf("cmd 2 = %s\n",  line->next->cmd->value);
-	// printf("cmd 3 = %s\n",  line->next->next->cmd->value);
-	
-	// printf("nb_pipes = %d\n", pipe_to_execute);
-	// if (nb_pipes >= 1)
-	// {
-	// 	while (nb_pipes)
-	// 	{
-	// 		pipe(pipefd);
-	// 		nb_pipes--;
-	// 	}
-	// }
 
-	/*  avoir le nb de la pipe actuel */
-	// minishell->exec.index_pipe;
-	
-	// pid = fork();
-	// printf("ICI = %s\n", minishell->exec.pipe_lst->cmd->value);
-	// line = "cat";
-	// free(line->cmd->value);
-	// line->cmd->value = "cat";
 	
 	// if (minishell->exec.pipe_lst->next)
 	// 	printf("dernier output = %d\n", minishell->exec.pipe_lst->next->output);
