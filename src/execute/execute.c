@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/18 15:06:45 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/18 18:09:28 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ int execute(t_minishell *minishell, char **envp)
 		if (minishell->token)
 		{
 			init_exec(minishell);
-			read_all_pipes(minishell, envp);
+			// read_all_pipes(minishell, envp);
 			exec_cmds_pipe(minishell, envp);
 			// if (minishell->exec.pipe_lst->is_cmd == 1)
 			// {

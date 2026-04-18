@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/18 15:06:20 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/18 18:09:41 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		pid = fork();
 		already_output = 0;
 
-		// read_tokens(minishell, pipe, envp);
-		// if (pipe->cmd)
-		// 	init_args_execve(minishell, pipe);
+		read_tokens(minishell, current, envp);
+		if (current->cmd)
+			init_args_execve(minishell, current);
 
 		// printf("infile fd== %d\n", current->infile->fd);
 		// input_pipe = minishell->exec.index_pipe;/*  nb pipe - 1 -> le nb de la pipe d avant   */
