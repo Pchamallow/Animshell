@@ -6,7 +6,7 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/16 22:51:56 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/19 17:09:16 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,13 @@ int	find_env_var(char *line, int len)
 	int				i;
 	t_quote_type	quote;
 
-	if (!line)
-		return (0);
+	/*if (!line)*/
+		/*return (-1);*/
 	i = 0;
 	quote = NO;
 	while (i < len - 1)
 	{
+		/*---------- toggle quote -----------*/
 		if (line[i] == '\"')
 		{
 			if (quote == NO)
@@ -38,16 +39,17 @@ int	find_env_var(char *line, int len)
 			else if (quote == SINGLE)
 				quote = NO;
 		}
+		/*----------------------------------*/
 		if (quote != SINGLE && line[i] == '$' && line[i + 1] != '$'
 				&& line[i + 1] != '?' && !is_separator(line[i + 1]))
 			return (i);
 		i++;
 	}
 
-	return (0);
+	return (-1);
 }
 
-int	get_var_name(char *line)
+int	get_var_name_len(char *line)
 {
 	int	wd_len;
 	int	len;
@@ -66,6 +68,8 @@ int	get_var(char *line, char **envp, int wd_len)
 {
 	int	j;
 
+	if (!envp)
+		return (-1);
 	j = 0;
 	while (envp[j] && ft_strncmp(line, envp[j], wd_len) != 0)
 		j++;
@@ -87,6 +91,7 @@ int	count_total_char(char *line, int len, char **envp)
 	quote = NO;
 	while (i < len)
 	{
+		/*---------- toggle quote -----------*/
 		if (line[i] == '\"')
 		{
 			if (quote == NO)
@@ -101,14 +106,15 @@ int	count_total_char(char *line, int len, char **envp)
 			else if (quote == SINGLE)
 				quote = NO;
 		}
+		/*----------------------------------*/
 		if (quote != SINGLE && line[i] == '$' && line[i + 1] != '$'
 				&& line[i + 1] != '?' && !is_separator(line[i + 1]))
 		{
 			i++;
-			wd_len = get_var_name(line + i);
+			wd_len = get_var_name_len(line + i);
 			/*ft_printf_fd(1, "wd_len: %d\n", wd_len);*/
 			j = get_var(line + i, envp, wd_len);
-			if (envp[j] != NULL)
+			if (j != -1 && envp[j] != NULL)
 				count += (ft_strlen(envp[j]) - (wd_len + 1));
 			count -= (wd_len + 1);
 		}
@@ -146,15 +152,20 @@ char	*expand_line(char *line, char **envp)
 
 	if (!line)
 		return (NULL);
-	if (!find_env_var(line, ft_strlen(line)))
+	if (find_env_var(line, ft_strlen(line)) == -1)
 		return (line);
-	ft_printf_fd(1, "---------------EXPAND--------------\n");
+	/*ft_printf_fd(1, "---------------EXPAND--------------\n");*/
 	count = count_total_char(line, ft_strlen(line), envp);
 	/*ft_printf_fd(1, "count final: %d\n", count);*/
 	if (count < 0)
 	{
 		ft_printf_fd(2, "Problem with count_total_char\n");
 		return (line);
+	}
+	if (count == 0)
+	{
+		free(line);
+		return (NULL);
 	}
 	newline = ft_calloc(count + 1, sizeof(char));
 	if (!newline)
@@ -173,9 +184,9 @@ char	*expand_line(char *line, char **envp)
 		}
 		else if (len == 0 && line[i] == '$')
 		{
-			wd_len = get_var_name(line + i + 1);
+			wd_len = get_var_name_len(line + i + 1);
 			j = get_var(line + i + 1, envp, wd_len);
-			if (envp[j] != NULL)
+			if (j != -1 && envp[j] != NULL)
 				ft_strlcat_minishell(newline, envp[j] + wd_len + 1, count + 1);
 			i += (wd_len + 1);
 		}
@@ -187,9 +198,10 @@ char	*expand_line(char *line, char **envp)
 		}
 	}
 	free(line);
-	if (find_env_var(newline, ft_strlen(newline)))
+	//S'il y a des variables qui contiennent des variables, on refait un tour :
+	if (find_env_var(newline, ft_strlen(newline)) != -1)
 		newline = expand_line(newline, envp);
-	ft_printf_fd(1, "NEWLINE:\n%s\n", newline);
-	ft_printf_fd(1, "----------------------------------\n");
+	ft_printf_fd(1, "EXPAND LINE:\n**%s**\n", newline);
+	/*ft_printf_fd(1, "----------------------------------\n");*/
 	return (newline);
 }

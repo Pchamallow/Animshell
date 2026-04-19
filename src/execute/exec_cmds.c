@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/17 14:41:25 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/19 15:23:36 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,14 +77,14 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 	pid_t	pid;
 	int		pipefd[minishell->exec.nb_pipes];
 	int		already_output;
-	int		nb_pipes;
+	/*int		nb_pipes;*/
 	
-	nb_pipes = 
-	if (minishell->exec.nb_pipes >= 1)
-	{
-		while ()
-	}
-		pipe(pipefd);
+	/*nb_pipes = */
+	/*if (minishell->exec.nb_pipes >= 1)*/
+	/*{*/
+		/*while ()*/
+	/*}*/
+		/*pipe(pipefd);*/
 	pid = fork();
 	// printf("ICI = %s\n", minishell->exec.pipe_lst->cmd->value);
 	line = minishell->exec.pipe_lst;

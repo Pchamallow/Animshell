@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/17 15:00:30 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/19 15:57:21 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,10 @@ int execute(t_minishell *minishell, char **envp)
 		line = expand_line(line, envp);
 		if (separate_into_tokens(line, &first_token) != 0
 				|| parse_tokens(line, &first_token) != 0)
+		{
+			minishell->exec.error = 2;
 			continue ;
+		}
 		// *************************************
 		
 		free(line);
