@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/08 22:07:46 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/13 16:19:53 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/19 17:21:07 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_token	*case_heredoc(t_token *token, int *error)
 		delete_next(token);
 	if (!token->next || token->next->type != WORD)
 	{
-		*error = 2;
+		*error = 2;//code retour 2
 		ft_printf_fd(2, "minishell: syntax error after %s\n", token->value);
 		return (token);
 	}
@@ -73,7 +73,7 @@ t_token	*case_redirection(t_token *token, int *error)
 	if (!token->next || token->next->type != WORD)
 	{
 		ft_printf_fd(2, "minishell: syntax error after %s\n", token->value);
-		*error = 1;
+		*error = 1;//code retour 2
 		return (token);
 	}
 	token = token->next;
@@ -150,7 +150,7 @@ t_token	*case_pipe(t_token *token, bool *cmd_found, int *error, t_token **head)
 	if (token == *head || !token->next || token->next->type == PIPE)
 	{
 		ft_printf_fd(2, "minishell: syntax error after %s\n", token->value);
-		*error = 3;
+		*error = 3;//code retour 2
 		return (token);
 	}
 	token = token->next;

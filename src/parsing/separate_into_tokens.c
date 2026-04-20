@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/13 15:28:06 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/19 17:17:02 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ int	separate_into_tokens(char *line, t_token **token_list)
 	int	i;
 
 	i = 0;
+	if (!line)
+		return (1);//dans ce cas, le code de retour ne change pas
 	while (is_whitespace(line[i]))
 		i++;
 	while (line[i])
@@ -84,7 +86,7 @@ int	separate_into_tokens(char *line, t_token **token_list)
 		if (line[i] == '\"' || line[i] == '\'')
 		{
 			if (handle_quotes(line, token_list, &i, line[i]) != 0)
-				return (1);
+				return (1);//mettre le code retour a 2
 		}
 		handle_spaces(line, token_list, &i);
 		if (line[i] == '|')
