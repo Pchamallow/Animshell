@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/17 15:00:16 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 15:55:05 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ typedef struct s_pipe
 	t_token	*cmd;
 	int		is_cmd;
 	int		nb_args;
+	int		error;
 	t_put	input;
 	t_put	output;
 	t_built_in	built_in;
@@ -169,7 +170,8 @@ void	free_all(t_minishell *minishell);
 /*************************************************************** utils */
 int		len_double(char **tab);
 int		len_cmd_no_endspace(char *str);
-void	close_fds(t_minishell* minishell, t_pipe *pipe);
+void	close_fd(int fd);
+void	close_fds_pipe(t_pipe *pipe);
 int		is_sign(char c);
 /*************************************************************** TO_DELETE */
 void print_double(char **str);// section to delete

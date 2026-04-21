@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 12:44:16 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 15:59:07 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	find_pipe(t_token *token, int lastpipe)
 		// if (i > 0)
 		// 	i--;
 	}
-	ft_printf_fd(2, "pipe index := %d\n", i);
+	// ft_printf_fd(2, "pipe index := %d\n", i);
 	// ft_printf_fd(2, "last pipe:= %d\n", lastpipe);
 	return (pipe ? i : 0);
 }
@@ -131,7 +131,13 @@ static int	init_cmd(t_minishell *minishell, t_pipe *pipe,
 				pipe->is_cmd = 1;
 			}
 			else
+			{
+				token->type = WORD;
+				if (pipe->input != ERROR && pipe->output != ERROR)
+					ft_printf_fd(2, "minishell: %s: command not found\n", token->value);
+				minishell->exec.error = 127;
 				return (-1);
+			}
 		}
 		else if (token->type == IS_BUILT_IN)
 		{
@@ -245,7 +251,7 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp)
 
 	token = minishell->exec.last_pipe;
 
-	printf ("READ TOKENS\n");
+	// printf ("READ TOKENS\n");
 	
 	// input_pipe = 0;
 	// if (minishell->exec.last_pipe->type == PIPE)
@@ -262,7 +268,7 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp)
 	if (!(error_files == 0 && error_cmd == 0))
 	{
 		next_pipe(minishell, token, index_pipes);
-		close_fds(minishell, minishell->exec.pipe_lst);
+		// close_fds_pipe(minishell->exec.pipe_lst);
 		free_double(all_paths);
 		return (-1);
 	}

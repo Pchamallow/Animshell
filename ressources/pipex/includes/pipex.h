@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 15:42:57 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/04 17:06:04 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 13:40:10 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	strerror_print(char *filename);
 void	print_error_free(t_parse *parse, char *str, int error);
 void	print_error(char *str, int error);
 /*************************************************************** Utils */
-void	close_fds(t_parse *parse);
+void	close_fds_pipe(t_parse *parse);
 int		len_cmd(char *str);
 int		len_cmd_no_endspace(char *str);
 int		len_double(char **tab);

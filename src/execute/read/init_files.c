@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/17 19:17:12 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 15:25:13 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ static int	init_infile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 		strerror_file(token->value); //NOTE -  print ici ou stocker pour print aprs echo [par exemple] ? 
 	}
 	if (access(token->value, R_OK) != 0)
+	// F_OK pour qu il existe, a verifier
+	// X_OK executable 
 	{
 		// pipe->infile = NULL;
 		pipe->input = ERROR;
@@ -109,6 +111,6 @@ int	read_files(t_minishell *minishell, t_pipe *pipe, int pipes)
 		token = token->next;
 		i++;
 	}
-	printf("output of pipe == %d\n", pipe->output);
+	// printf("output of pipe == %d\n", pipe->output);
 	return (0);
 }

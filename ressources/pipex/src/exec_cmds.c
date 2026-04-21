@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/03/27 17:08:48 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 13:40:10 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	close_all(t_parse *parse, int *pipefd)
 {
-	close_fds(parse);
+	close_fds_pipe(parse);
 	close(pipefd[0]);
 	close(pipefd[1]);
 }
@@ -78,6 +78,6 @@ void	exec_cmds(t_parse *parse, char **envp)
 		else
 			close_all(parse, pipefd);
 	}
-	close_fds(parse);
+	close_fds_pipe(parse);
 	waitpid(pid, NULL, 0);
 }

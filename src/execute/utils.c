@@ -6,22 +6,24 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 12:47:22 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 13:41:54 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	close_fds(t_minishell* minishell, t_pipe *pipe)
+void	close_fds_pipe(t_pipe *pipe)
 {
 	if (pipe->infile && pipe->infile->fd >= 0)
 		close(pipe->infile->fd);
 	if (pipe->outfile && pipe->outfile->fd >= 0)
 		close(pipe->outfile->fd);
-	// if (pipe == minishell->exec.pipe_b)
-	// 	return ;
-	// close_fds(minishell, minishell->exec.pipe_b);
-	(void)minishell;
+}
+
+void	close_fd(int fd)
+{
+	if (fd && fd >= 0)
+		close(fd);
 }
 
 // /* cmd without spaces */

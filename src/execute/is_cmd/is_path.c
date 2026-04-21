@@ -6,18 +6,11 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/11 10:42:22 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 15:54:46 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	no_cmd(t_token *token, int *error)
-{
-	token->type = WORD;
-	ft_printf_fd(2, "%s: command not found\n", token->value);
-	*error = 127;
-}
 
 /*static void	path_explicit(t_minishell *minishell, t_token *token)*/
 /*{*/
@@ -31,8 +24,7 @@ static void	no_cmd(t_token *token, int *error)
 	/*cmd_explicit(minishell, token);*/
 /*}*/
 
-static int	is_valid_path(t_minishell *minishell,
-	t_token *token, char **all_paths, int len)
+static int	is_valid_path(t_token *token, char **all_paths, int len)
 {
 	char	*tmp;
 	int		i;
@@ -50,10 +42,7 @@ static int	is_valid_path(t_minishell *minishell,
 		i++;
 	}
 	if (i >= len + 1)
-	{
-		no_cmd(token, &minishell->exec.error);
 		return (-1);
-	}
 	return (0);
 }
 
@@ -101,7 +90,7 @@ int	path_cmd(t_minishell *minishell, t_token *token, char **all_paths)
 	else if (i == 0)
 	{
 		len = len_double(all_paths);
-		if (is_valid_path(minishell, token, all_paths, len) == -1)
+		if (is_valid_path(token, all_paths, len) == -1)
 			return (-1);
 	}
 	else if (i == -1)
