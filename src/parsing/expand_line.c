@@ -6,7 +6,7 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/19 17:09:16 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/21 23:17:03 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ int	count_total_char(char *line, int len, char **envp)
 	t_quote_type	quote;
 
 	count = len;
-	/*ft_printf_fd(1, "count avant la boucle: %d\n", count);*/
 	i = 0;
 	quote = NO;
 	while (i < len)
@@ -112,7 +111,6 @@ int	count_total_char(char *line, int len, char **envp)
 		{
 			i++;
 			wd_len = get_var_name_len(line + i);
-			/*ft_printf_fd(1, "wd_len: %d\n", wd_len);*/
 			j = get_var(line + i, envp, wd_len);
 			if (j != -1 && envp[j] != NULL)
 				count += (ft_strlen(envp[j]) - (wd_len + 1));
@@ -129,7 +127,10 @@ size_t	ft_strlcat_minishell(char *dst, const char *src, size_t size)
 	size_t	j;
 
 	j = ft_strlen(src);
-	i = ft_strlen(dst);
+	if (dst)
+		i = ft_strlen(dst);
+	else
+		i = 0;
 	j = 0;
 	while ((i + j < (size)) && src[j])
 	{
@@ -169,10 +170,7 @@ char	*expand_line(char *line, char **envp)
 	}
 	newline = ft_calloc(count + 1, sizeof(char));
 	if (!newline)
-	{
-		ft_printf_fd(1, "Error calloc\n");
-		return (NULL);
-	}
+		error_malloc(line, "malloc error in minishell expand line");
 	i = 0;
 	while (i < (int)ft_strlen(line))
 	{

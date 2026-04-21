@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/19 17:17:02 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/21 22:09:32 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,30 +72,32 @@ void	print_tokens(t_token *token)// pour tester
 /*	NOTE: only handle_quotes can return an error				*/
 /*	-> in that case, separate_into_tokens returns 1				*/
 /*	******************************************************		*/
-int	separate_into_tokens(char *line, t_token **token_list)
+int	separate_into_tokens(char *line, t_token **token_list,
+		t_minishell *minishell)
 {
 	int	i;
 
-	i = 0;
-	if (!line)
+	if (!line || line[0] == '0')
+	{
+		if (line)
+			free(line);
 		return (1);//dans ce cas, le code de retour ne change pas
+	}
+	i = 0;
 	while (is_whitespace(line[i]))
 		i++;
 	while (line[i])
 	{
 		if (line[i] == '\"' || line[i] == '\'')
 		{
-			if (handle_quotes(line, token_list, &i, line[i]) != 0)
+			if (handle_quotes(line, token_list, &i, minishell) != 0)
 				return (1);//mettre le code retour a 2
 		}
-		handle_spaces(line, token_list, &i);
-		if (line[i] == '|')
+		else if (line[i] == '|')
 			handle_pipe(line, token_list, &i);
-		handle_spaces(line, token_list, &i);
-		if (line[i] == '>' || line[i] == '<')
+		else if (line[i] == '>' || line[i] == '<')
 			handle_redirection(line, token_list, &i, line[i]);
-		handle_spaces(line, token_list, &i);
-		if (line[i] && !is_separator(line[i]))
+		else if (line[i] && !is_separator(line[i]))
 			handle_words_no_quotes(line, token_list, &i);
 		handle_spaces(line, token_list, &i);
 	}

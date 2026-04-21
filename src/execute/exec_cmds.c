@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/19 15:23:36 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/19 22:53:19 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 					strerror_free_structure(minishell, "dup2", 2);
 			}
 
-			else if (line->output == PIPE && already_output == 0)
+			else if ((int)line->output == (int)PIPE && already_output == 0)
 			{
 				if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);

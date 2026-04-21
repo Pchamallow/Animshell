@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/15 15:38:07 by stkloutz         ###   ########.fr        #
+#    Updated: 2026/04/21 21:39:19 by stkloutz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,6 +50,7 @@ SRCS		:= 											\
 			src/parsing/handle_token_types.c			\
 			src/parsing/separate_into_tokens.c			\
 			src/parsing/parsing_utils.c					\
+			src/parsing/parsing_errors_free.c			\
 			src/parsing/parsing.c						\
 			src/execute/built_in/echo.c					\
 			src/execute/built_in/exec_built_in.c		\
