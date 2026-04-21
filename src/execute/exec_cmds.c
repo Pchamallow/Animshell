@@ -6,12 +6,26 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 16:04:21 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:30:58 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+
+
+
+/*
+
+
+if current + is_next_pipe 
+but current->output == IS_FILE
+== ERROR 
+-> next pipe will receive nothing,
+so we close pipefd[1] == writing
+
+
+*/
 void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 {
 	t_pipe *current;
@@ -53,8 +67,8 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		else 
 			is_next_pipe = 0;
 
-		if (current->input == TERMINAL && is_next_pipe == 1)
-			current->error = 1;
+		// if (current->output ==  && is_next_pipe)
+		// 	current->error = 1;
 		
 		pid = fork();
 		already_output = 0;
@@ -109,7 +123,8 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 					strerror_free_structure(minishell, "dup2", 2);
 			}
 			// printf("already_ouput = %d\n", already_output);
-			else if (current->output == IS_PIPE && already_output == 0)
+			else if (current->output == IS_PIPE
+				&& already_output == 0)
 			{
 				// printf("current OUT PIPE\n");
 				// printf("pipefd 1 = %d\n", pipefd[1]);
@@ -157,7 +172,9 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		close_fds_pipe(current);
 		current = current->next;
 	}
-	waitpid(pid, NULL, 0);
+	while(wait(NULL) > 0);
+	// waitpid(pid, NULL, 0);
+	// waitpid(pid, NULL, 0);
 	// close(input_fd);
 	// close(pipefd[0]);
 	ft_printf_fd(2, "--------------------------------------------\n");

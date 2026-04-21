@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 15:25:13 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:34:55 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,14 +88,12 @@ int	read_files(t_minishell *minishell, t_pipe *pipe, int pipes)
 				return (-1);
 		}
 		
-		if (i > 0 && i == pipes)
+		if (i > 0 && i == pipes && pipe->output != IS_FILE)
 		{
 			// printf("HOW MANY = %d\n", i);
 			if (token->type == PIPE)
-			{
 				pipe->output = IS_PIPE;
 				// printf("OUPUT PIPE = OUI\n");
-			}
 		}
 		else if (token->file_output == 1)
 		{

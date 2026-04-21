@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 15:31:33 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:42:09 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,14 @@ void	nb_pipes(t_minishell *minishell, t_token *first)
 	minishell->exec.nb_pipes = pipes;
 }
 
+void init_paths_for_search_cmd(t_minishell *minishell, char **envp)
+{
+	char *paths_one_line;
+
+	paths_one_line = is_path(minishell, envp);
+	minishell->exec.paths_for_search_cmd = ft_split(paths_one_line, ':');
+}
+
 /*
 Put values 0 or NULL in order to reuse after
 1 for input and output for terminal by default
@@ -83,9 +91,7 @@ void	init_exec(t_minishell *minishell)
 	t_token *tmp;
 
 	nb_pipes(minishell, minishell->token);
-	// printf("ICI\n");
 	init_pipe(minishell);
-	// ft_printf_fd(2, "test = %d\n", minishell->exec.pipe_lst->is_cmd);
 
 	minishell->exec.input = 0;
 	minishell->exec.output = 0;
@@ -146,7 +152,9 @@ int execute(t_minishell *minishell, char **envp)
 
 	first_token = NULL;
 	minishell->exec.error = 0;
-
+	
+	init_paths_for_search_cmd(minishell, envp);	
+	
 	while (1)
 	{
 		// printf("MAIN LOOP PID: %d\n", getpid());
@@ -157,6 +165,7 @@ int execute(t_minishell *minishell, char **envp)
 			// free_all(minishell);
 			rl_clear_history();
 			printf("exit\n");
+			free_double(minishell->exec.paths_for_search_cmd);
 			exit (0);
 		}
 
@@ -207,5 +216,6 @@ int execute(t_minishell *minishell, char **envp)
 		// cat < infile.txt | wc -c > outfile.txt
 		
 	}
+	free_double(minishell->exec.paths_for_search_cmd);
 	return (0);
 }
