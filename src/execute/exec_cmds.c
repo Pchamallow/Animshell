@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 16:47:35 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 17:03:22 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 				// printf("pas de probleme fd \n");
 				close_fd(input_fd);
 			}
+			
 			
 
 			/* OUTPUT                          */
