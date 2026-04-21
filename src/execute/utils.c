@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 19:40:23 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 12:47:22 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	close_fds(t_minishell* minishell, t_pipe *pipe)
 {
-	if (pipe->infile)
+	if (pipe->infile && pipe->infile->fd >= 0)
 		close(pipe->infile->fd);
-	if (pipe->outfile)
+	if (pipe->outfile && pipe->outfile->fd >= 0)
 		close(pipe->outfile->fd);
 	// if (pipe == minishell->exec.pipe_b)
 	// 	return ;
