@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 17:03:22 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 18:07:37 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 	at_least_one_pipe = 0;
 	while (current)
 	{
-		
+		printf("new command -----------------------\n");
 		if (read_tokens(minishell, current) != -1)
 		{
 			if (current->cmd)
@@ -56,6 +56,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			printf("WRONG CMD OR FILE\n");
 			current->error = 1;
 		}
+		printf("exec command = %s\n", current->cmd->value);
 		
 		if (current->next)
 		{
@@ -163,9 +164,9 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		// printf("pipe to execute = %d\n", pipe_to_execute);
 		if (is_next_pipe)
 		{
-			printf("releve de input fd\n");
+			// printf("releve de input fd\n");
 			input_fd = pipefd[0];
-			printf("input_fd = %d\n", input_fd);
+			// printf("input_fd = %d\n", input_fd);
 			close_fd(pipefd[1]);
 		}
 		else if (at_least_one_pipe)

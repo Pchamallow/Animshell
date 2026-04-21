@@ -8,29 +8,8 @@ display cmd->cmd_args[1]
 
 
 
-ssvgsc < infile | wc
-cmd = NULL
-pipefd
-input = 0
-output = 3
-
-output IS_PIPE
-dup2 pipefd[1] et stdout
-
-is next pipe 
-close close
-pas de execve
-
-free all 
-exit 
 
 
+cat > infile.txt | wc | cat
 
-pas de infile
-
-cmd null
-pipefd
-0  et 3 input output 
-dup2 pipef[1] stdout 
-is next pipe 
-close close
+minishell->exec.index_pipe

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 16:48:09 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 18:00:01 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,33 @@ void init_paths_for_search_cmd(t_minishell *minishell, char **envp)
 	minishell->exec.paths_for_search_cmd = ft_split(paths_one_line, ':');
 }
 
+int find_first_pipe(t_token *token)
+{
+	t_token *tmp;
+	int pipe;
+	int i;
+
+	i = 0;
+	pipe = 0;
+	tmp = token;
+	// printf("-------------------start find pipe actuel\n");
+	while (tmp != NULL && tmp->type != PIPE)
+	{
+		// printf("%s\n", tmp->value);
+		tmp = tmp->next;
+		i++;
+	}
+	if (tmp != NULL && tmp->type == PIPE)
+	{
+		// printf("%s\n", tmp->value);
+		pipe = 1;
+	}
+	// ft_printf_fd(2, "pipe index := %d\n", i);
+	// ft_printf_fd(2, "last pipe:= %d\n", lastpipe);
+	// printf("-------------------end find pipe actuel\n");
+	return (pipe ? i : 0);
+}
+
 /*
 Put values 0 or NULL in order to reuse after
 1 for input and output for terminal by default
@@ -89,13 +116,18 @@ Put values 0 or NULL in order to reuse after
 void	init_exec(t_minishell *minishell)
 {
 	t_token *tmp;
+	int		first_pipe;
 
 	nb_pipes(minishell, minishell->token);
 	init_pipe(minishell);
 
+	// trouver la 1ere pipe
+	first_pipe = find_first_pipe(minishell->token);
+	minishell->exec.index_pipe = first_pipe;
+	// printf("nouvel index de la pipe = %d\n", minishell->exec.index_pipe);
+
 	minishell->exec.input = 0;
 	minishell->exec.output = 0;
-	minishell->exec.index_pipe = 0;
 	minishell->exec.last_pipe = minishell->token;
 	tmp = minishell->token;
 	while (tmp != NULL)
@@ -153,7 +185,7 @@ int execute(t_minishell *minishell, char **envp)
 	first_token = NULL;
 	minishell->exec.error = 0;
 	
-	init_paths_for_search_cmd(minishell, envp);	
+	init_paths_for_search_cmd(minishell, envp);
 	
 	while (1)
 	{

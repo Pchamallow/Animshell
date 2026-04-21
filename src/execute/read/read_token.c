@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 16:47:17 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 18:12:12 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,54 +19,44 @@ void free_cpy(char **dst, char *src)
 	*dst = ft_strdup(src);
 }
 
-/*
-TODO verifier que ca fait bien toute la pipe
-*/
-int find_pipe(t_token *token, int lastpipe)
+void next_pipe(t_minishell *minishell, t_token *token)
 {
 	t_token *tmp;
-	int pipe;
-	int i;
-	int skip;
-
-	pipe = 0;
-	i = 0;
-	skip = 0;
-	tmp = token;
-	while (tmp != NULL && tmp->type != PIPE)
-	{
-		tmp = tmp->next;
-		if (i >= lastpipe)
-			i++;
-		skip++;
-	}
-	if (tmp != NULL && tmp->type == PIPE)
-	{
-		pipe = 1;
-		// if (i > 0)
-		// 	i--;
-	}
-	// ft_printf_fd(2, "pipe index := %d\n", i);
-	// ft_printf_fd(2, "last pipe:= %d\n", lastpipe);
-	return (pipe ? i : 0);
-}
-
-void next_pipe(t_minishell *minishell, t_token *token, int lastpipe)
-{
-	t_token *tmp;
-	int i;
+	int		i;
+	int		is_pipe;
 
 	i = 0;
+	is_pipe = 0;
 	tmp = token;
-	while (tmp != NULL && i < lastpipe)
+	// printf("%s\n", tmp->value);
+	// printf("-------------------start search next pipe\n");
+	// printf("old last_pipe index = %d\n", lastpipe);
+
+	while (tmp)
 	{
+		// printf("%s\n", tmp->value);
+		if (i > 0 && tmp->type == PIPE)
+		{
+			is_pipe = 1;
+			if (tmp->next)
+				tmp = tmp->next;
+			break;
+		}
 		tmp = tmp->next;
 		i++;
 	}
-	while (tmp != NULL && tmp->type != PIPE)
-		tmp = tmp->next;
-	if (tmp != NULL && tmp->type == PIPE)
-		minishell->exec.last_pipe = tmp;
+	if (tmp)
+	{
+		if (is_pipe)
+		{
+			// printf("new last_pipe value -> %s\n", tmp->value);
+			minishell->exec.last_pipe = tmp;
+			minishell->exec.index_pipe = minishell->exec.index_pipe + i;
+		}
+		else
+			minishell->exec.index_pipe = -1;
+	}
+	// printf("-------------------end search next pipe\n");
 }
 
 int nb_args(t_token *token)
@@ -111,44 +101,43 @@ B. IS_BUILT_IN
 C. if there is a command and at least one arg
 = initialisation tab args
 */
-static int init_cmd(t_minishell *minishell, t_pipe *pipe, int pipes)
+static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *token;
 	int nb_cmd_args;
-	int i;
 
-	i = 0;
 	token = minishell->exec.last_pipe;
 	nb_cmd_args = nb_args(token);
-	while (token != NULL && (pipes == 0 || i <= pipes))
+	// printf("----------------------begin init_cmd\n");
+
+	if (token->type == PIPE)
+		token = token->next;
+	else if (token->type == IS_CMD)
 	{
-		if (token->type == IS_CMD)
+		if (path_cmd(minishell, token) == 0)
 		{
-			if (path_cmd(minishell, token) == 0)
-			{
-				pipe->cmd = token;
-				pipe->is_cmd = 1;
-			}
-			else
-			{
-				token->type = WORD;
-				if (pipe->input != ERROR && pipe->output != ERROR)
-					ft_printf_fd(2, "minishell: %s: command not found\n", token->value);
-				minishell->exec.error = 127;
-				return (-1);
-			}
-		}
-		else if (token->type == IS_BUILT_IN)
-		{
-			is_built_in(pipe, token);
 			pipe->cmd = token;
 			pipe->is_cmd = 1;
 		}
-		token = token->next;
-		i++;
+		else
+		{
+			token->type = WORD;
+			if (pipe->input != ERROR && pipe->output != ERROR)
+				ft_printf_fd(2, "minishell: %s: command not found\n", token->value);
+			minishell->exec.error = 127;
+			return (-1);
+		}
+	}
+	else if (token->type == IS_BUILT_IN)
+	{
+		is_built_in(pipe, token);
+		pipe->cmd = token;
+		pipe->is_cmd = 1;
 	}
 	if (pipe->is_cmd == 1 && nb_cmd_args > 0)
 		init_cmd_args(minishell, pipe, nb_cmd_args);
+	// printf("----------------------end init_cmd\n");
+	
 	return (0);
 }
 
@@ -235,15 +224,12 @@ Pipe :
 */
 int read_tokens(t_minishell *minishell, t_pipe *pipe)
 {
-	// char **all_paths;
-	// char *paths_one_line;
-	int index_pipes;
 	int error_files;
 	int error_cmd;
-	// int		input_pipe;
 	t_token *token;
 
 	token = minishell->exec.last_pipe;
+	// printf("token actuel = %s\n", token->value);
 
 	// printf ("READ TOKENS\n");
 
@@ -253,22 +239,21 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 	error_cmd = 0;
 	error_files = 0;
 	/* CMD et Infile et Outfile valides **************************/
-	index_pipes = find_pipe(token, minishell->exec.index_pipe);
-	minishell->exec.index_pipe = index_pipes;
-	// paths_one_line = is_path(minishell, envp);
-	// all_paths = ft_split(paths_one_line, ':');
-	error_files = read_files(minishell, pipe, index_pipes);
-	error_cmd = init_cmd(minishell, pipe, index_pipes);
+	// printf("ancien index de la pipe = %d\n", minishell->exec.index_pipe);
+	// index_pipes = find_pipe(token, minishell->exec.index_pipe);
+	// printf("nouvel index de la pipe = %d\n", index_pipes);
+	// minishell->exec.index_pipe = index_pipes;
+	error_files = read_files(minishell, pipe, minishell->exec.index_pipe);
+	error_cmd = init_cmd(minishell, pipe);
+	// printf("read index de la pipe = %d\n", minishell->exec.index_pipe);
 	if (!(error_files == 0 && error_cmd == 0))
 	{
-		next_pipe(minishell, token, index_pipes);
-		// close_fds_pipe(minishell->exec.pipe_lst);
-		// free_double(all_paths);
+		next_pipe(minishell, token);
 		return (-1);
 	}
 	/**************************************************************/
 
-	next_pipe(minishell, token, index_pipes);
+	next_pipe(minishell, token);
 
 	read_args(minishell, token, pipe);
 
