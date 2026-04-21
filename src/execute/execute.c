@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 16:42:09 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:48:09 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,24 +109,24 @@ void	init_exec(t_minishell *minishell)
 	}
 }
 
-void read_all_pipes(t_minishell *minishell, char **envp)
-{
-	t_pipe *pipe;
-	int	max;
-	int	i;
+// void read_all_pipes(t_minishell *minishell, char **envp)
+// {
+// 	t_pipe *pipe;
+// 	int	max;
+// 	int	i;
 
-	i = 0;
-	max = minishell->exec.nb_pipes;
-	pipe = minishell->exec.pipe_lst;
-	while (i <= max)
-	{
-		read_tokens(minishell, pipe, envp);
-		if (pipe->cmd)
-			init_args_execve(minishell, pipe);
-		pipe = pipe->next;
-		i++;
-	}
-}
+// 	i = 0;
+// 	max = minishell->exec.nb_pipes;
+// 	pipe = minishell->exec.pipe_lst;
+// 	while (i <= max)
+// 	{
+// 		read_tokens(minishell, pipe, envp);
+// 		if (pipe->cmd)
+// 			init_args_execve(minishell, pipe);
+// 		pipe = pipe->next;
+// 		i++;
+// 	}
+// }
 
 int execute(t_minishell *minishell, char **envp)
 {

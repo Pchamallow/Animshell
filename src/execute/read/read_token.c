@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 16:36:36 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:47:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,7 @@ B. IS_BUILT_IN
 C. if there is a command and at least one arg
 = initialisation tab args
 */
-static int init_cmd(t_minishell *minishell, t_pipe *pipe,
-					char **all_paths, int pipes)
+static int init_cmd(t_minishell *minishell, t_pipe *pipe, int pipes)
 {
 	t_token *token;
 	int nb_cmd_args;
@@ -125,7 +124,7 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe,
 	{
 		if (token->type == IS_CMD)
 		{
-			if (path_cmd(minishell, token, all_paths) == 0)
+			if (path_cmd(minishell, token) == 0)
 			{
 				pipe->cmd = token;
 				pipe->is_cmd = 1;
@@ -234,10 +233,10 @@ Pipe :
 -> ouput pipe : output to next pipe
 
 */
-int read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp)
+int read_tokens(t_minishell *minishell, t_pipe *pipe)
 {
-	char **all_paths;
-	char *paths_one_line;
+	// char **all_paths;
+	// char *paths_one_line;
 	int index_pipes;
 	int error_files;
 	int error_cmd;
@@ -256,15 +255,15 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp)
 	/* CMD et Infile et Outfile valides **************************/
 	index_pipes = find_pipe(token, minishell->exec.index_pipe);
 	minishell->exec.index_pipe = index_pipes;
-	paths_one_line = is_path(minishell, envp);
-	all_paths = ft_split(paths_one_line, ':');
+	// paths_one_line = is_path(minishell, envp);
+	// all_paths = ft_split(paths_one_line, ':');
 	error_files = read_files(minishell, pipe, index_pipes);
-	error_cmd = init_cmd(minishell, pipe, all_paths, index_pipes);
+	error_cmd = init_cmd(minishell, pipe, index_pipes);
 	if (!(error_files == 0 && error_cmd == 0))
 	{
 		next_pipe(minishell, token, index_pipes);
 		// close_fds_pipe(minishell->exec.pipe_lst);
-		free_double(all_paths);
+		// free_double(all_paths);
 		return (-1);
 	}
 	/**************************************************************/
@@ -284,6 +283,5 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp)
 	// donc une erreure a print apres echo
 	// if (minishell->exec.input == -1)
 	// ft_printf_fd(2, "ici\n");
-	free_double(all_paths);
 	return (0);
 }

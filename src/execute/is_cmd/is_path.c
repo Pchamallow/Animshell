@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 15:54:46 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:46:40 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,17 @@
 	/*cmd_explicit(minishell, token);*/
 /*}*/
 
-static int	is_valid_path(t_token *token, char **all_paths, int len)
+static int	is_valid_path(t_minishell *minishell, t_token *token)
 {
 	char	*tmp;
 	int		i;
+	int		len;
 
 	i = 0;
-	while (all_paths[i] && i <= len)
+	len = len_double(minishell->exec.paths_for_search_cmd);
+	while (minishell->exec.paths_for_search_cmd[i] && i <= len)
 	{
-		tmp = ft_strjoin(all_paths[i], "/");
+		tmp = ft_strjoin(minishell->exec.paths_for_search_cmd[i], "/");
 		token->cmd_path = ft_strjoin(tmp, token->value);
 		free(tmp);
 		if (access(token->cmd_path, X_OK) == 0)
@@ -70,7 +72,7 @@ static int	path_type(t_exec *exec, char *token)
 	return (0);
 }
 
-int	path_cmd(t_minishell *minishell, t_token *token, char **all_paths)
+int	path_cmd(t_minishell *minishell, t_token *token)
 {
 	int		i;
 	int		len;
@@ -81,16 +83,12 @@ int	path_cmd(t_minishell *minishell, t_token *token, char **all_paths)
 		len = len_cmd_no_endspace(token->value) + 1;
 		token->cmd_path = ft_calloc(sizeof(char *), len);
 		if (!token->cmd_path)
-		{
-			free_double(all_paths);
 			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-		}
 		ft_strlcpy(token->cmd_path, token->value, len);
 	}
 	else if (i == 0)
 	{
-		len = len_double(all_paths);
-		if (is_valid_path(token, all_paths, len) == -1)
+		if (is_valid_path(minishell, token) == -1)
 			return (-1);
 	}
 	else if (i == -1)

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 16:38:51 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:47:26 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,9 +134,9 @@ typedef struct s_minishell
 int		main(int argc, char **argv, char **envp);
 /************************************************************* execute */
 int		execute(t_minishell *minishell, char **envp);
-int		read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp);
+int		read_tokens(t_minishell *minishell, t_pipe *pipe);
 int		read_files(t_minishell *minishell, t_pipe *pipe, int pipes);
-int		path_cmd(t_minishell *minishell, t_token *token, char **all_paths);
+int		path_cmd(t_minishell *minishell, t_token *token);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
 char	*is_path(t_minishell *minishell, char **envp);
 void	is_built_in(t_pipe *the_pipe, t_token *token);

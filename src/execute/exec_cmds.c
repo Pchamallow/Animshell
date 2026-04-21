@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 16:30:58 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:47:35 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 	while (current)
 	{
 		
-		if (read_tokens(minishell, current, envp) != -1)
+		if (read_tokens(minishell, current) != -1)
 		{
 			if (current->cmd)
 				init_args_execve(minishell, current);
