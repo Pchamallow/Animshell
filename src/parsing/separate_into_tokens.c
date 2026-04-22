@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/19 17:17:02 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/21 22:09:32 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ int	separate_into_tokens(char *line, t_token **token_list)
 	int	i;
 
 	i = 0;
-	if (!line)
-		return (1);//dans ce cas, le code de retour ne change pas
 	while (is_whitespace(line[i]))
 		i++;
 	while (line[i])

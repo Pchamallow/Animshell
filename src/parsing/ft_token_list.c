@@ -70,11 +70,8 @@ void	ft_token_add_back(t_token **head, t_token *newer, char *line)
 
 void	ft_token_delone(t_token *lst, void (*del)(void *))
 {
-	// printf(" ! DELETE ! \n");
 	if (!lst || !del)
 		return ;
-	// printf("value = %s\n", lst->value);
-	// printf("fd = %d\n", lst->fd);
 	del(lst->value);
 	if (lst->cmd_path)
 		free(lst->cmd_path);
@@ -99,7 +96,6 @@ void	ft_token_lstclear(t_token **head)
 	if (!head)
 		return ;
 	current = *head;
-	// printf("-----------------DELETE\n");
 	while (current)
 	{
 		// printf("FREE = %s\n", current->value);
