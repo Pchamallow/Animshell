@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 19:01:04 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 19:05:22 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 	at_least_one_pipe = 0;
 	while (current)
 	{
-		printf(ERROR_MSG("new command -----------------------\n"));
+		// printf(ERROR_MSG("new command -----------------------\n"));
 		if (read_tokens(minishell, current) != -1)
 		{
 			if (current->cmd)
@@ -53,12 +53,12 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		}
 		else
 		{
-			printf("WRONG CMD OR FILE\n");
+			// printf("WRONG CMD OR FILE\n");
 			current->error = 1;
 		}
 		//print
-		if (current->cmd)
-			printf("exec command = %s\n", current->cmd->value);
+		// if (current->cmd)
+		// 	printf("exec command = %s\n", current->cmd->value);
 		
 		if (current->next)
 		{
@@ -87,8 +87,8 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		// printf("output pipe == %d\n", output_pipe);
 		if (pid == 0)
 		{
-			printf("current->input = %d\n", current->input);
-			printf("current->output = %d\n", current->output);
+			// printf("current->input = %d\n", current->input);
+			// printf("current->output = %d\n", current->output);
 
 			/* INPUT               */
 			if (current->input == IS_FILE && current->output == IS_FILE)
