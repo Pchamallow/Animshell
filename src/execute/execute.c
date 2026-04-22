@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 12:38:25 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 18:03:27 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ int find_first_pipe(t_token *token)
 	return (pipe ? i : 0);
 }
 
-
 /* 
 Find nb of pipes, 
 fill 0 or NULL,
@@ -117,6 +116,8 @@ find the PATH (split each little paths)
 */
 void init_line_to_exec(t_minishell *minishell, char **envp)
 {	
+	// env -i -> retirer envp
+	strv_dup(minishell, &minishell->exec.envp, envp);
 	minishell->exec.nb_pipes = nb_pipes(minishell->token);
 	init_pipe(minishell);
 	init_paths_for_search_cmd(minishell, envp);
@@ -128,7 +129,6 @@ void	init_exec(t_minishell *minishell)
 	t_token *tmp;
 	int		first_pipe;
 
-	// trouver la 1ere pipe
 	first_pipe = find_first_pipe(minishell->token);
 	minishell->exec.index_pipe = first_pipe;
 	// printf("nouvel index de la pipe = %d\n", minishell->exec.index_pipe);
@@ -137,6 +137,7 @@ void	init_exec(t_minishell *minishell)
 	minishell->exec.output = 0;
 	minishell->exec.last_pipe = minishell->token;
 	minishell->exec.paths_for_search_cmd = NULL;
+	minishell->exec.envp = NULL;
 	tmp = minishell->token;
 	while (tmp != NULL)
 	{
@@ -170,6 +171,7 @@ int execute(t_minishell *minishell, char **envp)
 		if (!line)
 		{
 			// free_all(minishell);
+			// free_strv(minishell->exec.envp);
 			rl_clear_history();
 			printf("exit\n");
 			exit (0);
@@ -220,10 +222,7 @@ int execute(t_minishell *minishell, char **envp)
 		/************************************************/
 		
 		free_all(minishell);
-		// break;
-		// cat < infile.txt | wc -c > outfile.txt
 		
 	}
-	// free_double(minishell->exec.paths_for_search_cmd);
 	return (0);
 }

@@ -9,6 +9,14 @@
     2. create echo in order to receive characters
 
 
+|Utils||
+|-|-|
+|strv_dup| malloc a char **str and copy from a char **str |
+|free_strv| free a char **str |
+
+
+
+
 initialisation of environnement
 get_username = for the prompt we have "username@hostname$ "coucou
 README.md

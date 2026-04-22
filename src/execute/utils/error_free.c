@@ -6,48 +6,26 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 12:31:45 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 18:13:18 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_double(char **tab)
+void	free_strv(char **array)
 {
 	int	i;
 
 	i = 0;
-	if (!tab)
+	if (!array)
 		return ;
-	while (tab[i])
+	while (array[i])
 	{
-		free(tab[i]);
+		free(array[i]);
 		i++;
 	}
-	free(tab);
+	free(array);
 }
-
-// void	free_structure(t_minishell *minishell)
-// {
-// 	t_token *token;
-
-// 	token = &minishell->token;
-// 	while (token.value != NULL)
-// 	{
-		
-// 	}
-// 	if (type->close == 0)
-// 		close(type->fd);
-// 	if (type->options)
-// 		free_double(type->options, type->nb_opt);
-// 	if (type->cmd_path)
-// 		free(type->cmd_path);
-// 	if (type->args_execve)
-// 		free_double(type->args_execve, type->nb_opt + 1);
-// 	if (i == 1)
-// 		return ;
-// 	free_structure(&parse->out, parse, 1);
-// }
 
 void	lst_pipe_clear(t_pipe **head)
 {
@@ -67,9 +45,11 @@ void	lst_pipe_clear(t_pipe **head)
 }
 void	free_all(t_minishell *minishell)
 {
-	ft_token_lstclear(minishell->exec.first_token);
+	if (minishell->exec.envp)
+		free_strv(minishell->exec.envp);
 	if (minishell->exec.paths_for_search_cmd)
-		free_double(minishell->exec.paths_for_search_cmd);
+		free_strv(minishell->exec.paths_for_search_cmd);
+	ft_token_lstclear(minishell->exec.first_token);
 	lst_pipe_clear(&minishell->exec.pipe_lst);
 	// print_pauline(minishell);// print la commande et les arguments
 }

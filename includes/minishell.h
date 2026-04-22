@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 13:11:20 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 17:07:58 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ typedef struct s_exec
 	char		*file_input;
 	char		*file_output;
 	char		**paths_for_search_cmd;
+	char		**envp;
 	int			error;
 	int			input; // -1 file invalide, 0 pas de input, 1 = file, 2 = pipe
 	int			output; // 0 pas de output(donc terminal), 1 = file, 2 = pipe
@@ -166,7 +167,7 @@ void	add_args(t_minishell *minishell, t_pipe *pipe, t_token *token);
 int		term_raw_mode(struct termios *oldt, struct termios *newt);
 /********************************************************** error_free */
 void	print_error_free(t_minishell *minishell, char *str, int error);
-void	free_double(char **tab);
+void	free_strv(char **array);
 void	strerror_file(char *filename);
 void	strerror_free_structure(t_minishell *minishell, char *filename, int error);
 void	error_cmd_args(t_minishell *minishell, char *cmd, char *filename);
@@ -178,6 +179,8 @@ int		len_cmd_no_endspace(char *str);
 void	close_fd(int fd);
 void	close_fds_pipe(t_pipe *pipe);
 int		is_sign(char c);
+int	strv_dup(t_minishell *minishell, char ***dst, char **src);
+
 /*************************************************************** TO_DELETE */
 void print_double(char **str);// section to delete
 bool find_built_in(char *token);

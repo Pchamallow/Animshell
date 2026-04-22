@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:14:01 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/21 13:08:22 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 16:46:47 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,9 @@ void	ft_token_delone(t_token *lst, void (*del)(void *))
 	if (lst->path_explicite)
 		free(lst->path_explicite);
 	if (lst->cmd_args)
-		free_double(lst->cmd_args);
+		free_strv(lst->cmd_args);
 	if (lst->args_execve)
-		free_double(lst->args_execve);
+		free_strv(lst->args_execve);
 	// if (lst->fd) // si >= 0 exit tout 
 	if (lst->fd && lst->fd >= 0) // si >= 0 exit tout 
 		close(lst->fd);
