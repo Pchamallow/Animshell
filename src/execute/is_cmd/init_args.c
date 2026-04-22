@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 13:12:46 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/09 21:07:24 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 16:46:47 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 // }
 static void	free_tab(t_minishell *minishell, char **tab)
 {
-	free_double(tab);
+	free_strv(tab);
 	print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 }
 

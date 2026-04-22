@@ -12,6 +12,11 @@ display token->value
 
 
 cat < infile.txt | wc | cat
+cat < infile.txt > outfile.txt | wc | cat
 cat < infile.txt | wc
+cat < infile.txt > outfile.txt | wc > outfile.txt
 
 minishell->exec.index_pipe
+
+p minishell->exec.envp[0]
+p minishell->exec.envp
