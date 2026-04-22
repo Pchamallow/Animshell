@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 11:00:17 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 11:12:42 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,9 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 				// print_pipefd(pipefd[0], pipefd[1]);
 			}
 
+
+
+			
 			
 			// else
 			// {
