@@ -12,6 +12,7 @@ display token->value
 
 
 cat < infile.txt | wc | cat
+cat < infile.txt > outfile.txt | wc | cat
 cat < infile.txt | wc
 
 minishell->exec.index_pipe

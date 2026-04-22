@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 10:48:25 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 12:31:45 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void	lst_pipe_clear(t_pipe **head)
 void	free_all(t_minishell *minishell)
 {
 	ft_token_lstclear(minishell->exec.first_token);
+	if (minishell->exec.paths_for_search_cmd)
+		free_double(minishell->exec.paths_for_search_cmd);
 	lst_pipe_clear(&minishell->exec.pipe_lst);
 	// print_pauline(minishell);// print la commande et les arguments
 }

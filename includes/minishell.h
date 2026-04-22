@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 10:51:38 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 13:11:20 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,10 @@
 # include <signal.h>
 # include <stdbool.h>
 # include <sys/wait.h>
+
+# define BLUE	"\033[34m"// a delete pour les commentaires
+# define RESET	"\033[0m"// a delete. pour les commentaires
+# define ERROR_MSG(msg) BLUE msg RESET //
 
 /***********************************************************************/
 typedef enum e_token_type

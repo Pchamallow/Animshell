@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 10:38:24 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 13:00:02 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,19 @@ static int	init_infile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 static int	init_outfile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 {
 	token->fd = open(token->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	// printf("fd out = %d\n", token->fd);
+	// printf("fd out = %s\n", token->value);
 	if (token->fd < 0)
 	{
 		pipe->output = ERROR;
+		// printf("error out\n");
 		strerror_file(token->value);
 		minishell->exec.error = 2;
 	}
 	if (access(token->value, W_OK) != 0)
 	{
+		// printf("error out\n");
+		// strerror_file(token->value);
 		pipe->output = ERROR;
 		minishell->exec.error = 1;
 		return (-1);

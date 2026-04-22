@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 10:25:30 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 12:38:25 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,17 +109,24 @@ int find_first_pipe(t_token *token)
 	return (pipe ? i : 0);
 }
 
-/*
-Put values 0 or NULL in order to reuse after
-1 for input and output for terminal by default
+
+/* 
+Find nb of pipes, 
+fill 0 or NULL,
+find the PATH (split each little paths)
 */
+void init_line_to_exec(t_minishell *minishell, char **envp)
+{	
+	minishell->exec.nb_pipes = nb_pipes(minishell->token);
+	init_pipe(minishell);
+	init_paths_for_search_cmd(minishell, envp);
+}
+
+/* Put values 0 or NULL in order to reuse after */
 void	init_exec(t_minishell *minishell)
 {
 	t_token *tmp;
 	int		first_pipe;
-
-	minishell->exec.nb_pipes = nb_pipes(minishell->token);
-	init_pipe(minishell);
 
 	// trouver la 1ere pipe
 	first_pipe = find_first_pipe(minishell->token);
@@ -129,6 +136,7 @@ void	init_exec(t_minishell *minishell)
 	minishell->exec.input = 0;
 	minishell->exec.output = 0;
 	minishell->exec.last_pipe = minishell->token;
+	minishell->exec.paths_for_search_cmd = NULL;
 	tmp = minishell->token;
 	while (tmp != NULL)
 	{
@@ -141,38 +149,8 @@ void	init_exec(t_minishell *minishell)
 	}
 }
 
-// void read_all_pipes(t_minishell *minishell, char **envp)
-// {
-// 	t_pipe *pipe;
-// 	int	max;
-// 	int	i;
-
-// 	i = 0;
-// 	max = minishell->exec.nb_pipes;
-// 	pipe = minishell->exec.pipe_lst;
-// 	while (i <= max)
-// 	{
-// 		read_tokens(minishell, pipe, envp);
-// 		if (pipe->cmd)
-// 			init_args_execve(minishell, pipe);
-// 		pipe = pipe->next;
-// 		i++;
-// 	}
-// }
-
 int execute(t_minishell *minishell, char **envp)
 {
-	/*             EXECUTION       V001      */
-	// init_exec(minishell);
-	// read_tokens(minishell, minishell->exec.pipe_lst,
-	// 	minishell->token, envp);
-	// ft_printf_fd(2, "------------------\n");
-	// // read_tokens(minishell, minishell->exec.pipe_b,
-	// // 	minishell->token, envp);
-	// init_args_execve(minishell, minishell->exec.pipe_lst);
-	// exec_cmd(minishell, envp);
-	// print_pauline(minishell);//TO DELETE
-	/************************************************/
 
 	signal(SIGINT, handle_sigint);
 	
@@ -185,19 +163,15 @@ int execute(t_minishell *minishell, char **envp)
 	first_token = NULL;
 	minishell->exec.error = 0;
 	
-	init_paths_for_search_cmd(minishell, envp);
 	
 	while (1)
 	{
-		// printf("MAIN LOOP PID: %d\n", getpid());
 		line = readline("minishell$ ");
-		// line = "cat < infile.txt | wc > yeay";
 		if (!line)
 		{
 			// free_all(minishell);
 			rl_clear_history();
 			printf("exit\n");
-			free_double(minishell->exec.paths_for_search_cmd);
 			exit (0);
 		}
 
@@ -224,10 +198,12 @@ int execute(t_minishell *minishell, char **envp)
 		}
 		else
     		minishell->token = NULL;
+
+		init_exec(minishell);
 		
 		if (minishell->token)
 		{
-			init_exec(minishell);
+			init_line_to_exec(minishell, envp);
 			// read_all_pipes(minishell, envp);
 			exec_cmds_pipe(minishell, envp);
 			// if (minishell->exec.pipe_lst->is_cmd == 1)
@@ -248,6 +224,6 @@ int execute(t_minishell *minishell, char **envp)
 		// cat < infile.txt | wc -c > outfile.txt
 		
 	}
-	free_double(minishell->exec.paths_for_search_cmd);
+	// free_double(minishell->exec.paths_for_search_cmd);
 	return (0);
 }
