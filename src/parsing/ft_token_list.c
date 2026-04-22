@@ -52,8 +52,9 @@ void	ft_token_add_back(t_token **head, t_token *newer, char *line)
 	{
 		if (head)
 			ft_token_lstclear(head);
-		free(line);
-		exit(2);
+		error_malloc(line, "Error while creating token list");
+		/*free(line);*/
+		/*exit(2);*/
 	}
 	if (!*head)
 	{
