@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 16:47:26 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 10:51:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ int		main(int argc, char **argv, char **envp);
 /************************************************************* execute */
 int		execute(t_minishell *minishell, char **envp);
 int		read_tokens(t_minishell *minishell, t_pipe *pipe);
-int		read_files(t_minishell *minishell, t_pipe *pipe, int pipes);
+int		find_input_output(t_minishell *minishell, t_pipe *pipe);
 int		path_cmd(t_minishell *minishell, t_token *token);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
 char	*is_path(t_minishell *minishell, char **envp);
@@ -177,6 +177,7 @@ int		is_sign(char c);
 /*************************************************************** TO_DELETE */
 void print_double(char **str);// section to delete
 bool find_built_in(char *token);
+void	print_pipefd(int fd1, int fd2);
 
 /************************************************************* parsing */
 char	*expand_line(char *line, char **envp);

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 16:34:55 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 10:38:24 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,24 +60,20 @@ read_files
 - if we have a pipe, input = pipe, else if we have infile 
 input = file
 */
-int	read_files(t_minishell *minishell, t_pipe *pipe, int pipes)
+int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *token;
-	int	i;
 	/*garder les erreurs de tests */
 	/* permission OK, exit ou est creer pour un outfile*/
-	i = 0;
 	token = minishell->exec.last_pipe;
-	while (token != NULL && (pipes == 0 || i <= pipes))
+	while (token)
 	{
 		if (token->type == IS_INPUT && token->next != NULL)
 			token->next->file_input = 1;
 		else if (token->type == IS_OUTPUT && token->next != NULL)
 			token->next->file_output = 1;
-		
-		if (i == 0 && token->type == PIPE)
-			pipe->input = IS_PIPE;
-		else if (token->file_input == 1)
+
+		if (token->file_input == 1)
 		{
 			if ((init_infile(minishell, pipe, token) == 0))
 			{
@@ -88,13 +84,9 @@ int	read_files(t_minishell *minishell, t_pipe *pipe, int pipes)
 				return (-1);
 		}
 		
-		if (i > 0 && i == pipes && pipe->output != IS_FILE)
-		{
-			// printf("HOW MANY = %d\n", i);
-			if (token->type == PIPE)
-				pipe->output = IS_PIPE;
-				// printf("OUPUT PIPE = OUI\n");
-		}
+		if (pipe->output != IS_FILE && token->type == PIPE)
+			pipe->output = IS_PIPE;
+		
 		else if (token->file_output == 1)
 		{
 			if (init_outfile(minishell, pipe, token) == 0)
@@ -107,7 +99,11 @@ int	read_files(t_minishell *minishell, t_pipe *pipe, int pipes)
 		}
 		
 		token = token->next;
-		i++;
+	}
+	if (pipe->input == TERMINAL && minishell->exec.nb_pipes)
+	{
+		pipe->input = IS_PIPE;
+		minishell->exec.nb_pipes--;
 	}
 	// printf("output of pipe == %d\n", pipe->output);
 	return (0);

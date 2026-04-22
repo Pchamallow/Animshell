@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 18:00:01 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 10:25:30 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void init_pipe(t_minishell *minishell)
 }
 
 
-void	nb_pipes(t_minishell *minishell, t_token *first)
+int	nb_pipes(t_token *first)
 {
 	t_token *token;
 	int		pipes;
@@ -71,7 +71,7 @@ void	nb_pipes(t_minishell *minishell, t_token *first)
 			pipes++;
 		token = token->next;
 	}
-	minishell->exec.nb_pipes = pipes;
+	return (pipes);
 }
 
 void init_paths_for_search_cmd(t_minishell *minishell, char **envp)
@@ -118,7 +118,7 @@ void	init_exec(t_minishell *minishell)
 	t_token *tmp;
 	int		first_pipe;
 
-	nb_pipes(minishell, minishell->token);
+	minishell->exec.nb_pipes = nb_pipes(minishell->token);
 	init_pipe(minishell);
 
 	// trouver la 1ere pipe

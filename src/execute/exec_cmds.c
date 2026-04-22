@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 18:07:37 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 11:00:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 	at_least_one_pipe = 0;
 	while (current)
 	{
-		printf("new command -----------------------\n");
+		// printf("new command -----------------------\n");
 		if (read_tokens(minishell, current) != -1)
 		{
 			if (current->cmd)
@@ -56,7 +56,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			printf("WRONG CMD OR FILE\n");
 			current->error = 1;
 		}
-		printf("exec command = %s\n", current->cmd->value);
+		// printf("exec command = %s\n", current->cmd->value);
 		
 		if (current->next)
 		{
@@ -85,8 +85,8 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		// printf("output pipe == %d\n", output_pipe);
 		if (pid == 0)
 		{
-			printf("current->input = %d\n", current->input);
-			printf("current->output = %d\n", current->output);
+			// printf("current->input = %d\n", current->input);
+			// printf("current->output = %d\n", current->output);
 
 			/* INPUT               */
 			if (current->input == IS_FILE && current->output == IS_FILE)
@@ -141,7 +141,10 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			{
 				close_fd(pipefd[0]);
 				close_fd(pipefd[1]);
+				// print_pipefd(pipefd[0], pipefd[1]);
 			}
+
+			
 			// else
 			// {
 			// 	close(pipefd[0]);
@@ -168,9 +171,17 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			input_fd = pipefd[0];
 			// printf("input_fd = %d\n", input_fd);
 			close_fd(pipefd[1]);
+			// printf("close pipefd[1]\n");
+			
 		}
 		else if (at_least_one_pipe)
+		{
 			close_fd(pipefd[0]);
+			// printf("close pipefd[0]\n");
+		}
+		
+		// print_pipefd(pipefd[0], pipefd[1]);
+		
 		close_fds_pipe(current);
 		current = current->next;
 	}

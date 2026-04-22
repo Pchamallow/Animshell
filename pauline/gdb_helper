@@ -6,10 +6,12 @@ display minishell.token->next.value
 
 display cmd->cmd_args[1]
 
+display minishell->exec.nb_pipes
+display token->value
 
 
 
-
-cat > infile.txt | wc | cat
+cat < infile.txt | wc | cat
+cat < infile.txt | wc
 
 minishell->exec.index_pipe

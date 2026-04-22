@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 16:40:02 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 10:48:25 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,8 @@ void	strerror_file(char *filename)
 
 void	print_error_free(t_minishell *minishell, char *str, int error)
 {
-	// ft_token_lstclear(head);
-    (void)minishell;
+	ft_printf_fd(2, "minishell: ");
 	ft_printf_fd(2, "%s", str);
+	free_all(minishell);
 	exit(error);
 }
