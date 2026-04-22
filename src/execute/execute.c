@@ -206,8 +206,8 @@ int execute(t_minishell *minishell, char **envp)
 
 		// PARSING ICI :************************
 		line = expand_line(line, envp);
-		if (separate_into_tokens(line, &first_token, minishell) != 0
-				|| parse_tokens(line, &first_token, minishell) != 0)
+		if (separate_into_tokens(line, &first_token) != 0
+				|| parse_tokens(line, &first_token) != 0)
 			continue ;
 		// *************************************
 		

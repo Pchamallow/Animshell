@@ -181,8 +181,7 @@ void	print_pipefd(int fd1, int fd2);
 
 /************************************************************* parsing */
 char	*expand_line(char *line, char **envp);
-int		handle_quotes(char *line, t_token **token_list, int *index,
-			t_minishell *minishell);
+int		handle_quotes(char *line, t_token **token_list, int *index, char quote);
 void	handle_pipe(char *line, t_token **token_list, int *index);
 void	handle_redirection(char *line, t_token **token_list,
 			int *index, char angle_bracket);
@@ -190,19 +189,14 @@ void	handle_words_no_quotes(char *line, t_token **token_list, int *index);
 void	handle_spaces(char *line, t_token **token_list, int *index);
 bool	is_whitespace(char c);
 bool	is_separator(char c);
-int		separate_into_tokens(char *line, t_token **token_list,
-			t_minishell *minishell);
+int		separate_into_tokens(char *line, t_token **token_list);
 void	delete_next(t_token *token);
 t_token	*case_heredoc(t_token *token, int *error);
 t_token	*case_redirection(t_token *token, int *error);
 t_token	*case_command(t_token *token, bool *cmd_found);
 t_token	*case_arg(t_token *token);
 t_token	*case_pipe(t_token *token, bool *cmd_found, int *error, t_token **head);
-int		parse_tokens(char *line, t_token **token_list, t_minishell *minishell);
-/*******************************************************errors parsing */
-void	free_line_and_token_list(char *line, t_token **token_list);
-void	error_malloc(char *line, char *err_msg);
-void	error_quote(char *line, t_token **token_list, t_minishell *minishell);
+int		parse_tokens(char *line, t_token **token_list);
 /********************************************************** token_list */
 t_token	*ft_token_new(char *str, t_token_type token_type);
 t_token	*ft_token_last(t_token *lst);

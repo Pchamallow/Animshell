@@ -32,19 +32,18 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 	pid_t	pid;
 	int		pipefd[2];
 	int		already_output;
-	/*int		nb_pipes;*/
+	int		input_fd;
+	int		is_next_pipe;
+	int		at_least_one_pipe;
 	
-	/*nb_pipes = */
-	/*if (minishell->exec.nb_pipes >= 1)*/
-	/*{*/
-		/*while ()*/
-	/*}*/
-		/*pipe(pipefd);*/
-	pid = fork();
-	// printf("ICI = %s\n", minishell->exec.pipe_lst->cmd->value);
-	line = minishell->exec.pipe_lst;
-	already_output = 0;
-	if (pid == 0)
+	current = minishell->exec.pipe_lst;
+
+	// if (minishell->exec.pipe_lst->next)
+	// 	printf("dernier output = %d\n", minishell->exec.pipe_lst->next->output);
+	// pipe(pipefd);
+	input_fd = 0;
+	at_least_one_pipe = 0;
+	while (current)
 	{
 		// printf("new command -----------------------\n");
 		if (read_tokens(minishell, current) != -1)

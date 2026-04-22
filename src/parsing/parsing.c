@@ -37,7 +37,7 @@ void	delete_next(t_token *token)
 /*					not be the last token				*/
 /*					not be the first token				*/
 /*	**********************************************		*/
-int	parse_tokens(char *line, t_token **token_list, t_minishell *minishell)
+int	parse_tokens(char *line, t_token **token_list)
 {
 	t_token	*token;
 	bool	cmd_found;
@@ -61,8 +61,8 @@ int	parse_tokens(char *line, t_token **token_list, t_minishell *minishell)
 	/*print_tokens_types(*token_list);//pour test*/
 	if (error)
 	{
-		free_line_and_token_list(line, token_list);
-		minishell->exec.error = 2;
+		ft_token_lstclear(token_list);
+		free(line);
 	}
 	return (error);
 }
