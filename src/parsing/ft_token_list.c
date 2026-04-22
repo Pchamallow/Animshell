@@ -24,7 +24,6 @@ t_token	*ft_token_new(char *str, t_token_type token_type)
 	token = malloc(sizeof (t_token));
 	if (!token)
 	{
-		ft_printf_fd(2, "Error malloc when creating token\n");
 		free(str);
 		return (NULL);
 	}
@@ -52,8 +51,9 @@ void	ft_token_add_back(t_token **head, t_token *newer, char *line)
 	{
 		if (head)
 			ft_token_lstclear(head);
-		free(line);
-		exit(2);
+		error_malloc(line, "Error while creating token list");
+		/*free(line);*/
+		/*exit(2);*/
 	}
 	if (!*head)
 	{

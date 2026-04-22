@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/15 11:16:47 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/21 21:53:12 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 /*	the type of quotes						*/
 /*	used in the original input and			*/
 /*	removed by the handle_quotes function	*/
-void	add_quote_type(t_token *token, char quote)
+static void	add_quote_type(t_token *token, char quote)
 {
 	if (quote == '\'')
 		token->quote = SINGLE;
@@ -24,8 +24,7 @@ void	add_quote_type(t_token *token, char quote)
 		token->quote = DOUBLE;
 }
 
-bool	is_quote_closed(char *line, t_token **token_list,
-		int *index, char quote)
+static bool	is_quote_closed(char *line, int *index, char quote)
 {
 	int	i;
 
@@ -34,12 +33,7 @@ bool	is_quote_closed(char *line, t_token **token_list,
 	{
 		i++;
 		if (line[i] == '\0')
-		{
-			ft_printf_fd(2, "Error: unclosed quotes\n");
-			ft_token_lstclear(token_list);
-			free(line);
 			return (false);
-		}
 	}
 	*index = i;
 	return (true);
@@ -49,18 +43,24 @@ bool	is_quote_closed(char *line, t_token **token_list,
 /*	with the text inside quotes,							*/
 /*	keeping the quotes.										*/
 /*	It stops and returns 1 in case of unclosed quotes		*/
-int	handle_quotes(char *line, t_token **token_list, int *index, char quote)
+int	handle_quotes(char *line, t_token **token_list, int *index,
+		t_minishell *minishell)
 {
-	int	i;
-	int	start;
-	int	len;
+	int		i;
+	int		start;
+	int		len;
+	char	quote;
 
 	i = *index;
+	quote = line[i];
 	/*i++;//pour enlever le quote de debut*/
 	start = i;
 	i++;//pour garder le quote de debut
-	if (!is_quote_closed(line, token_list, &i, quote))
+	if (!is_quote_closed(line, &i, quote))
+	{
+		error_quote(line, token_list, minishell);
 		return (1);
+	}
 	i++;//pour garder le quote de fin
 	len = i - start;
 	ft_token_add_back(token_list,
