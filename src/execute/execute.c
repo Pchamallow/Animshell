@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 21:24:19 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/22 10:25:30 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static void init_pipe(t_minishell *minishell)
 		// printf("ICI\n");
 		current->is_cmd = 0;
 		current->nb_args = 0;
+		current->error = 0;
 		current->built_in = NONE;
 		current->input = TERMINAL;
 		current->output = TERMINAL;
@@ -57,7 +58,7 @@ static void init_pipe(t_minishell *minishell)
 }
 
 
-void	nb_pipes(t_minishell *minishell, t_token *first)
+int	nb_pipes(t_token *first)
 {
 	t_token *token;
 	int		pipes;
@@ -70,7 +71,42 @@ void	nb_pipes(t_minishell *minishell, t_token *first)
 			pipes++;
 		token = token->next;
 	}
-	minishell->exec.nb_pipes = pipes;
+	return (pipes);
+}
+
+void init_paths_for_search_cmd(t_minishell *minishell, char **envp)
+{
+	char *paths_one_line;
+
+	paths_one_line = is_path(minishell, envp);
+	minishell->exec.paths_for_search_cmd = ft_split(paths_one_line, ':');
+}
+
+int find_first_pipe(t_token *token)
+{
+	t_token *tmp;
+	int pipe;
+	int i;
+
+	i = 0;
+	pipe = 0;
+	tmp = token;
+	// printf("-------------------start find pipe actuel\n");
+	while (tmp != NULL && tmp->type != PIPE)
+	{
+		// printf("%s\n", tmp->value);
+		tmp = tmp->next;
+		i++;
+	}
+	if (tmp != NULL && tmp->type == PIPE)
+	{
+		// printf("%s\n", tmp->value);
+		pipe = 1;
+	}
+	// ft_printf_fd(2, "pipe index := %d\n", i);
+	// ft_printf_fd(2, "last pipe:= %d\n", lastpipe);
+	// printf("-------------------end find pipe actuel\n");
+	return (pipe ? i : 0);
 }
 
 /*
@@ -80,15 +116,18 @@ Put values 0 or NULL in order to reuse after
 void	init_exec(t_minishell *minishell)
 {
 	t_token *tmp;
+	int		first_pipe;
 
-	nb_pipes(minishell, minishell->token);
-	// printf("ICI\n");
+	minishell->exec.nb_pipes = nb_pipes(minishell->token);
 	init_pipe(minishell);
-	// ft_printf_fd(2, "test = %d\n", minishell->exec.pipe_lst->is_cmd);
+
+	// trouver la 1ere pipe
+	first_pipe = find_first_pipe(minishell->token);
+	minishell->exec.index_pipe = first_pipe;
+	// printf("nouvel index de la pipe = %d\n", minishell->exec.index_pipe);
 
 	minishell->exec.input = 0;
 	minishell->exec.output = 0;
-	minishell->exec.index_pipe = 0;
 	minishell->exec.last_pipe = minishell->token;
 	tmp = minishell->token;
 	while (tmp != NULL)
@@ -102,24 +141,24 @@ void	init_exec(t_minishell *minishell)
 	}
 }
 
-void read_all_pipes(t_minishell *minishell, char **envp)
-{
-	t_pipe *pipe;
-	int	max;
-	int	i;
+// void read_all_pipes(t_minishell *minishell, char **envp)
+// {
+// 	t_pipe *pipe;
+// 	int	max;
+// 	int	i;
 
-	i = 0;
-	max = minishell->exec.nb_pipes;
-	pipe = minishell->exec.pipe_lst;
-	while (i <= max)
-	{
-		read_tokens(minishell, pipe, envp);
-		if (pipe->cmd)
-			init_args_execve(minishell, pipe);
-		pipe = pipe->next;
-		i++;
-	}
-}
+// 	i = 0;
+// 	max = minishell->exec.nb_pipes;
+// 	pipe = minishell->exec.pipe_lst;
+// 	while (i <= max)
+// 	{
+// 		read_tokens(minishell, pipe, envp);
+// 		if (pipe->cmd)
+// 			init_args_execve(minishell, pipe);
+// 		pipe = pipe->next;
+// 		i++;
+// 	}
+// }
 
 int execute(t_minishell *minishell, char **envp)
 {
@@ -145,16 +184,20 @@ int execute(t_minishell *minishell, char **envp)
 
 	first_token = NULL;
 	minishell->exec.error = 0;
-
+	
+	init_paths_for_search_cmd(minishell, envp);
+	
 	while (1)
 	{
 		// printf("MAIN LOOP PID: %d\n", getpid());
 		line = readline("minishell$ ");
+		// line = "cat < infile.txt | wc > yeay";
 		if (!line)
 		{
 			// free_all(minishell);
 			rl_clear_history();
 			printf("exit\n");
+			free_double(minishell->exec.paths_for_search_cmd);
 			exit (0);
 		}
 
@@ -170,8 +213,8 @@ int execute(t_minishell *minishell, char **envp)
 		
 		free(line);
 		
-		(void)envp;
-		(void)minishell;
+		// (void)envp;
+		// (void)minishell;
 		
 		/* PARSING **********************************/
 		if (first_token)
@@ -185,24 +228,26 @@ int execute(t_minishell *minishell, char **envp)
 		if (minishell->token)
 		{
 			init_exec(minishell);
-			read_all_pipes(minishell, envp);
-			if (minishell->exec.pipe_lst->is_cmd == 1)
-			{
-				if (minishell->exec.nb_pipes > 0)
-					exec_cmds_pipe(minishell, envp);
-				else if (minishell->exec.pipe_lst->built_in != NONE)
-					echo(minishell);
-				else
-					exec_cmds_pipe(minishell, envp);
-					// exec_cmd_no_pipe(minishell, envp);
-			}
+			// read_all_pipes(minishell, envp);
+			exec_cmds_pipe(minishell, envp);
+			// if (minishell->exec.pipe_lst->is_cmd == 1)
+			// {
+			// 	if (minishell->exec.nb_pipes > 0)
+			// 		exec_cmds_pipe(minishell, envp);
+			// 	else if (minishell->exec.pipe_lst->built_in != NONE)
+			// 		echo(minishell);
+			// 	else
+			// 		exec_cmds_pipe(minishell, envp);
+			// 		// exec_cmd_no_pipe(minishell, envp);
+			// }
 		}
 		/************************************************/
 		
 		free_all(minishell);
-		
+		// break;
 		// cat < infile.txt | wc -c > outfile.txt
 		
 	}
+	free_double(minishell->exec.paths_for_search_cmd);
 	return (0);
 }

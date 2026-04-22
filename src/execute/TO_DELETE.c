@@ -49,3 +49,15 @@ void	print_pauline(t_minishell *minishell)
 		minishell->exec.pipe_lst = minishell->exec.pipe_lst->next;
 	}
 }
+
+void	print_pipefd(int fd1, int fd2)
+{
+	(void)fd1;
+	(void)fd2;
+	printf("close pipefd[0]\n");
+	printf("close pipefd[1]\n");
+	// if (fd1)
+	// 	printf("pipefd[0] read = %d\n", fd1);
+	// if (fd2)
+	// 	printf("pipefd[1] write = %d\n", fd2);
+}

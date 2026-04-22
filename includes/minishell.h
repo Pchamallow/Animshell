@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 21:51:09 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/22 10:51:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ typedef struct s_pipe
 	t_token	*cmd;
 	int		is_cmd;
 	int		nb_args;
+	int		error;
 	t_put	input;
 	t_put	output;
 	t_built_in	built_in;
@@ -106,6 +107,7 @@ typedef struct s_exec
 	char		*line;
 	char		*file_input;
 	char		*file_output;
+	char		**paths_for_search_cmd;
 	int			error;
 	int			input; // -1 file invalide, 0 pas de input, 1 = file, 2 = pipe
 	int			output; // 0 pas de output(donc terminal), 1 = file, 2 = pipe
@@ -132,9 +134,9 @@ typedef struct s_minishell
 int		main(int argc, char **argv, char **envp);
 /************************************************************* execute */
 int		execute(t_minishell *minishell, char **envp);
-int		read_tokens(t_minishell *minishell, t_pipe *pipe, char **envp);
-int		read_files(t_minishell *minishell, t_pipe *pipe, int pipes);
-int		path_cmd(t_minishell *minishell, t_token *token, char **all_paths);
+int		read_tokens(t_minishell *minishell, t_pipe *pipe);
+int		find_input_output(t_minishell *minishell, t_pipe *pipe);
+int		path_cmd(t_minishell *minishell, t_token *token);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
 char	*is_path(t_minishell *minishell, char **envp);
 void	is_built_in(t_pipe *the_pipe, t_token *token);
@@ -169,11 +171,13 @@ void	free_all(t_minishell *minishell);
 /*************************************************************** utils */
 int		len_double(char **tab);
 int		len_cmd_no_endspace(char *str);
-void	close_fds(t_minishell* minishell, t_pipe *pipe);
+void	close_fd(int fd);
+void	close_fds_pipe(t_pipe *pipe);
 int		is_sign(char c);
 /*************************************************************** TO_DELETE */
 void print_double(char **str);// section to delete
 bool find_built_in(char *token);
+void	print_pipefd(int fd1, int fd2);
 
 /************************************************************* parsing */
 char	*expand_line(char *line, char **envp);

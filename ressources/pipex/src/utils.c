@@ -6,13 +6,13 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/03/28 13:37:09 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/21 13:40:10 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	close_fds(t_parse *parse)
+void	close_fds_pipe(t_parse *parse)
 {
 	if (parse->in.close == 0)
 	{
