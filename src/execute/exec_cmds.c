@@ -146,6 +146,13 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 				// print_pipefd(pipefd[0], pipefd[1]);
 			}
 
+
+
+
+
+			
+
+			
 			
 			// else
 			// {
