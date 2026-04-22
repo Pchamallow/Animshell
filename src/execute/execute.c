@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 18:03:27 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 18:53:48 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,13 @@ int	nb_pipes(t_token *first)
 	return (pipes);
 }
 
-void init_paths_for_search_cmd(t_minishell *minishell, char **envp)
-{
-	char *paths_one_line;
+// void init_paths_for_search_cmd(t_minishell *minishell, char **envp)
+// {
+// 	char *paths_one_line;
 
-	paths_one_line = is_path(minishell, envp);
-	minishell->exec.paths_for_search_cmd = ft_split(paths_one_line, ':');
-}
+// 	paths_one_line = is_path(minishell, envp);
+// 	minishell->exec.paths_for_search_cmd = ft_split(paths_one_line, ':');
+// }
 
 int find_first_pipe(t_token *token)
 {
@@ -120,7 +120,7 @@ void init_line_to_exec(t_minishell *minishell, char **envp)
 	strv_dup(minishell, &minishell->exec.envp, envp);
 	minishell->exec.nb_pipes = nb_pipes(minishell->token);
 	init_pipe(minishell);
-	init_paths_for_search_cmd(minishell, envp);
+	// init_paths_for_search_cmd(minishell, envp);
 }
 
 /* Put values 0 or NULL in order to reuse after */
