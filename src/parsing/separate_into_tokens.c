@@ -72,17 +72,10 @@ void	print_tokens(t_token *token)// pour tester
 /*	NOTE: only handle_quotes can return an error				*/
 /*	-> in that case, separate_into_tokens returns 1				*/
 /*	******************************************************		*/
-int	separate_into_tokens(char *line, t_token **token_list,
-		t_minishell *minishell)
+int	separate_into_tokens(char *line, t_token **token_list)
 {
 	int	i;
 
-	if (!line || line[0] == '0')
-	{
-		if (line)
-			free(line);
-		return (1);//dans ce cas, le code de retour ne change pas
-	}
 	i = 0;
 	if (!line)
 		return (1);//dans ce cas, le code de retour ne change pas
@@ -92,14 +85,17 @@ int	separate_into_tokens(char *line, t_token **token_list,
 	{
 		if (line[i] == '\"' || line[i] == '\'')
 		{
-			if (handle_quotes(line, token_list, &i, minishell) != 0)
+			if (handle_quotes(line, token_list, &i, line[i]) != 0)
 				return (1);//mettre le code retour a 2
 		}
-		else if (line[i] == '|')
+		handle_spaces(line, token_list, &i);
+		if (line[i] == '|')
 			handle_pipe(line, token_list, &i);
-		else if (line[i] == '>' || line[i] == '<')
+		handle_spaces(line, token_list, &i);
+		if (line[i] == '>' || line[i] == '<')
 			handle_redirection(line, token_list, &i, line[i]);
-		else if (line[i] && !is_separator(line[i]))
+		handle_spaces(line, token_list, &i);
+		if (line[i] && !is_separator(line[i]))
 			handle_words_no_quotes(line, token_list, &i);
 		handle_spaces(line, token_list, &i);
 	}
