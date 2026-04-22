@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 21:18:24 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/19 16:07:02 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/21 22:44:27 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	delete_next(t_token *token)
 /*					not be the last token				*/
 /*					not be the first token				*/
 /*	**********************************************		*/
-int	parse_tokens(char *line, t_token **token_list)
+int	parse_tokens(char *line, t_token **token_list, t_minishell *minishell)
 {
 	t_token	*token;
 	bool	cmd_found;
@@ -61,8 +61,8 @@ int	parse_tokens(char *line, t_token **token_list)
 	/*print_tokens_types(*token_list);//pour test*/
 	if (error)
 	{
-		ft_token_lstclear(token_list);
-		free(line);
+		free_line_and_token_list(line, token_list);
+		minishell->exec.error = 2;
 	}
 	return (error);
 }

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:14:01 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/21 13:08:22 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 10:38:53 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ t_token	*ft_token_new(char *str, t_token_type token_type)
 	token = malloc(sizeof (t_token));
 	if (!token)
 	{
-		ft_printf_fd(2, "Error malloc when creating token\n");
 		free(str);
 		return (NULL);
 	}
@@ -52,8 +51,9 @@ void	ft_token_add_back(t_token **head, t_token *newer, char *line)
 	{
 		if (head)
 			ft_token_lstclear(head);
-		free(line);
-		exit(2);
+		error_malloc(line, "Error while creating token list");
+		/*free(line);*/
+		/*exit(2);*/
 	}
 	if (!*head)
 	{
@@ -70,11 +70,8 @@ void	ft_token_add_back(t_token **head, t_token *newer, char *line)
 
 void	ft_token_delone(t_token *lst, void (*del)(void *))
 {
-	// printf(" ! DELETE ! \n");
 	if (!lst || !del)
 		return ;
-	// printf("value = %s\n", lst->value);
-	// printf("fd = %d\n", lst->fd);
 	del(lst->value);
 	if (lst->cmd_path)
 		free(lst->cmd_path);
@@ -84,8 +81,7 @@ void	ft_token_delone(t_token *lst, void (*del)(void *))
 		free_double(lst->cmd_args);
 	if (lst->args_execve)
 		free_double(lst->args_execve);
-	// if (lst->fd) // si >= 0 exit tout 
-	if (lst->fd && lst->fd >= 0) // si >= 0 exit tout 
+	if (lst->fd)
 		close(lst->fd);
 	free(lst);
 	return ;
@@ -99,7 +95,6 @@ void	ft_token_lstclear(t_token **head)
 	if (!head)
 		return ;
 	current = *head;
-	// printf("-----------------DELETE\n");
 	while (current)
 	{
 		// printf("FREE = %s\n", current->value);
