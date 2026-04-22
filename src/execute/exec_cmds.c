@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 11:15:02 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/22 19:05:22 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 	at_least_one_pipe = 0;
 	while (current)
 	{
-		// printf("new command -----------------------\n");
+		// printf(ERROR_MSG("new command -----------------------\n"));
 		if (read_tokens(minishell, current) != -1)
 		{
 			if (current->cmd)
@@ -53,10 +53,12 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		}
 		else
 		{
-			printf("WRONG CMD OR FILE\n");
+			// printf("WRONG CMD OR FILE\n");
 			current->error = 1;
 		}
-		// printf("exec command = %s\n", current->cmd->value);
+		//print
+		// if (current->cmd)
+		// 	printf("exec command = %s\n", current->cmd->value);
 		
 		if (current->next)
 		{
@@ -166,7 +168,6 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 				execve(current->cmd->cmd_path, current->cmd->args_execve, envp);
 				perror("execve");
 			}
-			
 			free_all(minishell);
 			exit(1);
 			
@@ -175,9 +176,11 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		if (is_next_pipe)
 		{
 			// printf("releve de input fd\n");
+			close_fd(input_fd);
 			input_fd = pipefd[0];
 			// printf("input_fd = %d\n", input_fd);
 			close_fd(pipefd[1]);
+			// close_fd(pipefd[0]); impossible le lecture
 			// printf("close pipefd[1]\n");
 			
 		}
@@ -186,13 +189,21 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			close_fd(pipefd[0]);
 			// printf("close pipefd[0]\n");
 		}
+
+		// if (ft_strnstr(current->cmd->value, "ls", 20))
+		// 	close_fd(pipefd[0]);
 		
-		// print_pipefd(pipefd[0], pipefd[1]);
+		// if (at_least_one_pipe && !minishell->exec.nb_pipes)
+		// {
+		// 	close_fd(pipefd[0]);
+		// 	printf("close pipefd[0]\n");
+		// }
 		
 		close_fds_pipe(current);
 		current = current->next;
 	}
 	while(wait(NULL) > 0);
+	
 	// waitpid(pid, NULL, 0);
 	// waitpid(pid, NULL, 0);
 	// close(input_fd);

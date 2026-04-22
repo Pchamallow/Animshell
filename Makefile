@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/21 21:39:19 by stkloutz         ###   ########.fr        #
+#    Updated: 2026/04/22 18:16:08 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,16 +32,19 @@ NC			:='\033[0m'
 
 # Sources
 SRCS		:= 											\
-			src/execute/read/init_files.c				\
-			src/execute/TO_DELETE.c						\
-			src/execute/read/read_token.c				\
+			src/execute/built_in/echo.c					\
+			src/execute/built_in/exec_built_in.c		\
 			src/execute/is_cmd/init_args.c				\
 			src/execute/is_cmd/init_cmd_args.c			\
 			src/execute/is_cmd/init.c					\
 			src/execute/is_cmd/is_path.c				\
 			src/execute/is_cmd/path_explicit.c			\
-			src/execute/utils.c							\
-			src/execute/error_free.c					\
+			src/execute/read/init_files.c				\
+			src/execute/read/read_token.c				\
+			src/execute/utils/error_free.c				\
+			src/execute/utils/strv_dup.c				\
+			src/execute/utils/utils.c					\
+			src/execute/TO_DELETE.c						\
 			src/execute/exec_cmds.c						\
 			src/execute/execute.c						\
 			src/execute/term.c							\
@@ -50,10 +53,7 @@ SRCS		:= 											\
 			src/parsing/handle_token_types.c			\
 			src/parsing/separate_into_tokens.c			\
 			src/parsing/parsing_utils.c					\
-			src/parsing/parsing_errors_free.c			\
 			src/parsing/parsing.c						\
-			src/execute/built_in/echo.c					\
-			src/execute/built_in/exec_built_in.c		\
 			src/main.c									\
 
 

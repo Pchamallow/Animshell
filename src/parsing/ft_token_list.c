@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:14:01 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/22 10:38:53 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/22 16:46:47 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_token	*ft_token_new(char *str, t_token_type token_type)
 	token = malloc(sizeof (t_token));
 	if (!token)
 	{
+		ft_printf_fd(2, "Error malloc when creating token\n");
 		free(str);
 		return (NULL);
 	}
@@ -51,9 +52,8 @@ void	ft_token_add_back(t_token **head, t_token *newer, char *line)
 	{
 		if (head)
 			ft_token_lstclear(head);
-		error_malloc(line, "Error while creating token list");
-		/*free(line);*/
-		/*exit(2);*/
+		free(line);
+		exit(2);
 	}
 	if (!*head)
 	{
@@ -78,10 +78,11 @@ void	ft_token_delone(t_token *lst, void (*del)(void *))
 	if (lst->path_explicite)
 		free(lst->path_explicite);
 	if (lst->cmd_args)
-		free_double(lst->cmd_args);
+		free_strv(lst->cmd_args);
 	if (lst->args_execve)
-		free_double(lst->args_execve);
-	if (lst->fd)
+		free_strv(lst->args_execve);
+	// if (lst->fd) // si >= 0 exit tout 
+	if (lst->fd && lst->fd >= 0) // si >= 0 exit tout 
 		close(lst->fd);
 	free(lst);
 	return ;

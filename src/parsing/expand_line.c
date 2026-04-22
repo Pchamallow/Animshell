@@ -86,6 +86,7 @@ int	count_total_char(char *line, int len, char **envp)
 	t_quote_type	quote;
 
 	count = len;
+	/*ft_printf_fd(1, "count avant la boucle: %d\n", count);*/
 	i = 0;
 	quote = NO;
 	while (i < len)
@@ -127,10 +128,7 @@ size_t	ft_strlcat_minishell(char *dst, const char *src, size_t size)
 	size_t	j;
 
 	j = ft_strlen(src);
-	if (dst)
-		i = ft_strlen(dst);
-	else
-		i = 0;
+	i = ft_strlen(dst);
 	j = 0;
 	while ((i + j < (size)) && src[j])
 	{
@@ -175,12 +173,12 @@ char	*expand_line(char *line, char **envp)
 	while (i < (int)ft_strlen(line))
 	{
 		len = find_env_var(line + i, ft_strlen(line + i));
-		if (len == -1)
+		if (len == 0 && line[i] != '$')
 		{
 			ft_strlcat_minishell(newline, line + i, count + 1);
 			i += ft_strlen(line + i);
 		}
-		else if (len == 0)
+		else if (len == 0 && line[i] == '$')
 		{
 			wd_len = get_var_name_len(line + i + 1);
 			j = get_var(line + i + 1, envp, wd_len);
