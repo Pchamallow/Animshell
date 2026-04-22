@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:14:01 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/21 22:17:45 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/22 10:38:53 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ t_token	*ft_token_new(char *str, t_token_type token_type)
 	token = malloc(sizeof (t_token));
 	if (!token)
 	{
-		ft_printf_fd(2, "Error malloc when creating token\n");
 		free(str);
 		return (NULL);
 	}

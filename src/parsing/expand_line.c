@@ -6,7 +6,7 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/21 23:17:03 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/22 10:40:21 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,12 +175,12 @@ char	*expand_line(char *line, char **envp)
 	while (i < (int)ft_strlen(line))
 	{
 		len = find_env_var(line + i, ft_strlen(line + i));
-		if (len == 0 && line[i] != '$')
+		if (len == -1)
 		{
 			ft_strlcat_minishell(newline, line + i, count + 1);
 			i += ft_strlen(line + i);
 		}
-		else if (len == 0 && line[i] == '$')
+		else if (len == 0)
 		{
 			wd_len = get_var_name_len(line + i + 1);
 			j = get_var(line + i + 1, envp, wd_len);
