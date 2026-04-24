@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/24 16:04:29 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/24 17:16:43 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 			if (pipe->input != ERROR && pipe->output != ERROR)
 				ft_printf_fd(2, "minishell: %s: command not found\n", token->value);
 			minishell->exec.error = 127;
-			return (-1);
+			return (1);
 		}
 	}
 	else if (token->type == IS_BUILT_IN)
@@ -224,8 +224,8 @@ Pipe :
 */
 int read_tokens(t_minishell *minishell, t_pipe *pipe)
 {
-	int error_files;
-	int error_cmd;
+	// int error_files;
+	// int error_cmd;
 	t_token *token;
 
 	token = minishell->exec.last_pipe;
@@ -236,22 +236,27 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 	// input_pipe = 0;
 	// if (minishell->exec.last_pipe->type == PIPE)
 	// 	input_pipe = 1;
-	error_cmd = 0;
-	error_files = 0;
+	// error_cmd = 0;
+	// error_files = 0;
 	/* CMD et Infile et Outfile valides **************************/
 	// printf("ancien index de la pipe = %d\n", minishell->exec.index_pipe);
 	// index_pipes = find_pipe(token, minishell->exec.index_pipe);
 	// printf("nouvel index de la pipe = %d\n", index_pipes);
 	// minishell->exec.index_pipe = index_pipes;
-	error_files = find_input_output(minishell, pipe);
-	error_cmd = init_cmd(minishell, pipe);
-	
-	// printf("read index de la pipe = %d\n", minishell->exec.index_pipe);
-	if (!(error_files == 0 && error_cmd == 0))
+	if (find_input_output(minishell, pipe) || init_cmd(minishell, pipe))
 	{
 		next_pipe(minishell, token);
 		return (-1);
 	}
+	
+	// error_cmd = init_cmd(minishell, pipe);
+	
+	// // printf("read index de la pipe = %d\n", minishell->exec.index_pipe);
+	// if (!(error_files == 0 && error_cmd == 0))
+	// {
+	// 	next_pipe(minishell, token);
+	// 	return (-1);
+	// }
 	/**************************************************************/
 
 	next_pipe(minishell, token);

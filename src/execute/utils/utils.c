@@ -6,11 +6,26 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/24 16:05:01 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/24 17:23:25 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	lst_size(t_token *token)
+{
+	int	count;
+
+	count = 0;
+	if (!token)
+		return (0);
+	while (token)
+	{
+		count++;
+		token = token->next;
+	}
+	return (count);
+}
 
 void	close_fds_pipe(t_pipe *pipe)
 {

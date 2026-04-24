@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/24 17:07:22 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/24 17:14:08 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,6 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 	int		i;
 
 	i = 0;
-	/*garder les erreurs de tests */
-	/* permission OK, exit ou est creer pour un outfile*/
 	token = minishell->exec.last_pipe;
 	while (token && i < minishell->exec.index_pipe)
 	{
@@ -89,8 +87,6 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 				pipe->infile = token;
 				pipe->input = IS_FILE;
 			}
-			// else
-			// 	return (-1);
 		}
 		
 		if (pipe->output != IS_FILE && pipe->output != ERROR && token->type == PIPE)
@@ -102,10 +98,7 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 			{
 				pipe->outfile = token;
 				pipe->output = IS_FILE;
-				// close(pipe->outfile->fd);
 			}
-			// else
-			// 	return (-1);
 		}
 		
 		token = token->next;
@@ -117,7 +110,7 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 		minishell->exec.nb_pipes--;
 	}
 	if (pipe->input == ERROR || pipe->output == ERROR)
-		return (-1);
+		return (1);
 	// if (pipe->next)
 	// 	pipe->output = IS_PIPE;
 	// 	pipe->write = 1;

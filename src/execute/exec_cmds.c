@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/24 17:02:52 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/24 17:24:33 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		}
 		else
 		{
-			printf("WRONG CMD OR FILE\n");
+			// printf("WRONG CMD OR FILE\n");
 			current->error = 1;
 			// not_write = 1;
 		}
