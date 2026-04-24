@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 21:57:55 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/24 15:12:05 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ void	init_exec(t_minishell *minishell)
 	int		first_pipe;
 
 	first_pipe = find_first_pipe(minishell->token);
+	// printf("index first pipe = %d\n", first_pipe);
 	minishell->exec.index_pipe = first_pipe;
 	// printf("nouvel index de la pipe = %d\n", minishell->exec.index_pipe);
 
@@ -138,6 +139,7 @@ void	init_exec(t_minishell *minishell)
 	minishell->exec.last_pipe = minishell->token;
 	minishell->exec.paths_for_search_cmd = NULL;
 	minishell->exec.envp = NULL;
+	minishell->exec.pipe_lst = NULL;
 	tmp = minishell->token;
 	while (tmp != NULL)
 	{

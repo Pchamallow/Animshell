@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 13:23:33 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/24 16:03:34 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,13 @@ input = file
 int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *token;
+	int		i;
+
+	i = 0;
 	/*garder les erreurs de tests */
 	/* permission OK, exit ou est creer pour un outfile*/
 	token = minishell->exec.last_pipe;
-	while (token)
+	while (token && i < minishell->exec.index_pipe)
 	{
 		if (token->type == IS_INPUT && token->next != NULL)
 			token->next->file_input = 1;
@@ -99,12 +102,14 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 			{
 				pipe->outfile = token;
 				pipe->output = IS_FILE;
+				// close(pipe->outfile->fd);
 			}
 			// else
 			// 	return (-1);
 		}
 		
 		token = token->next;
+		i++;
 	}
 	if (pipe->input == TERMINAL && minishell->exec.nb_pipes)
 	{

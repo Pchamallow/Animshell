@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 10:38:46 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/24 16:04:29 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,6 +245,7 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 	// minishell->exec.index_pipe = index_pipes;
 	error_files = find_input_output(minishell, pipe);
 	error_cmd = init_cmd(minishell, pipe);
+	
 	// printf("read index de la pipe = %d\n", minishell->exec.index_pipe);
 	if (!(error_files == 0 && error_cmd == 0))
 	{
