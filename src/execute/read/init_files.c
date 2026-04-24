@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/24 16:56:09 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/24 17:07:22 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 			// 	return (-1);
 		}
 		
-		if (pipe->output != IS_FILE && token->type == PIPE)
+		if (pipe->output != IS_FILE && pipe->output != ERROR && token->type == PIPE)
 			pipe->output = IS_PIPE;
 		
 		else if (token->file_output == 1)
