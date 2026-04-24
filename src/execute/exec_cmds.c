@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/24 16:05:32 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/24 17:02:52 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 	int		input_fd;
 	int		is_next_pipe;
 	int		at_least_one_pipe;
+	// int		not_write;
 	
 	current = minishell->exec.pipe_lst;
 
@@ -50,11 +51,13 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		{
 			if (current->cmd)
 				init_args_execve(minishell, current);
+			// not_write = 0;
 		}
 		else
 		{
-			// printf("WRONG CMD OR FILE\n");
+			printf("WRONG CMD OR FILE\n");
 			current->error = 1;
+			// not_write = 1;
 		}
 		//print
 		// if (current->cmd)
@@ -142,7 +145,9 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			// input_fd = pipefd[0];
 			if (is_next_pipe)
 			{
+				// if (current->read == 1)
 				close_fd(pipefd[0]);
+				// if (current->write == 1)
 				close_fd(pipefd[1]);
 				// print_pipefd(pipefd[0], pipefd[1]);
 			}		
@@ -158,6 +163,11 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			if (!current->error)
 			{
 			// printf("current = %s\n", current->cmd->value);
+				// if (is_next_pipe)
+				// {
+				// 	close_fd(pipefd[0]);
+				// 	close_fd(pipefd[1]);
+				// }
 				execve(current->cmd->cmd_path, current->cmd->args_execve, envp);
 				perror("execve");
 			}
@@ -170,8 +180,13 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		if (is_next_pipe)
 		{
 			// printf("releve de input fd\n");
-			close_fd(input_fd);
-			input_fd = pipefd[0];
+			// if (not_write)
+			// 	close(pipefd[0]);
+			// else
+			// {
+				close_fd(input_fd);
+				input_fd = pipefd[0];
+			// }
 			// printf("input_fd = %d\n", input_fd);
 			close_fd(pipefd[1]);
 			// close_fd(pipefd[0]); impossible le lecture

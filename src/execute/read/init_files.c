@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/24 16:03:34 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/24 16:56:09 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,19 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 		pipe->input = IS_PIPE;
 		minishell->exec.nb_pipes--;
 	}
+	if (pipe->input == ERROR || pipe->output == ERROR)
+		return (-1);
+	// if (pipe->next)
+	// 	pipe->output = IS_PIPE;
+	// 	pipe->write = 1;
+	// else 
+	// 	pipe->write = 0;
+
+	// if (pipe->input == IS_PIPE)
+	// 	pipe->read = 1;
+	// else
+	// 	pipe->read = 0;
+		
 	// printf("output of pipe == %d\n", pipe->output);
 	return (0);
 }

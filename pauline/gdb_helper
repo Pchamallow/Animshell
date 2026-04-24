@@ -15,7 +15,7 @@ cat < infile.txt | wc | cat
 cat < infile.txt > outfile.txt | wc | cat
 cat < infile.txt | wc
 cat < infile.txt > outfile.txt | wc > outfile.txt 
-cat < infile.txt > outfile.txt | wc > outfile.txt | cat | wc 
+cat < infile.txt > outfile.txt | wc > outfile.txt | cat | wc
 
 minishell->exec.index_pipe
 

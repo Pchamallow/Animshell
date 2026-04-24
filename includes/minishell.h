@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 18:52:28 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/24 17:02:32 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ typedef struct s_pipe
 	int		is_cmd;
 	int		nb_args;
 	int		error;
+	// int		write;
+	// int		read;
 	t_put	input;
 	t_put	output;
 	t_built_in	built_in;
