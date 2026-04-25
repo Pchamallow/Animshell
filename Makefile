@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/22 22:04:15 by stkloutz         ###   ########.fr        #
+#    Updated: 2026/04/25 11:03:39 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,9 +36,8 @@ SRCS		:= 											\
 			src/execute/built_in/exec_built_in.c		\
 			src/execute/is_cmd/init_args.c				\
 			src/execute/is_cmd/init_cmd_args.c			\
-			src/execute/is_cmd/init.c					\
-			src/execute/is_cmd/is_path.c				\
-			src/execute/is_cmd/path_explicit.c			\
+			src/execute/cmd_path/is_path.c				\
+			src/execute/cmd_path/path_explicit.c		\
 			src/execute/read/init_files.c				\
 			src/execute/read/read_token.c				\
 			src/execute/utils/error_free.c				\

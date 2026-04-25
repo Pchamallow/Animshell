@@ -9,14 +9,20 @@ display cmd->cmd_args[1]
 display minishell->exec.nb_pipes
 display token->value
 
+p minishell->exec.index_pipe
 
 
 cat < infile.txt | wc | cat
 cat < infile.txt > outfile.txt | wc | cat
 cat < infile.txt | wc
-cat < infile.txt > outfile.txt | wc > outfile.txt
+cat < infile.txt > outfile.txt | wc > outfile.txt 
+cat < infile.txt > outfile.txt | wc > outfile.txt | cat | wc
+nocmd < infile.txt infile2
+
 
 minishell->exec.index_pipe
 
 p minishell->exec.envp[0]
 p minishell->exec.envp
+
+set detach-on-fork off

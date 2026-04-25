@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 19:05:22 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 14:52:16 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 	int		input_fd;
 	int		is_next_pipe;
 	int		at_least_one_pipe;
+	// int		not_write;
 	
 	current = minishell->exec.pipe_lst;
 
@@ -50,11 +51,13 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		{
 			if (current->cmd)
 				init_args_execve(minishell, current);
+			// not_write = 0;
 		}
 		else
 		{
 			// printf("WRONG CMD OR FILE\n");
 			current->error = 1;
+			// not_write = 1;
 		}
 		//print
 		// if (current->cmd)
@@ -87,6 +90,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		// printf("output pipe == %d\n", output_pipe);
 		if (pid == 0)
 		{
+			// printf("-------- child \n");
 			// printf("current->input = %d\n", current->input);
 			// printf("current->output = %d\n", current->output);
 
@@ -97,6 +101,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 					strerror_free_structure(minishell, "dup2", 2);
 				if (dup2(current->outfile->fd, STDOUT_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
+				// close_fd(current->outfile->fd);
 				already_output = 1;
 			}
 			
@@ -117,14 +122,13 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 				// printf("pas de probleme fd \n");
 				close_fd(input_fd);
 			}
-			
-			
 
 			/* OUTPUT                          */
 			if (current->output == IS_FILE && already_output == 0)
 			{
 				if (dup2(current->outfile->fd, STDOUT_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
+				close_fd(current->outfile->fd);
 			}
 			// printf("already_ouput = %d\n", already_output);
 			else if (current->output == IS_PIPE
@@ -141,18 +145,12 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			// input_fd = pipefd[0];
 			if (is_next_pipe)
 			{
+				// if (current->read == 1)
 				close_fd(pipefd[0]);
+				// if (current->write == 1)
 				close_fd(pipefd[1]);
 				// print_pipefd(pipefd[0], pipefd[1]);
-			}
-
-
-
-
-
-			
-
-			
+			}		
 			
 			// else
 			// {
@@ -165,6 +163,11 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			if (!current->error)
 			{
 			// printf("current = %s\n", current->cmd->value);
+				// if (is_next_pipe)
+				// {
+				// 	close_fd(pipefd[0]);
+				// 	close_fd(pipefd[1]);
+				// }
 				execve(current->cmd->cmd_path, current->cmd->args_execve, envp);
 				perror("execve");
 			}
@@ -173,11 +176,17 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			
 		}
 		// printf("pipe to execute = %d\n", pipe_to_execute);
+		// printf("-------- parent \n");
 		if (is_next_pipe)
 		{
 			// printf("releve de input fd\n");
-			close_fd(input_fd);
-			input_fd = pipefd[0];
+			// if (not_write)
+			// 	close(pipefd[0]);
+			// else
+			// {
+				close_fd(input_fd);
+				input_fd = pipefd[0];
+			// }
 			// printf("input_fd = %d\n", input_fd);
 			close_fd(pipefd[1]);
 			// close_fd(pipefd[0]); impossible le lecture
@@ -189,6 +198,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			close_fd(pipefd[0]);
 			// printf("close pipefd[0]\n");
 		}
+		// close(current->outfile->fd);
 
 		// if (ft_strnstr(current->cmd->value, "ls", 20))
 		// 	close_fd(pipefd[0]);
@@ -203,6 +213,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		current = current->next;
 	}
 	while(wait(NULL) > 0);
+	// close_fds_pipe(current);
 	
 	// waitpid(pid, NULL, 0);
 	// waitpid(pid, NULL, 0);

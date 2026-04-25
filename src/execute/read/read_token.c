@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 10:38:46 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 13:04:29 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 			if (pipe->input != ERROR && pipe->output != ERROR)
 				ft_printf_fd(2, "minishell: %s: command not found\n", token->value);
 			minishell->exec.error = 127;
-			return (-1);
+			return (1);
 		}
 	}
 	else if (token->type == IS_BUILT_IN)
@@ -182,10 +182,157 @@ void convert_to_single_quotes(t_minishell *minishell, t_token *token)
 	free(original);
 }
 
+
+// int	is_single_double_single(t_token *token)
+// {
+// 	int	i;
+
+// 	i = 3;
+// 	if ((token->quote == SINGLE)
+// 		&&(token->next && token->next->quote == DOUBLE)
+// 		&&(token->next->next && token->next->next->quote == SINGLE))
+// 	{
+// 		token = token->next;
+// 		token = token->next;
+// 		token = token->next;
+// 		while (token && token->type == IS_ARG 
+// 			|| token->type == IS_FILENAME
+// 			|| token->type == IS_INPUT
+// 			|| token->type == IS_OUTPUT
+// 			|| token->type == ONE_SPACE
+// 			|| token->type == REDIRECTION)
+// 		{
+// 			token = token->next;
+// 			i++;
+// 		}
+// 		if ((token && token->quote == SINGLE)
+// 			&&(token->next && token->next->quote == DOUBLE)
+// 			&&(token->next->next && token->next->next->quote == SINGLE))
+// 			{
+// 				if (i == 3)
+// 					return (0);
+// 				return (i + 3);
+// 			}
+// 		else
+// 			return (0);
+// 	}
+// 	return (0);
+// }
+
+
+// void merge_in_one(t_minishell *minishell, t_token *token, int skip)
+// {
+// 	t_token	*original;
+// 	char	*result;
+// 	char	*tmp;
+// 	int		i;
+// 	int		only_first_word;
+
+// 	i = 0;
+// 	original = token;
+// 	only_first_word = 0;
+// 	result = ft_calloc(1, sizeof(char));
+// 	if (!result)
+// 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+// 	while (token)
+// 	{
+// 		while (token && token->quote != NO)
+// 		{
+// 			token = token->next;
+// 			i++;
+// 		}
+// 		if (token->type == IS_INPUT)
+// 		{
+// 			while (token && i < skip)
+// 			{
+// 				token = token->next;
+// 				if (token->type == IS_INPUT
+// 					|| token->type == IS_OUTPUT
+// 					|| token->type == ONE_SPACE)
+// 					only_first_word = 1;
+// 				if ((token->type = IS_ARG
+// 					|| token->type = IS_FILENAME)
+// 					&& only_first_word)
+// 				{
+// 					free(result);
+// 					result = ft_strdup(token->value);
+// 					break;
+// 				}
+// 				i++;
+// 			}
+// 			result = ft_strdup("'\"'");
+// 		}
+// 		if 
+
+		
+// 		tmp = ft_strdup(result);
+// 		free(result);
+// 		result = ft_strjoin(tmp, token->value);
+// 		free(tmp);
+// 		token = token->next;
+// 		i++;
+// 	}
+// 	if (i == skip)
+// 	{
+// 		free(original->value);
+// 		original->value = ft_strdup(result);
+// 		free(result);
+// 	}
+// }
+
+void	remove_quots(t_minishell *minishell, t_token *token)
+{
+	char	*original;
+	int		len;
+
+	original = ft_strdup(token->value);
+	if (!original)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	len = ft_strlen(original);
+	free(token->value);
+	token->value = ft_calloc(len, sizeof(char));
+	ft_strlcpy(token->value, &original[1], len - 1);
+	free(original);
+	printf("resultat = %s\n", token->value);
+}
+
+bool is_single_double_quoted(t_minishell *minishell, t_token *token)
+{
+	char	*str;
+	int		i;
+	int		single;
+	int		doubled;
+
+	i = 0;
+	single = 0;
+	doubled = 0;
+	str = token->value;
+	if (str[i] == '\'')
+		single++;
+	if (str[i] == '"')
+		doubled++;
+	i++;
+	while (str[i])
+	{
+		if (str[i] == '\'')
+			single = i;
+		if (str[i] == '"')
+			doubled = i;
+		i++;
+	}
+	if (single > 1 && str[i] == '\'')
+		remove_quots(minishell, token);
+	if (doubled > 1)
+		remove_quots(minishell, token);
+	return (false);
+}
+
+
 /*
 if a token is an infile or outfile and is double quoted
 -> replace double quotes to simple quotes
 else if token is an argument and we have a command
+-> for '"'word'"' = one arg
 -> keep token intact if it s single quoted + double quoted
 -> add to char **cmd_args
 */
@@ -193,16 +340,39 @@ void read_args(t_minishell *minishell, t_token *token, t_pipe *pipe)
 {
 	int index_pipes;
 	int i;
+	// int	skip;
+	// int	single;
+	// int	double;
 
 	i = 0;
+	// skip = 0;
+	// single = 0;
+	// double = 0;
 	index_pipes = minishell->exec.index_pipe;
 	while (token != NULL && ((index_pipes == 0) || (index_pipes > 0 && i <= index_pipes)))
 	{
 		// ft_printf_fd(2, "pipe = %s\n", token->value);
-		if ((token->quote == DOUBLE ||
-			 (token->quote == SINGLE && token->next && token->next->quote != DOUBLE)) &&
-			(is_redirection(token) == true))
-			convert_to_single_quotes(minishell, token);
+		// if ((token->quote == DOUBLE ||
+		// 	 (token->quote == SINGLE && token->next && token->next->quote != DOUBLE)) &&
+		// 	(is_redirection(token) == true))
+		// 	convert_to_single_quotes(minishell, token);
+		if (token->type == IS_ARG)
+			is_single_double_quoted(minishell, token);
+		// if (token->quote == SINGLE)
+		// 	single++;
+		// else if (token->quote == DOUBLE)
+		// 	double++;
+		// skip = is_single_double_single(token);
+		// if (skip)
+		// {
+		// 	// merge en un seul dans le 1er token 
+		// 	// et skip les args qui y correspondent
+		// 	merge_in_one(minishell, token, skip);
+		// 	add_args(minishell, pipe, token);
+		// 	while (token && i < skip)
+		// 		token = token->next;
+		// 	continue;
+		// }
 		// printf("ICI = %s\n", token->value);
 		if (token->type == IS_ARG && pipe->is_cmd == 1)
 			add_args(minishell, pipe, token);
@@ -224,8 +394,8 @@ Pipe :
 */
 int read_tokens(t_minishell *minishell, t_pipe *pipe)
 {
-	int error_files;
-	int error_cmd;
+	// int error_files;
+	// int error_cmd;
 	t_token *token;
 
 	token = minishell->exec.last_pipe;
@@ -236,21 +406,27 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 	// input_pipe = 0;
 	// if (minishell->exec.last_pipe->type == PIPE)
 	// 	input_pipe = 1;
-	error_cmd = 0;
-	error_files = 0;
+	// error_cmd = 0;
+	// error_files = 0;
 	/* CMD et Infile et Outfile valides **************************/
 	// printf("ancien index de la pipe = %d\n", minishell->exec.index_pipe);
 	// index_pipes = find_pipe(token, minishell->exec.index_pipe);
 	// printf("nouvel index de la pipe = %d\n", index_pipes);
 	// minishell->exec.index_pipe = index_pipes;
-	error_files = find_input_output(minishell, pipe);
-	error_cmd = init_cmd(minishell, pipe);
-	// printf("read index de la pipe = %d\n", minishell->exec.index_pipe);
-	if (!(error_files == 0 && error_cmd == 0))
+	if (find_input_output(minishell, pipe) || init_cmd(minishell, pipe))
 	{
 		next_pipe(minishell, token);
 		return (-1);
 	}
+	
+	// error_cmd = init_cmd(minishell, pipe);
+	
+	// // printf("read index de la pipe = %d\n", minishell->exec.index_pipe);
+	// if (!(error_files == 0 && error_cmd == 0))
+	// {
+	// 	next_pipe(minishell, token);
+	// 	return (-1);
+	// }
 	/**************************************************************/
 
 	next_pipe(minishell, token);

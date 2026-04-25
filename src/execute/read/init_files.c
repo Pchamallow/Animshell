@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 13:23:33 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 11:16:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,13 @@ input = file
 int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *token;
-	/*garder les erreurs de tests */
-	/* permission OK, exit ou est creer pour un outfile*/
+	int		i;
+
+	i = minishell->exec.index_prev_pipe;
+	if (i > 0)
+		pipe->input = IS_PIPE;
 	token = minishell->exec.last_pipe;
-	while (token)
+	while (token && i <= minishell->exec.index_pipe)
 	{
 		if (token->type == IS_INPUT && token->next != NULL)
 			token->next->file_input = 1;
@@ -86,11 +89,11 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 				pipe->infile = token;
 				pipe->input = IS_FILE;
 			}
-			// else
-			// 	return (-1);
 		}
 		
-		if (pipe->output != IS_FILE && token->type == PIPE)
+		if (i > minishell->exec.index_prev_pipe
+			&& pipe->output != IS_FILE
+			&& pipe->output != ERROR && token->type == PIPE)
 			pipe->output = IS_PIPE;
 		
 		else if (token->file_output == 1)
@@ -100,17 +103,25 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 				pipe->outfile = token;
 				pipe->output = IS_FILE;
 			}
-			// else
-			// 	return (-1);
 		}
 		
 		token = token->next;
+		i++;
 	}
-	if (pipe->input == TERMINAL && minishell->exec.nb_pipes)
-	{
-		pipe->input = IS_PIPE;
-		minishell->exec.nb_pipes--;
-	}
+	if (pipe->input == ERROR || pipe->output == ERROR)
+		return (1);
+	minishell->exec.index_prev_pipe = minishell->exec.index_pipe;
+	// if (pipe->next)
+	// 	pipe->output = IS_PIPE;
+	// 	pipe->write = 1;
+	// else 
+	// 	pipe->write = 0;
+
+	// if (pipe->input == IS_PIPE)
+	// 	pipe->read = 1;
+	// else
+	// 	pipe->read = 0;
+		
 	// printf("output of pipe == %d\n", pipe->output);
 	return (0);
 }
