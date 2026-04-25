@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 19:11:35 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/21 21:54:40 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/25 15:31:42 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	free_line_and_token_list(char *line, t_token **token_list)
 	ft_token_lstclear(token_list);
 }
 
-void	error_malloc(char *line, char *err_msg)
+void	error_malloc(char *line, char *err_msg)//ajouter free envp copy
 {
 	ft_printf_fd(2, "minishell: ");
 	ft_printf_fd(2, "%s", err_msg);

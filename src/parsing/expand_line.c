@@ -6,7 +6,7 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/22 10:40:21 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/25 15:30:53 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ char	*expand_line(char *line, char **envp)
 	}
 	newline = ft_calloc(count + 1, sizeof(char));
 	if (!newline)
-		error_malloc(line, "malloc error in minishell expand line");
+		error_malloc(line, "malloc error in minishell expand line");//il faut aussi free envp copy
 	i = 0;
 	while (i < (int)ft_strlen(line))
 	{

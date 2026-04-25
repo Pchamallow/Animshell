@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:14:01 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/22 16:46:47 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 15:31:13 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	ft_token_add_back(t_token **head, t_token *newer, char *line)
 	{
 		if (head)
 			ft_token_lstclear(head);
-		error_malloc(line, "Error while creating token list");
+		error_malloc(line, "Error while creating token list");//il faut aussi free copy envp
 		/*free(line);*/
 		/*exit(2);*/
 	}

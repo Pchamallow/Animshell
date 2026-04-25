@@ -6,11 +6,13 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 15:57:38 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 17:40:09 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+volatile sig_atomic_t	g_sig_value = 0;
 
 void handle_sigint(int sig)
 {
@@ -18,7 +20,12 @@ void handle_sigint(int sig)
 	/*t_token	*first_token;*/
 
 	/*first_token = NULL;*/
-	(void)sig;
+	/*(void)sig;*/
+	if (sig == SIGINT)
+		g_sig_value = 130;
+	rl_replace_line("",0);//remplace complètement le contenu actuel de la ligne en cours d’édition
+	rl_on_new_line();//tells the update routine that we have moved onto a new empty line
+	rl_redisplay();//met a jour le display
 	write(1, "\nminishell$ ", 12); // réaffiche le prompt
 }
 
@@ -188,6 +195,13 @@ int execute(t_minishell *minishell, char **envp)
 			rl_clear_history();
 			printf("exit\n");
 			exit (0);
+		}
+
+		//routine signaux :
+		if (g_sig_value == 130 || g_sig_value == 131)
+		{
+			minishell->exec.error = g_sig_value;
+			continue ;
 		}
 
 		if (*line)

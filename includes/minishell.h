@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 15:27:31 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 17:37:40 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@
 # define ERROR_MSG(msg) BLUE msg RESET //
 
 /***********************************************************************/
+
+extern volatile sig_atomic_t	g_sig_value;
+
 typedef enum e_token_type
 {
 	WORD,
@@ -129,8 +132,6 @@ typedef struct s_minishell
 	t_exec		exec;
 	t_token		*token;
 }				t_minishell;
-
-# define CMD_LIST "echo, cd, pwd, export, unset, env, exit"
 
 /***********************************************************************/
 
