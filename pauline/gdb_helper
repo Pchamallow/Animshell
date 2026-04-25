@@ -2,6 +2,7 @@ display src[i + j]
 display little[j]
 
 display minishell.token->next.value
+display array[i]
 
 
 display cmd->cmd_args[1]
@@ -18,7 +19,7 @@ cat < infile.txt | wc
 cat < infile.txt > outfile.txt | wc > outfile.txt 
 cat < infile.txt > outfile.txt | wc > outfile.txt | cat | wc
 nocmd < infile.txt infile2
-
+echo coucou | none -a
 
 minishell->exec.index_pipe
 

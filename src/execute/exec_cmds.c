@@ -6,27 +6,39 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 14:52:16 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 16:04:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
+//faire un tableau de fonction
 
+void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
+{
+	array_built_in[IS_ECHO] = echo;
+	// array_buit_in[CD]= ;
+	// array_buit_in[PWD]= ;
+	// array_buit_in[EXPORT]= ;
+	// array_buit_in[UNSET]= ;
+	// array_buit_in[ENV]= ;
+	// array_buit_in[EXIT]= ;
+}
+
+// void	exec_built_in(t_minishell *minishell, t_pipe *pipe)
+// {
+// 	if (pipe->built_in)
+// }
 
 /*
-
-
 if current + is_next_pipe 
 but current->output == IS_FILE
 == ERROR 
 -> next pipe will receive nothing,
 so we close pipefd[1] == writing
-
-
 */
-void	exec_cmds_pipe(t_minishell *minishell, char **envp)
+void	exec_cmds_pipe(t_minishell *minishell)
 {
 	t_pipe *current;
 	pid_t	pid;
@@ -35,15 +47,17 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 	int		input_fd;
 	int		is_next_pipe;
 	int		at_least_one_pipe;
+	int		(*array_built_in[8])(t_minishell *, t_pipe *);
 	// int		not_write;
 	
 	current = minishell->exec.pipe_lst;
-
+	init_array_built_in(array_built_in);
 	// if (minishell->exec.pipe_lst->next)
 	// 	printf("dernier output = %d\n", minishell->exec.pipe_lst->next->output);
 	// pipe(pipefd);
 	input_fd = 0;
 	at_least_one_pipe = 0;
+	
 	while (current)
 	{
 		// printf(ERROR_MSG("new command -----------------------\n"));
@@ -59,6 +73,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			current->error = 1;
 			// not_write = 1;
 		}
+		// printf("current built-in = %d\n", current->built_in);
 		//print
 		// if (current->cmd)
 		// 	printf("exec command = %s\n", current->cmd->value);
@@ -160,7 +175,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			
 			close_fds_pipe(current);
 			
-			if (!current->error)
+			if (current->is_cmd && !current->error && current->built_in == NONE)
 			{
 			// printf("current = %s\n", current->cmd->value);
 				// if (is_next_pipe)
@@ -168,9 +183,13 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 				// 	close_fd(pipefd[0]);
 				// 	close_fd(pipefd[1]);
 				// }
-				execve(current->cmd->cmd_path, current->cmd->args_execve, envp);
+				execve(current->cmd->cmd_path, current->cmd->args_execve, minishell->exec.envp);
 				perror("execve");
 			}
+			else if (current->built_in)
+				array_built_in[current->built_in](minishell, current);
+				// exec_built_in(minishell, current);
+			
 			free_all(minishell);
 			exit(1);
 			

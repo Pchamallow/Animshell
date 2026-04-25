@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 13:04:29 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 16:03:45 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void free_cpy(char **dst, char *src)
 	*dst = ft_strdup(src);
 }
 
-void next_pipe(t_minishell *minishell, t_token *token)
+int next_pipe(t_minishell *minishell, t_token *token)
 {
 	t_token *tmp;
 	int		i;
@@ -51,11 +51,13 @@ void next_pipe(t_minishell *minishell, t_token *token)
 		{
 			// printf("new last_pipe value -> %s\n", tmp->value);
 			minishell->exec.last_pipe = tmp;
-			minishell->exec.index_pipe = minishell->exec.index_pipe + i;
+			return (i);
+			// minishell->exec.index_pipe = minishell->exec.index_pipe + i;
 		}
 		else
 			minishell->exec.index_pipe = -1;
 	}
+	return (0);
 	// printf("-------------------end search next pipe\n");
 }
 
@@ -110,32 +112,37 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 	nb_cmd_args = nb_args(token);
 	// printf("----------------------begin init_cmd\n");
 
-	if (token->type == PIPE)
-		token = token->next;
-	else if (token->type == IS_CMD)
+	while (token)
 	{
-		if (path_cmd(minishell, token) == 0)
+		if (token->type == PIPE)
+			token = token->next;
+		else if (token->type == IS_CMD)
 		{
+			if (path_cmd(minishell, token) == 0)
+			{
+				pipe->cmd = token;
+				pipe->is_cmd = 1;
+			}
+			else
+			{
+				token->type = WORD;
+				if (pipe->input != ERROR && pipe->output != ERROR)
+					ft_printf_fd(2, "minishell: %s: command not found\n", token->value);
+				minishell->exec.error = 127;
+				return (1);
+			}
+		}
+		else if (token->type == IS_BUILT_IN)
+		{
+			is_built_in(pipe, token);
 			pipe->cmd = token;
 			pipe->is_cmd = 1;
 		}
-		else
-		{
-			token->type = WORD;
-			if (pipe->input != ERROR && pipe->output != ERROR)
-				ft_printf_fd(2, "minishell: %s: command not found\n", token->value);
-			minishell->exec.error = 127;
-			return (1);
-		}
-	}
-	else if (token->type == IS_BUILT_IN)
-	{
-		is_built_in(pipe, token);
-		pipe->cmd = token;
-		pipe->is_cmd = 1;
+		token = token->next;
 	}
 	if (pipe->is_cmd == 1 && nb_cmd_args > 0)
 		init_cmd_args(minishell, pipe, nb_cmd_args);
+	// if (!pipe->cmd)
 	// printf("----------------------end init_cmd\n");
 	
 	return (0);
@@ -352,6 +359,7 @@ void read_args(t_minishell *minishell, t_token *token, t_pipe *pipe)
 	while (token != NULL && ((index_pipes == 0) || (index_pipes > 0 && i <= index_pipes)))
 	{
 		// ft_printf_fd(2, "pipe = %s\n", token->value);
+		// ft_printf_fd(2, "index_pipes = %d\n", index_pipes);
 		// if ((token->quote == DOUBLE ||
 		// 	 (token->quote == SINGLE && token->next && token->next->quote != DOUBLE)) &&
 		// 	(is_redirection(token) == true))
@@ -397,6 +405,7 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 	// int error_files;
 	// int error_cmd;
 	t_token *token;
+	int		index_next_pipe;
 
 	token = minishell->exec.last_pipe;
 	// printf("token actuel = %s\n", token->value);
@@ -415,7 +424,8 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 	// minishell->exec.index_pipe = index_pipes;
 	if (find_input_output(minishell, pipe) || init_cmd(minishell, pipe))
 	{
-		next_pipe(minishell, token);
+		index_next_pipe = next_pipe(minishell, token);
+		minishell->exec.index_pipe = minishell->exec.index_pipe + index_next_pipe;
 		return (-1);
 	}
 	
@@ -429,9 +439,10 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 	// }
 	/**************************************************************/
 
-	next_pipe(minishell, token);
+	index_next_pipe = next_pipe(minishell, token);
 
 	read_args(minishell, token, pipe);
+	minishell->exec.index_pipe = minishell->exec.index_pipe + index_next_pipe;
 
 	// if (!pipe->infile)
 	// {

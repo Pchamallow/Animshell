@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/13 19:16:48 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 15:27:48 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ conditions
 - - if $?word or word$? 
 - - no print with $ ?*/
 // *********************
-int echo(t_minishell *minishell)
+int echo(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *args;
 	int		i;
@@ -54,6 +54,7 @@ int echo(t_minishell *minishell)
 	int		len;
 
 	i = 0;
+	(void)pipe;
 	args = minishell->exec.pipe_lst->cmd;
 	args = args->next;
 	while (args && (minishell->exec.index_pipe == 0 || i < minishell->exec.index_pipe))

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 14:45:16 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 15:27:31 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,12 +150,12 @@ void	print_pauline(t_minishell *minishell);
 void	path_explicit(t_minishell *minishell, t_token *token);
 
 /************************************************************ built-in */
-int echo(t_minishell *minishell);
+int		echo(t_minishell *minishell, t_pipe *pipe);
 /***************************************************** tabs for execve */
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
 /**************************************************** execute commands */
-void	exec_cmds_pipe(t_minishell *minishell, char **envp);
-void	exec_cmd_no_pipe(t_minishell *minishell, char **envp);
+void	exec_cmds_pipe(t_minishell *minishell);
+// void	exec_cmd_no_pipe(t_minishell *minishell, char **envp);
 
 /********************************************************** struct env */
 // void    init_struct_env(t_env *env);

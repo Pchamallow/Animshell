@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 14:51:09 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 15:57:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,10 @@ int	nb_pipes(t_token *first)
 	return (pipes);
 }
 
+/* 
+Find nb of pipes, 
+fill 0 or NULL,
+*/
 static void init_pipe(t_minishell *minishell)
 {
 	t_pipe	*current;
@@ -113,17 +117,11 @@ int find_first_pipe(t_token *token)
 /* 
 Find nb of pipes, 
 fill 0 or NULL,
-find the PATH (split each little paths)
 */
-void init_line_to_exec(t_minishell *minishell, char **envp)
-{	
-	// env -i -> retirer envp
-	// strv_dup(minishell, &minishell->exec.envp, envp);
-	// minishell->exec.nb_pipes = nb_pipes(minishell->token);
-	(void)envp;
-	init_pipe(minishell);
-	// init_paths_for_search_cmd(minishell, envp);
-}
+// void init_line_to_exec(t_minishell *minishell)
+// {	
+// 	init_pipe(minishell);
+// }
 
 /* Put values 0 or NULL in order to reuse after */
 void	init_exec(t_minishell *minishell)
@@ -220,9 +218,10 @@ int execute(t_minishell *minishell, char **envp)
 		
 		if (minishell->token)
 		{
-			init_line_to_exec(minishell, envp);
+			init_pipe(minishell);
+			// init_line_to_exec(minishell, envp);
 			// read_all_pipes(minishell, envp);
-			exec_cmds_pipe(minishell, envp);
+			exec_cmds_pipe(minishell);
 			// if (minishell->exec.pipe_lst->is_cmd == 1)
 			// {
 			// 	if (minishell->exec.nb_pipes > 0)
