@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 15:27:48 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 16:51:49 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,12 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 
 	i = 0;
 	(void)pipe;
-	args = minishell->exec.pipe_lst->cmd;
-	args = args->next;
+	args = NULL;
+	if (pipe->cmd->next)
+		args = pipe->cmd->next;
+	else
+		return (0);
+	// args = args->next;
 	while (args && (minishell->exec.index_pipe == 0 || i < minishell->exec.index_pipe))
 	{
 		len = ft_strlen(args->value);
@@ -75,6 +79,8 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 				j++;
 			}
 		}
+		else if (args->type == IS_INPUT)
+			return (0);
 		else
 			ft_printf_fd(1, "%s", args->value);
 		// ft_printf_fd(2, "%d", args->type);
@@ -84,31 +90,3 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 	ft_printf_fd(1, "\n");
 	return (0);
 }
-
-/*
-faire la verification de cmd, voir si elle passe,
-si el chemin est explicite ou non etc
--> test des cmd, voir si word = echo 
--> exec.echo = 1 si il y a "echo " + un mot derriere
-voir les diffrents contextes d utilisation d echo 
-
-parsing verifier les mots les uns apres les autres
-que ce soit bien pas des commandes
-
-
-j ai besoin dune structure ? ou pas 
-
-mot1
-
-cmd1
-
-mot2
-
-cmd2
-
-
-ici pour dire a echo print les mots d apres
-mais arrete s il autre chose qu un mot
-= recuperer le type
-
-*/

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 11:16:17 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 16:20:45 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	init_outfile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	if (token->fd < 0)
 	{
 		pipe->output = ERROR;
-		// printf("error out\n");
+		printf("error out\n");
 		if (pipe->input != ERROR)
 			strerror_file(token->value);
 		minishell->exec.error = 2;
@@ -100,8 +100,11 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 		{
 			if (init_outfile(minishell, pipe, token) == 0)
 			{
-				pipe->outfile = token;
-				pipe->output = IS_FILE;
+				if (pipe->output != ERROR)
+				{
+					pipe->outfile = token;
+					pipe->output = IS_FILE;
+				}
 			}
 		}
 		

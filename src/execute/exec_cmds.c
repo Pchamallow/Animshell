@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 16:04:04 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 16:57:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,9 +175,9 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			
 			close_fds_pipe(current);
 			
+			// printf("current = %s\n", current->cmd->value);
 			if (current->is_cmd && !current->error && current->built_in == NONE)
 			{
-			// printf("current = %s\n", current->cmd->value);
 				// if (is_next_pipe)
 				// {
 				// 	close_fd(pipefd[0]);

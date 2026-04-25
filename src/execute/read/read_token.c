@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 16:03:45 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 16:51:13 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,19 +129,29 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 				if (pipe->input != ERROR && pipe->output != ERROR)
 					ft_printf_fd(2, "minishell: %s: command not found\n", token->value);
 				minishell->exec.error = 127;
+				pipe->input = ERROR;
+				pipe->output = ERROR;
 				return (1);
 			}
 		}
 		else if (token->type == IS_BUILT_IN)
 		{
+			// printf("cmd attribu'e\n");
+			// printf("%s\n", token->value);
+			// printf("%s\n", token->next->value);
 			is_built_in(pipe, token);
 			pipe->cmd = token;
 			pipe->is_cmd = 1;
 		}
 		token = token->next;
 	}
-	if (pipe->is_cmd == 1 && nb_cmd_args > 0)
+	if (pipe->is_cmd && nb_cmd_args > 0)
 		init_cmd_args(minishell, pipe, nb_cmd_args);
+	if (!pipe->is_cmd)
+	{
+		pipe->input = ERROR;
+		pipe->output = ERROR;
+	}
 	// if (!pipe->cmd)
 	// printf("----------------------end init_cmd\n");
 	
