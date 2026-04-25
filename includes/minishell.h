@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/24 17:23:40 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 11:12:02 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,8 @@ typedef struct s_exec
 	int			input; // -1 file invalide, 0 pas de input, 1 = file, 2 = pipe
 	int			output; // 0 pas de output(donc terminal), 1 = file, 2 = pipe
 	int			index_pipe;
-	int			nb_pipes;
+	int			index_prev_pipe;
+	// int			nb_pipes;
 	t_pipe		*pipe_lst;
 	t_token		*last_pipe;
 	t_token		**first_token;

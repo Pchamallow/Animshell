@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/24 17:14:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 11:16:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,11 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 	t_token *token;
 	int		i;
 
-	i = 0;
+	i = minishell->exec.index_prev_pipe;
+	if (i > 0)
+		pipe->input = IS_PIPE;
 	token = minishell->exec.last_pipe;
-	while (token && i < minishell->exec.index_pipe)
+	while (token && i <= minishell->exec.index_pipe)
 	{
 		if (token->type == IS_INPUT && token->next != NULL)
 			token->next->file_input = 1;
@@ -89,7 +91,9 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 			}
 		}
 		
-		if (pipe->output != IS_FILE && pipe->output != ERROR && token->type == PIPE)
+		if (i > minishell->exec.index_prev_pipe
+			&& pipe->output != IS_FILE
+			&& pipe->output != ERROR && token->type == PIPE)
 			pipe->output = IS_PIPE;
 		
 		else if (token->file_output == 1)
@@ -104,13 +108,9 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 		token = token->next;
 		i++;
 	}
-	if (pipe->input == TERMINAL && minishell->exec.nb_pipes)
-	{
-		pipe->input = IS_PIPE;
-		minishell->exec.nb_pipes--;
-	}
 	if (pipe->input == ERROR || pipe->output == ERROR)
 		return (1);
+	minishell->exec.index_prev_pipe = minishell->exec.index_pipe;
 	// if (pipe->next)
 	// 	pipe->output = IS_PIPE;
 	// 	pipe->write = 1;

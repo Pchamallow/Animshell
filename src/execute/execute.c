@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/24 17:24:21 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 11:12:35 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,23 @@ void handle_sigint(int sig)
 	write(1, "\nminishell$ ", 12); // réaffiche le prompt
 }
 
+
+int	nb_pipes(t_token *first)
+{
+	t_token *token;
+	int		pipes;
+
+	pipes = 0;
+	token = first;
+	while (token)
+	{
+		if (token->type == PIPE)
+			pipes++;
+		token = token->next;
+	}
+	return (pipes);
+}
+
 static void init_pipe(t_minishell *minishell)
 {
 	t_pipe	*current;
@@ -29,7 +46,7 @@ static void init_pipe(t_minishell *minishell)
 	int	i;
 
 	i = 0;
-	max = minishell->exec.nb_pipes;
+	max = nb_pipes(minishell->token);
 	// printf("max = %d\n", max);
 	minishell->exec.pipe_lst = ft_calloc(1, sizeof(t_pipe));
 	if (!minishell->exec.pipe_lst)
@@ -57,22 +74,6 @@ static void init_pipe(t_minishell *minishell)
 	}
 }
 
-
-int	nb_pipes(t_token *first)
-{
-	t_token *token;
-	int		pipes;
-
-	pipes = 0;
-	token = first;
-	while (token)
-	{
-		if (token->type == PIPE)
-			pipes++;
-		token = token->next;
-	}
-	return (pipes);
-}
 
 // void init_paths_for_search_cmd(t_minishell *minishell, char **envp)
 // {
@@ -118,7 +119,7 @@ void init_line_to_exec(t_minishell *minishell, char **envp)
 {	
 	// env -i -> retirer envp
 	strv_dup(minishell, &minishell->exec.envp, envp);
-	minishell->exec.nb_pipes = nb_pipes(minishell->token);
+	// minishell->exec.nb_pipes = nb_pipes(minishell->token);
 	init_pipe(minishell);
 	// init_paths_for_search_cmd(minishell, envp);
 }
@@ -139,6 +140,7 @@ void	init_exec(t_minishell *minishell)
 	
 	minishell->exec.input = 0;
 	minishell->exec.output = 0;
+	minishell->exec.index_prev_pipe = 0;
 	minishell->exec.last_pipe = minishell->token;
 	minishell->exec.paths_for_search_cmd = NULL;
 	minishell->exec.envp = NULL;

@@ -9,6 +9,7 @@ display cmd->cmd_args[1]
 display minishell->exec.nb_pipes
 display token->value
 
+p minishell->exec.index_pipe
 
 
 cat < infile.txt | wc | cat
