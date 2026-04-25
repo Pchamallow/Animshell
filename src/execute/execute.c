@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/22 21:57:55 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/24 22:29:43 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ void handle_sigint(int sig)
 
 	/*first_token = NULL;*/
 	(void)sig;
+	rl_replace_line("",0);//remplace complètement le contenu actuel de la ligne en cours d’édition
+	rl_on_new_line();//tells the update routine that we have moved onto a new empty line
+	rl_redisplay();//met a jour le display
 	write(1, "\nminishell$ ", 12); // réaffiche le prompt
 }
 
@@ -150,10 +153,19 @@ void	init_exec(t_minishell *minishell)
 	}
 }
 
+void	set_signal_default(void)
+{
+	struct sigaction sa_default;
+
+	ft_bzero(&sa_default, sizeof(struct sigaction));
+	sa_default.sa_handler = SIG_DFL;
+	sigaction(SIGINT, &sa_default, NULL);
+	sigaction(SIGQUIT, &sa_default, NULL);
+}
+
 int execute(t_minishell *minishell, char **envp)
 {
 
-	signal(SIGINT, handle_sigint);
 	
 	/*  BOUCLE WHILE  **********************************/
 	//variables pour boucle while :
@@ -167,6 +179,7 @@ int execute(t_minishell *minishell, char **envp)
 	
 	while (1)
 	{
+		signal(SIGINT, handle_sigint);
 		line = readline("minishell$ ");
 		if (!line)
 		{
@@ -205,6 +218,7 @@ int execute(t_minishell *minishell, char **envp)
 		
 		if (minishell->token)
 		{
+			set_signal_default();
 			init_line_to_exec(minishell, envp);
 			// read_all_pipes(minishell, envp);
 			exec_cmds_pipe(minishell, envp);

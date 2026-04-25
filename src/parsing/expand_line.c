@@ -6,7 +6,7 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/22 10:40:21 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/23 22:55:12 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ char	*expand_line(char *line, char **envp)
 	//S'il y a des variables qui contiennent des variables, on refait un tour :
 	if (find_env_var(newline, ft_strlen(newline)) != -1)
 		newline = expand_line(newline, envp);
-	ft_printf_fd(1, "EXPAND LINE:\n**%s**\n", newline);
+	/*ft_printf_fd(1, "EXPAND LINE:\n**%s**\n", newline);*/
 	/*ft_printf_fd(1, "----------------------------------\n");*/
 	return (newline);
 }
