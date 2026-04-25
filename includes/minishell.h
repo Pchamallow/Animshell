@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 11:12:02 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 14:45:16 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,7 @@ void	strerror_file(char *filename);
 void	strerror_free_structure(t_minishell *minishell, char *filename, int error);
 void	error_cmd_args(t_minishell *minishell, char *cmd, char *filename);
 void	free_all(t_minishell *minishell);
+void	lst_pipe_clear(t_pipe **head);
 
 /*************************************************************** utils */
 int		len_double(char **tab);

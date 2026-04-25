@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/24 17:24:33 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 14:52:16 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,9 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 		// printf("output pipe == %d\n", output_pipe);
 		if (pid == 0)
 		{
-			printf("-------- child \n");
-			printf("current->input = %d\n", current->input);
-			printf("current->output = %d\n", current->output);
+			// printf("-------- child \n");
+			// printf("current->input = %d\n", current->input);
+			// printf("current->output = %d\n", current->output);
 
 			/* INPUT               */
 			if (current->input == IS_FILE && current->output == IS_FILE)
@@ -176,7 +176,7 @@ void	exec_cmds_pipe(t_minishell *minishell, char **envp)
 			
 		}
 		// printf("pipe to execute = %d\n", pipe_to_execute);
-		printf("-------- parent \n");
+		// printf("-------- parent \n");
 		if (is_next_pipe)
 		{
 			// printf("releve de input fd\n");

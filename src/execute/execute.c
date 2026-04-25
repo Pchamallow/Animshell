@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 11:12:35 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 14:51:09 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,9 @@ find the PATH (split each little paths)
 void init_line_to_exec(t_minishell *minishell, char **envp)
 {	
 	// env -i -> retirer envp
-	strv_dup(minishell, &minishell->exec.envp, envp);
+	// strv_dup(minishell, &minishell->exec.envp, envp);
 	// minishell->exec.nb_pipes = nb_pipes(minishell->token);
+	(void)envp;
 	init_pipe(minishell);
 	// init_paths_for_search_cmd(minishell, envp);
 }
@@ -142,8 +143,8 @@ void	init_exec(t_minishell *minishell)
 	minishell->exec.output = 0;
 	minishell->exec.index_prev_pipe = 0;
 	minishell->exec.last_pipe = minishell->token;
-	minishell->exec.paths_for_search_cmd = NULL;
-	minishell->exec.envp = NULL;
+	// minishell->exec.paths_for_search_cmd = NULL;
+	// minishell->exec.envp = NULL;
 	minishell->exec.pipe_lst = NULL;
 	tmp = minishell->token;
 	while (tmp != NULL)
@@ -155,6 +156,12 @@ void	init_exec(t_minishell *minishell)
 		tmp->file_output = 0;
 		tmp = tmp->next;
 	}
+}
+
+void	free_envp(t_minishell *minishell)
+{
+	free_strv(minishell->exec.envp);
+	free_strv(minishell->exec.paths_for_search_cmd);
 }
 
 int execute(t_minishell *minishell, char **envp)
@@ -171,14 +178,15 @@ int execute(t_minishell *minishell, char **envp)
 	first_token = NULL;
 	minishell->exec.error = 0;
 	
+	minishell->exec.envp = NULL;
+	strv_dup(minishell, &minishell->exec.envp, envp);
 	
 	while (1)
 	{
 		line = readline("minishell$ ");
 		if (!line)
 		{
-			// free_all(minishell);
-			// free_strv(minishell->exec.envp);
+			free_envp(minishell);
 			rl_clear_history();
 			printf("exit\n");
 			exit (0);
@@ -228,7 +236,10 @@ int execute(t_minishell *minishell, char **envp)
 		}
 		/************************************************/
 		
-		free_all(minishell);
+		if (minishell->token)
+			ft_token_lstclear(minishell->exec.first_token);
+		if (minishell->exec.pipe_lst)
+			lst_pipe_clear(&minishell->exec.pipe_lst);
 		
 	}
 	return (0);
