@@ -15,7 +15,7 @@ void print_double(char **str)
 
 void print_pauline_pipe(t_pipe *pipe)
 {
-	ft_printf_fd(2, "\nbuilt in : %d\n", pipe->built_in);
+	ft_printf_fd(2, "\nbuilt in : %d\n", pipe->builtin_kind);
 	if (pipe->cmd)
 	{
 		ft_printf_fd(2, "\ncmd : %s\n", pipe->cmd->value);

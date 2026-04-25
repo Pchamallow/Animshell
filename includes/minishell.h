@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 15:27:31 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 17:47:33 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef struct s_token
 	struct s_token	*next;
 }				t_token;
 
-typedef enum e_built_in
+typedef enum e_builtin_kind
 {
 	NONE,
 	IS_ECHO,
@@ -81,7 +81,7 @@ typedef enum e_built_in
 	UNSET,
 	ENV,
 	EXIT
-}			t_built_in;
+}			t_builtin_kind;
 
 typedef enum e_put
 {
@@ -91,18 +91,29 @@ typedef enum e_put
 	IS_PIPE
 }			t_put;
 
+typedef struct s_builtin_content
+{
+	char		*result;
+}				t_builtin_content;
+
+typedef struct s_builtin
+{
+	t_builtin_content	echo;
+}				t_builtin;
+
 typedef struct s_pipe
 {
-	t_token *infile;
-	t_token *outfile;
-	t_token	*token;
-	t_token	*cmd;
-	int		is_cmd;
-	int		nb_args;
-	int		error;
-	t_put	input;
-	t_put	output;
-	t_built_in	built_in;
+	t_token 		*infile;
+	t_token 		*outfile;
+	t_token			*token;
+	t_token			*cmd;
+	int				is_cmd;
+	int				nb_args;
+	int				error;
+	t_put			input;
+	t_put			output;
+	// t_builtin		builtin;
+	t_builtin_kind	builtin_kind;
 	struct s_pipe	*next;
 }				t_pipe;
 
@@ -128,6 +139,8 @@ typedef struct s_minishell
 {
 	t_exec		exec;
 	t_token		*token;
+	t_builtin	builtin;
+	char		*prompt;
 }				t_minishell;
 
 # define CMD_LIST "echo, cd, pwd, export, unset, env, exit"

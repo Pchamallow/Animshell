@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 16:57:38 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 17:27:32 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
 
 // void	exec_built_in(t_minishell *minishell, t_pipe *pipe)
 // {
-// 	if (pipe->built_in)
+// 	if (pipe->builtin_kind)
 // }
 
 /*
@@ -73,7 +73,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			current->error = 1;
 			// not_write = 1;
 		}
-		// printf("current built-in = %d\n", current->built_in);
+		// printf("current built-in = %d\n", current->builtin_kind);
 		//print
 		// if (current->cmd)
 		// 	printf("exec command = %s\n", current->cmd->value);
@@ -176,7 +176,8 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			close_fds_pipe(current);
 			
 			// printf("current = %s\n", current->cmd->value);
-			if (current->is_cmd && !current->error && current->built_in == NONE)
+			if (current->is_cmd && !current->error
+				&& current->builtin_kind == NONE)
 			{
 				// if (is_next_pipe)
 				// {
@@ -186,8 +187,8 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				execve(current->cmd->cmd_path, current->cmd->args_execve, minishell->exec.envp);
 				perror("execve");
 			}
-			else if (current->built_in)
-				array_built_in[current->built_in](minishell, current);
+			else if (current->builtin_kind)
+				array_built_in[current->builtin_kind](minishell, current);
 				// exec_built_in(minishell, current);
 			
 			free_all(minishell);
