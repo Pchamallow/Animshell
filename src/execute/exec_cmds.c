@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 17:27:32 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/27 15:14:20 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,11 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			current->error = 1;
 			// not_write = 1;
 		}
+
+		if (current->builtin_kind == IS_ECHO)
+			echo_for_prompt(minishell, current);
+
+		
 		// printf("current built-in = %d\n", current->builtin_kind);
 		//print
 		// if (current->cmd)

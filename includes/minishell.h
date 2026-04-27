@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 17:47:33 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/27 17:39:09 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef enum e_token_type
 	IS_DELIMITER,/* EOF */
 	ONE_SPACE,
 	PIPE,
-	REDIRECTION,
+	REDIRECTION, /* valeur intermediaire durant le parsing */
 	IS_INPUT,
 	IS_OUTPUT,
 	IS_APPEND,/* >> */
@@ -94,6 +94,7 @@ typedef enum e_put
 typedef struct s_builtin_content
 {
 	char		*result;
+	bool		for_prompt;
 }				t_builtin_content;
 
 typedef struct s_builtin
@@ -164,6 +165,7 @@ void	path_explicit(t_minishell *minishell, t_token *token);
 
 /************************************************************ built-in */
 int		echo(t_minishell *minishell, t_pipe *pipe);
+void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe);
 /***************************************************** tabs for execve */
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
 /**************************************************** execute commands */
@@ -196,10 +198,11 @@ void	close_fds_pipe(t_pipe *pipe);
 int		is_sign(char c);
 int		strv_dup(t_minishell *minishell, char ***dst, char **src);
 int		lst_size(t_token *token);
+int		count_chr(char *str, char c, bool followed);
+bool	find_built_in(char *token);
 
 /*************************************************************** TO_DELETE */
-void print_double(char **str);// section to delete
-bool find_built_in(char *token);
+void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);
 
 /************************************************************* parsing */

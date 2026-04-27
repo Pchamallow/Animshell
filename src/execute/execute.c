@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 18:36:03 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/27 15:16:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,9 @@ void	get_prompt(t_minishell *minishell)
 	if (minishell->builtin.echo.result)
 	{
 		minishell->prompt = ft_strjoin(minishell->builtin.echo.result, base);
+		free(minishell->builtin.echo.result);
+		minishell->builtin.echo.result = NULL;
+		minishell->builtin.echo.for_prompt = false;
 	}
 	else
 		minishell->prompt = ft_strdup("minishell$ ");
@@ -192,6 +195,7 @@ int execute(t_minishell *minishell, char **envp)
 	minishell->exec.error = 0;
 	minishell->prompt = NULL;
 	minishell->builtin.echo.result = NULL;
+	minishell->builtin.echo.for_prompt = false;
 	minishell->exec.envp = NULL;
 	strv_dup(minishell, &minishell->exec.envp, envp);
 	

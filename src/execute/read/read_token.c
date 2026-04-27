@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 16:51:13 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/27 17:59:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,7 +310,7 @@ void	remove_quots(t_minishell *minishell, t_token *token)
 	token->value = ft_calloc(len, sizeof(char));
 	ft_strlcpy(token->value, &original[1], len - 1);
 	free(original);
-	printf("resultat = %s\n", token->value);
+	// printf("resultat = %s\n", token->value);
 }
 
 bool is_single_double_quoted(t_minishell *minishell, t_token *token)
@@ -422,11 +422,6 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 
 	// printf ("READ TOKENS\n");
 
-	// input_pipe = 0;
-	// if (minishell->exec.last_pipe->type == PIPE)
-	// 	input_pipe = 1;
-	// error_cmd = 0;
-	// error_files = 0;
 	/* CMD et Infile et Outfile valides **************************/
 	// printf("ancien index de la pipe = %d\n", minishell->exec.index_pipe);
 	// index_pipes = find_pipe(token, minishell->exec.index_pipe);
