@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/27 15:16:17 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/27 18:26:59 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,12 @@ int find_first_pipe(t_token *token)
 	return (pipe ? i : 0);
 }
 
+
+void	init_heredoc(t_minishell *minishell)
+{
+	minishell->here_doc->path_explicite = 
+}
+
 /* 
 Find nb of pipes, 
 fill 0 or NULL,
@@ -155,6 +161,7 @@ void	init_exec(t_minishell *minishell)
 		tmp = tmp->next;
 	}
 	minishell->builtin.echo.result = NULL;
+	init_heredoc(minishell);
 }
 
 void	free_envp(t_minishell *minishell)

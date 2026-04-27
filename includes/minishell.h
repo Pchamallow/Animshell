@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/27 17:39:09 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/27 18:14:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ typedef struct s_minishell
 {
 	t_exec		exec;
 	t_token		*token;
+	t_token		*here_doc;
 	t_builtin	builtin;
 	char		*prompt;
 }				t_minishell;
