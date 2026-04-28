@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/27 19:26:55 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/27 15:16:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static void init_pipe(t_minishell *minishell)
 		current->is_cmd = 0;
 		current->nb_args = 0;
 		current->error = 0;
-		current->built_in = NONE;
+		current->builtin_kind = NONE;
 		current->input = TERMINAL;
 		current->output = TERMINAL;
 		current->infile = NULL;
@@ -154,12 +154,30 @@ void	init_exec(t_minishell *minishell)
 		tmp->file_output = 0;
 		tmp = tmp->next;
 	}
+	minishell->builtin.echo.result = NULL;
 }
 
 void	free_envp(t_minishell *minishell)
 {
 	free_strv(minishell->exec.envp);
 	free_strv(minishell->exec.paths_for_search_cmd);
+}
+
+void	get_prompt(t_minishell *minishell)
+{
+	char	*base;
+
+	base = ft_strdup("minishell$ ");
+	if (minishell->builtin.echo.result)
+	{
+		minishell->prompt = ft_strjoin(minishell->builtin.echo.result, base);
+		free(minishell->builtin.echo.result);
+		minishell->builtin.echo.result = NULL;
+		minishell->builtin.echo.for_prompt = false;
+	}
+	else
+		minishell->prompt = ft_strdup("minishell$ ");
+	free(base);
 }
 
 int execute(t_minishell *minishell, char **envp)
@@ -175,15 +193,19 @@ int execute(t_minishell *minishell, char **envp)
 
 	first_token = NULL;
 	minishell->exec.error = 0;
-	
+	minishell->prompt = NULL;
+	minishell->builtin.echo.result = NULL;
+	minishell->builtin.echo.for_prompt = false;
 	minishell->exec.envp = NULL;
 	strv_dup(minishell, &minishell->exec.envp, envp);
 	
 	while (1)
 	{
-		line = readline("minishell$ ");
+		get_prompt(minishell);
+		line = readline(minishell->prompt);
 		if (!line)
 		{
+			free(minishell->prompt);
 			free_envp(minishell);
 			rl_clear_history();
 			printf("exit\n");
@@ -226,7 +248,7 @@ int execute(t_minishell *minishell, char **envp)
 			// {
 			// 	if (minishell->exec.nb_pipes > 0)
 			// 		exec_cmds_pipe(minishell, envp);
-			// 	else if (minishell->exec.pipe_lst->built_in != NONE)
+			// 	else if (minishell->exec.pipe_lst->builtin_kind != NONE)
 			// 		echo(minishell);
 			// 	else
 			// 		exec_cmds_pipe(minishell, envp);
@@ -234,7 +256,7 @@ int execute(t_minishell *minishell, char **envp)
 			// }
 		}
 		/************************************************/
-		
+		free(minishell->prompt);
 		if (minishell->token)
 			ft_token_lstclear(minishell->exec.first_token);
 		if (minishell->exec.pipe_lst)

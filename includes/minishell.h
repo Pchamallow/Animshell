@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 15:27:31 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/27 17:39:09 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef enum e_token_type
 	IS_DELIMITER,/* EOF */
 	ONE_SPACE,
 	PIPE,
-	REDIRECTION,
+	REDIRECTION, /* valeur intermediaire durant le parsing */
 	IS_INPUT,
 	IS_OUTPUT,
 	IS_APPEND,/* >> */
@@ -71,7 +71,7 @@ typedef struct s_token
 	struct s_token	*next;
 }				t_token;
 
-typedef enum e_built_in
+typedef enum e_builtin_kind
 {
 	NONE,
 	IS_ECHO,
@@ -81,7 +81,7 @@ typedef enum e_built_in
 	UNSET,
 	ENV,
 	EXIT
-}			t_built_in;
+}			t_builtin_kind;
 
 typedef enum e_put
 {
@@ -91,18 +91,30 @@ typedef enum e_put
 	IS_PIPE
 }			t_put;
 
+typedef struct s_builtin_content
+{
+	char		*result;
+	bool		for_prompt;
+}				t_builtin_content;
+
+typedef struct s_builtin
+{
+	t_builtin_content	echo;
+}				t_builtin;
+
 typedef struct s_pipe
 {
-	t_token *infile;
-	t_token *outfile;
-	t_token	*token;
-	t_token	*cmd;
-	int		is_cmd;
-	int		nb_args;
-	int		error;
-	t_put	input;
-	t_put	output;
-	t_built_in	built_in;
+	t_token 		*infile;
+	t_token 		*outfile;
+	t_token			*token;
+	t_token			*cmd;
+	int				is_cmd;
+	int				nb_args;
+	int				error;
+	t_put			input;
+	t_put			output;
+	// t_builtin		builtin;
+	t_builtin_kind	builtin_kind;
 	struct s_pipe	*next;
 }				t_pipe;
 
@@ -128,6 +140,8 @@ typedef struct s_minishell
 {
 	t_exec		exec;
 	t_token		*token;
+	t_builtin	builtin;
+	char		*prompt;
 }				t_minishell;
 
 # define CMD_LIST "echo, cd, pwd, export, unset, env, exit"
@@ -151,6 +165,7 @@ void	path_explicit(t_minishell *minishell, t_token *token);
 
 /************************************************************ built-in */
 int		echo(t_minishell *minishell, t_pipe *pipe);
+void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe);
 /***************************************************** tabs for execve */
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
 /**************************************************** execute commands */
@@ -183,10 +198,11 @@ void	close_fds_pipe(t_pipe *pipe);
 int		is_sign(char c);
 int		strv_dup(t_minishell *minishell, char ***dst, char **src);
 int		lst_size(t_token *token);
+int		count_chr(char *str, char c, bool followed);
+bool	find_built_in(char *token);
 
 /*************************************************************** TO_DELETE */
-void print_double(char **str);// section to delete
-bool find_built_in(char *token);
+void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);
 
 /************************************************************* parsing */

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 14:49:29 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/27 15:19:06 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,26 @@ void	lst_pipe_clear(t_pipe **head)
 	}
 	*head = NULL;
 }
+
+void	free_builtin(t_minishell *minishell)
+{
+	if (minishell->builtin.echo.result)
+		free(minishell->builtin.echo.result);
+	// minishell->builtin.echo.for_prompt = false;
+}
+
 void	free_all(t_minishell *minishell)
 {
 	if (minishell->exec.envp)
 		free_strv(minishell->exec.envp);
 	if (minishell->exec.paths_for_search_cmd)
 		free_strv(minishell->exec.paths_for_search_cmd);
+	free_builtin(minishell);
 	if (minishell->token)
 		ft_token_lstclear(minishell->exec.first_token);
 	if (minishell->exec.pipe_lst)
 		lst_pipe_clear(&minishell->exec.pipe_lst);
+	free(minishell->prompt);
 	// print_pauline(minishell);// print la commande et les arguments
 }
 

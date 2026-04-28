@@ -1,1 +1,1 @@
-2>infile.txt|cat
+salut

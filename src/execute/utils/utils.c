@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/24 17:23:25 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/25 18:29:05 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,8 @@ bool find_built_in(char *token)
 {
 	const char *builtins[7];
 	int	i;
-	int	len;
+	int	len_token;
+	int	len_builtin;
 
 	builtins[0] = "echo";
 	builtins[1] = "cd";
@@ -146,12 +147,21 @@ bool find_built_in(char *token)
 	builtins[5] = "env";
 	builtins[6] = "exit";
 	i = 0;
-	len = ft_strlen(token);
-
+	len_token = ft_strlen(token);
+	// len == le plus grand entre le token et le builtins
 	while (i < 7)
 	{
-		if (ft_strncmp(token, builtins[i], len) == 0)
-			return (true);
+		len_builtin = ft_strlen(builtins[i]);
+		if (len_token > len_builtin)
+		{
+			if (ft_strncmp(token, builtins[i], len_token) == 0)
+				return (true);
+		}
+		else
+		{
+			if (ft_strncmp(token, builtins[i], len_builtin) == 0)
+				return (true);
+		}
 		i++;
 	}
 	return (false);

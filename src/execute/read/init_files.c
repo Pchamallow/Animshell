@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 16:20:45 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/27 18:00:26 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static int	init_infile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 {
 	token->fd = open(token->value, O_RDONLY);
-	// close(token->fd);
 	if (token->fd < 0)
 	{
 		pipe->input = ERROR;
@@ -26,7 +25,6 @@ static int	init_infile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	// F_OK pour qu il existe, a verifier
 	// X_OK executable 
 	{
-		// pipe->infile = NULL;
 		pipe->input = ERROR;
 		minishell->exec.error = 1;
 		return (-1);
@@ -34,9 +32,20 @@ static int	init_infile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	return (0);
 }
 
+/*
+init_outfile
+
+- if file_output == 2 -> append
+write in file after previous contente
+
+- else erase, write in file
+*/
 static int	init_outfile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 {
-	token->fd = open(token->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (token->file_output == 2)
+		token->fd = open(token->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	else
+		token->fd = open(token->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	// printf("fd out = %d\n", token->fd);
 	// printf("fd out = %s\n", token->value);
 	if (token->fd < 0)
@@ -81,8 +90,10 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 			token->next->file_input = 1;
 		else if (token->type == IS_OUTPUT && token->next != NULL)
 			token->next->file_output = 1;
+		else if (token->type == IS_APPEND && token->next != NULL)
+			token->next->file_output = 2;
 
-		if (token->file_input == 1)
+		if (token->file_input)
 		{
 			if ((init_infile(minishell, pipe, token) == 0))
 			{
@@ -96,7 +107,7 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 			&& pipe->output != ERROR && token->type == PIPE)
 			pipe->output = IS_PIPE;
 		
-		else if (token->file_output == 1)
+		else if (token->file_output)
 		{
 			if (init_outfile(minishell, pipe, token) == 0)
 			{
@@ -114,17 +125,5 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 	if (pipe->input == ERROR || pipe->output == ERROR)
 		return (1);
 	minishell->exec.index_prev_pipe = minishell->exec.index_pipe;
-	// if (pipe->next)
-	// 	pipe->output = IS_PIPE;
-	// 	pipe->write = 1;
-	// else 
-	// 	pipe->write = 0;
-
-	// if (pipe->input == IS_PIPE)
-	// 	pipe->read = 1;
-	// else
-	// 	pipe->read = 0;
-		
-	// printf("output of pipe == %d\n", pipe->output);
 	return (0);
 }

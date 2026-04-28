@@ -10,6 +10,15 @@ display cmd->cmd_args[1]
 display minishell->exec.nb_pipes
 display token->value
 display pipe->output
+display args->value[i]
+display args->value[j]
+display args->type
+display str[i]
+display c
+display count
+display i
+display tmp
+display result
 
 p minishell->exec.index_pipe
 
@@ -23,6 +32,8 @@ cat < infile.txt > outfile.txt | wc > outfile.txt
 cat < infile.txt > outfile.txt | wc > outfile.txt | cat | wc
 nocmd < infile.txt infile2
 echo coucou | none -a
+echo coucou >> echotest
+cat echotest
 
 minishell->exec.index_pipe
 
@@ -34,3 +45,4 @@ set follow-fork-mode child
 
 
 jkkhjkh | echo coucou
+echo -n coucou

@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/25 11:03:39 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/04/27 14:32:25 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ SRCS		:= 											\
 			src/execute/read/read_token.c				\
 			src/execute/utils/error_free.c				\
 			src/execute/utils/strv_dup.c				\
+			src/execute/utils/count_chr.c				\
 			src/execute/utils/utils.c					\
 			src/execute/TO_DELETE.c						\
 			src/execute/exec_cmds.c						\
