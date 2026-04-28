@@ -216,7 +216,7 @@ int execute(t_minishell *minishell, char **envp)
 			add_history(line);
 
 		// PARSING ICI :************************
-		line = expand_line(line, envp);
+		line = expand_line(line, minishell->exec.envp);
 		if (separate_into_tokens(line, &first_token, minishell) != 0
 				|| parse_tokens(line, &first_token, minishell) != 0)
 			continue ;

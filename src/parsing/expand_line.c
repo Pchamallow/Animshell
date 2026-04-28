@@ -6,41 +6,41 @@
 /*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/22 10:40:21 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/27 19:23:32 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*check si $ suivi de char != ? dans line*/
-int	find_env_var(char *line, int len)
+int	find_env_var(char *line, int len, t_quote_type *quote)
 {
 	int				i;
-	t_quote_type	quote;
+	/*t_quote_type	quote;*/
 
 	/*if (!line)*/
 		/*return (-1);*/
 	i = 0;
-	quote = NO;
+	/*quote = NO;*/
 	while (i < len - 1)
 	{
 		/*---------- toggle quote -----------*/
 		if (line[i] == '\"')
 		{
-			if (quote == NO)
-				quote = DOUBLE;
-			else if (quote == DOUBLE)
-				quote = NO;
+			if (*quote == NO)
+				*quote = DOUBLE;
+			else if (*quote == DOUBLE)
+				*quote = NO;
 		}
 		if (line[i] == '\'')
 		{
-			if (quote == NO)
-				quote = SINGLE;
-			else if (quote == SINGLE)
-				quote = NO;
+			if (*quote == NO)
+				*quote = SINGLE;
+			else if (*quote == SINGLE)
+				*quote = NO;
 		}
 		/*----------------------------------*/
-		if (quote != SINGLE && line[i] == '$' && line[i + 1] != '$'
+		if (*quote != SINGLE && line[i] == '$' && line[i + 1] != '$'
 				&& line[i + 1] != '?' && !is_separator(line[i + 1]))
 			return (i);
 		i++;
@@ -144,16 +144,18 @@ size_t	ft_strlcat_minishell(char *dst, const char *src, size_t size)
 /*boucle principale avec calloc + strlcopy / strlcat*/
 char	*expand_line(char *line, char **envp)
 {
-	int		count;
-	char	*newline;
-	int		i;
-	int		len;
-	int		wd_len;
-	int		j;
+	int				count;
+	char			*newline;
+	int				i;
+	int				len;
+	int				wd_len;
+	int				j;
+	t_quote_type	quote;
 
 	if (!line)
 		return (NULL);
-	if (find_env_var(line, ft_strlen(line)) == -1)
+	quote = NO;
+	if (find_env_var(line, ft_strlen(line), &quote) == -1)
 		return (line);
 	/*ft_printf_fd(1, "---------------EXPAND--------------\n");*/
 	count = count_total_char(line, ft_strlen(line), envp);
@@ -172,9 +174,10 @@ char	*expand_line(char *line, char **envp)
 	if (!newline)
 		error_malloc(line, "malloc error in minishell expand line");
 	i = 0;
+	quote = NO;
 	while (i < (int)ft_strlen(line))
 	{
-		len = find_env_var(line + i, ft_strlen(line + i));
+		len = find_env_var(line + i, ft_strlen(line + i), &quote);
 		if (len == -1)
 		{
 			ft_strlcat_minishell(newline, line + i, count + 1);
@@ -197,7 +200,8 @@ char	*expand_line(char *line, char **envp)
 	}
 	free(line);
 	//S'il y a des variables qui contiennent des variables, on refait un tour :
-	if (find_env_var(newline, ft_strlen(newline)) != -1)
+	quote = NO;
+	if (find_env_var(newline, ft_strlen(newline), &quote) != -1)
 		newline = expand_line(newline, envp);
 	ft_printf_fd(1, "EXPAND LINE:\n**%s**\n", newline);
 	/*ft_printf_fd(1, "----------------------------------\n");*/
