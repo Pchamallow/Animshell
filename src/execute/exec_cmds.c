@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 12:02:34 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/28 17:03:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			// not_write = 1;
 		}
 
-		if (current->builtin_kind == IS_ECHO)
-			echo_for_prompt(minishell, current);
+
 
 		
 		// printf("current built-in = %d\n", current->builtin_kind);
@@ -91,11 +90,15 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		{
 			// printf("create 1 pipe\n");
 			pipe(pipefd);
+			minishell->exec.pipe_lst->pipfd1 = pipefd[1];
 			is_next_pipe = 1;
 			at_least_one_pipe = 1;
 		}
 		else 
 			is_next_pipe = 0;
+
+		if (current->builtin_kind == IS_ECHO)
+			echo_for_prompt(minishell, current);
 
 		// if (current->output ==  && is_next_pipe)
 		// 	current->error = 1;

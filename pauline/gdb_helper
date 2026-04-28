@@ -14,6 +14,8 @@ display args->value[i]
 display args->value[j]
 display args->type
 display str[i]
+display original[i]
+display result
 display c
 display count
 display i

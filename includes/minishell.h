@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 15:12:14 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/28 17:02:56 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ typedef struct s_pipe
 	int				is_cmd;
 	int				nb_args;
 	int				error;
+	int				pipfd1;
 	t_put			input;
 	t_put			output;
 	// t_builtin		builtin;
@@ -209,6 +210,8 @@ int		lst_size(t_token *token);
 int		count_chr(char *str, char c, bool followed);
 bool	find_built_in(char *token);
 void	ft_joinstr(t_minishell *minishell, char **result, char *str);
+void	ft_joinchr(t_minishell *minishell, char **result, char c);
+int		ft_strcmp(char *s1, char *s2);
 
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete

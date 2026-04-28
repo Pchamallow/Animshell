@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 15:24:42 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/28 17:26:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,44 @@
 // 	// close(*fd);
 // 	return (0);
 // }
+
+/*
+while line != delimiter
+- is a pipe = new line and print content to pipe
+- no pipe = new line
+*/
+void	heredoc_lines(t_minishell *minishell)
+{
+	char	*line;
+	bool	read;
+	bool	is_pipe;
+
+	read = true;
+	// is_pipe = false;
+	is_pipe = true;
+	while (read == true)
+	{
+		if (is_pipe == true)
+		{
+			line = readline("> ");
+			if (!ft_strcmp(line, minishell->here_doc->value))
+				break;
+			// ft_printf_fd(minishell->exec.pipe_lst->pipfd1, "%s\n", line);
+			// mettre le pipefd[1]
+			line = expand_line(line, minishell->exec.envp);
+			ft_printf_fd(1, "%s\n", line);
+		}
+		else
+		{
+			line = readline("> ");
+			if (!ft_strcmp(line, minishell->here_doc->value))
+				break;
+		}
+	}
+	free(minishell->here_doc->value);
+	minishell->here_doc->value = NULL;
+	// result = 
+}
 
 void	heredoc_delimiter_quotes(t_minishell *minishell)
 {
@@ -69,7 +107,7 @@ void	heredoc_delimiter_quotes(t_minishell *minishell)
 
 	// pas de texte apres la fin des quotes
 
-	while (original[i])
+	while (original[i] != '\0')
 	{
 		if (original[i] == '\'')
 		{
@@ -77,7 +115,7 @@ void	heredoc_delimiter_quotes(t_minishell *minishell)
 			last_single = i;
 			// if (open_double == true && open_single == false)
 			if (open_double == true)
-				ft_joinstr(minishell, &result, &original[i]);
+				ft_joinchr(minishell, &result, original[i]);
 			if (open_single == true)
 				open_single = false;
 			else
@@ -87,18 +125,19 @@ void	heredoc_delimiter_quotes(t_minishell *minishell)
 		{
 			doubleq++;
 			last_doubleq = i;
-			if (open_single == true)
-				ft_joinstr(minishell, &result, &original[i]);
+			// if (open_single == true)
+			// 	ft_joinstr(minishell, &result, &original[i]);
 			if (open_double == true)
 				open_double = false;
 			else
 				open_double = true;
 		}
 		else
-			ft_joinstr(minishell, &result, &original[i]);
+			ft_joinchr(minishell, &result, original[i]);
 		i++;
 	}
-	printf("result = %s\n", result);
+	minishell->here_doc->value = ft_strdup(result);
+	// printf("result = %s\n", result);
 	free(original);
 	free(result);
 	/*
@@ -123,17 +162,16 @@ void	heredoc_delimiter(t_minishell *minishell, t_token *token)
 	if (token->next)
 	{
 		token = token->next;
-		while (token && token->type != ONE_SPACE)
+		while (token && token->type != ONE_SPACE && token->type != HEREDOC)
 		{
 			ft_joinstr(minishell, &hd->value, token->value);
-			// printf("------ dilimiter = %s\n", hd->value);
 			token->type = WORD;
 			token = token->next;
 		}
 	}
 	heredoc_delimiter_quotes(minishell);
 	
-	// printf("dilimiter = %s\n", hd->value);
+	printf("dilimiter = %s\n", hd->value);
 	
 	return ;
 	
@@ -184,10 +222,9 @@ int	heredoc(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	if (ft_strchr(token->value, '\'') || ft_strchr(token->value, '"'))
 		to_expand = false;
 
-	// faire un char *delimiter = delimiter sans "" mais avce '' 
-	// que si on a des quotes qui englobes
-	// heredoc->value = delimiter cleaned
 	heredoc_delimiter(minishell, token);
+	
+	heredoc_lines(minishell);
 
 		
 	// (void)token;
