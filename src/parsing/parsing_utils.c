@@ -6,22 +6,50 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/08 22:07:46 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/19 17:21:07 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/28 23:22:06 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*	****************************************************		*/
-/* case_heredoc:												*/
-/*	- sets token type to HEREDOC								*/
-/*	- deletes the following space if there is one				*/
-/*	- checks if the next token is a WORD:						*/
-/*				- if no, returns an error						*/
-/*				- else, sets the next token type to IS_DELIMITER*/
-/*	- deletes the space following IS_DELIMITER if there is one	*/
-/*	- returns the token after IS_DELIMITER						*/
-/*	****************************************************		*/
+/*	***********************************************		*/
+/*join_next_token:										*/
+/* - joins the value of the next token					*/
+/* - to the current token value,						*/
+/* - then deletes the next token.						*/
+/* - After that, if next->token->type is WORD,			*/
+/*   the function calls itself to join the next token	*/
+/*	***********************************************		*/
+void	join_next_token(t_token *token, int *error)
+{
+	char	*new_value;
+
+	new_value = ft_strjoin(token->value, token->next->value);
+	if (!new_value)
+	{
+		*error = 99;
+		ft_printf_fd(2, "minishell: malloc error when joining tokens\n");
+		return;
+	}
+	free(token->value);
+	token->value = new_value;
+	delete_next(token);
+	if (token->next && token->next->type == WORD)
+		join_next_token(token, error);
+}
+
+/*	**********************************************************		*/
+/* case_heredoc:													*/
+/*	- sets token type to HEREDOC									*/
+/*	- deletes the following space if there is one					*/
+/*	- checks if the next token is a WORD:							*/
+/*				- if no, returns an error							*/
+/*				- else, sets the next token type to IS_DELIMITER	*/
+/*	- if IS_DELIMITER->next token is a WORD:						*/
+/*				- joins next token									*/
+/*	- deletes the space following IS_DELIMITER if there is one		*/
+/*	- returns the token after IS_DELIMITER							*/
+/*	**********************************************************		*/
 t_token	*case_heredoc(t_token *token, int *error)
 {
 	token->type = HEREDOC;
@@ -35,6 +63,10 @@ t_token	*case_heredoc(t_token *token, int *error)
 	}
 	token = token->next;
 	token->type = IS_DELIMITER;
+	if (token->next && token->next->type == WORD)
+		join_next_token(token, error);
+	if (*error)
+		return (token);
 	if (token->next && token->next->type == ONE_SPACE)
 		delete_next(token);
 	token = token->next;
@@ -52,6 +84,8 @@ t_token	*case_heredoc(t_token *token, int *error)
 /*	- checks if the next token is a WORD			*/
 /*			(if no, returns an error)				*/
 /*		and sets its type to IS_FILENAME			*/
+/*	- if IS_FILENAME->next token is a WORD:			*/
+/*				- joins next token					*/
 /*	- removes the space following IS_FILENAME		*/
 /*	- returns the token following IS_FILENAME		*/
 /*	*******************************************		*/
@@ -78,6 +112,10 @@ t_token	*case_redirection(t_token *token, int *error)
 	}
 	token = token->next;
 	token->type = IS_FILENAME;
+	if (token->next && token->next->type == WORD)
+		join_next_token(token, error);
+	if (*error)
+		return (token);
 	if (token->next && token->next->type == ONE_SPACE)
 		delete_next(token);
 	token = token->next;
@@ -88,12 +126,18 @@ t_token	*case_redirection(t_token *token, int *error)
 /* case_command:							*/
 /*	- sets the token type to IS_CMD			*/
 /*	- sets @cmd_found to true				*/
+/*	- if next token is a WORD:				*/
+/*				- joins next token			*/
 /*	- removes the following space if needed	*/
 /*	- returns the next token				*/
 /*	*********************************		*/
-t_token	*case_command(t_token *token, bool *cmd_found)
+t_token	*case_command(t_token *token, bool *cmd_found, int *error)
 {
 	*cmd_found = true;
+	if (token->next && token->next->type == WORD)
+		join_next_token(token, error);
+	if (*error)
+		return (token);
 	if (find_built_in(token->value) == true)
 		token->type = IS_BUILT_IN;
 	else
@@ -107,6 +151,8 @@ t_token	*case_command(t_token *token, bool *cmd_found)
 /*	*************************************************************	*/
 /* case_arg:														*/
 /*	- sets the token type to IS_ARG									*/
+/*	- if IS_ARG->next token is a WORD:								*/
+/*				- joins next token									*/
 /*	- checks if the next token is ONE_SPACE							*/
 /*			and the next next token WORD							*/
 /* 					-> if yes, keeps the space						*/
@@ -114,11 +160,15 @@ t_token	*case_command(t_token *token, bool *cmd_found)
 /* 					-> if no, removes the space if there is one		*/
 /* 							and returns the next token				*/
 /*	*************************************************************	*/
-t_token	*case_arg(t_token *token)
+t_token	*case_arg(t_token *token, int *error)
 {
 	t_token	*check_next;
 
 	token->type = IS_ARG;
+	if (token->next && token->next->type == WORD)
+		join_next_token(token, error);
+	if (*error)
+		return (token);
 	check_next = token->next;
 	if (check_next && check_next->type == ONE_SPACE
 		&& check_next->next && check_next->next->type == WORD)

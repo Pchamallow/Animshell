@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/21 21:53:12 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/28 21:09:08 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static bool	is_quote_closed(char *line, int *index, char quote)
 
 /*	handle_quotes creates a token							*/
 /*	with the text inside quotes,							*/
-/*	keeping the quotes.										*/
+/*	removing the quotes.									*/
 /*	It stops and returns 1 in case of unclosed quotes		*/
 int	handle_quotes(char *line, t_token **token_list, int *index,
 		t_minishell *minishell)
@@ -53,20 +53,20 @@ int	handle_quotes(char *line, t_token **token_list, int *index,
 
 	i = *index;
 	quote = line[i];
-	/*i++;//pour enlever le quote de debut*/
+	i++;//pour enlever le quote de debut
 	start = i;
-	i++;//pour garder le quote de debut
+	/*i++;//pour garder le quote de debut*/
 	if (!is_quote_closed(line, &i, quote))
 	{
 		error_quote(line, token_list, minishell);
 		return (1);
 	}
-	i++;//pour garder le quote de fin
+	/*i++;//pour garder le quote de fin*/
 	len = i - start;
 	ft_token_add_back(token_list,
 		ft_token_new(ft_substr(line, start, len), WORD), line);
 	add_quote_type(ft_token_last(*token_list), quote);
-	/*i++;//pour passer le quote de fin*/
+	i++;//pour passer le quote de fin
 	*index = i;
 	return (0);
 }

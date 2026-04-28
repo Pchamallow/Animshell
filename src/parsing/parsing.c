@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 21:18:24 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/25 12:16:58 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/28 23:06:08 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ void	delete_next(t_token *token)
 /*	**********************************************		*/
 /* parse_tokens and subfunctions:						*/
 /*	1.define more precisely the type of the token:		*/
-/*		- WORD becomes IS_CMD, IS_ARG or IS_FILENAME	*/
+/*		- WORD becomes	IS_CMD, IS_ARG					*/
+/*						IS_FILENAME or IS_DELIMITER		*/
 /*		- REDIRECTION becomes IS_ INPUT, IS_OUTPUT		*/
 /*							  HEREDOC or IS_APPEND		*/
 /*		- no change of type for PIPE and ONE_SPACE		*/
@@ -33,6 +34,7 @@ void	delete_next(t_token *token)
 /*		Only spaces between 2 IS_ARG are left.			*/
 /*	3.Check for syntax errors:							*/
 /*		- REDIRECTIONS must be followed by IS_FILENAME	*/
+/*		- HEREDOC must be followed by IS_DELIMITER		*/
 /*		- PIPE must not be followed by another PIPE		*/
 /*					not be the last token				*/
 /*					not be the first token				*/
@@ -51,9 +53,9 @@ int	parse_tokens(char *line, t_token **token_list, t_minishell *minishell)
 		if (!error && token && token->type == REDIRECTION)
 			token = case_redirection(token, &error);
 		if (!error && token && token->type == WORD && !cmd_found)
-			token = case_command(token, &cmd_found);
+			token = case_command(token, &cmd_found, &error);
 		if (!error && token && token->type == WORD && cmd_found)
-			token = case_arg(token);
+			token = case_arg(token, &error);
 		if (!error && token && token->type == PIPE)
 			token = case_pipe(token, &cmd_found, &error, token_list);
 	}
@@ -63,6 +65,11 @@ int	parse_tokens(char *line, t_token **token_list, t_minishell *minishell)
 	{
 		free_line_and_token_list(line, token_list);
 		minishell->exec.error = 2;
+	}
+	if (error == 99)//erreur malloc ft_str_join
+	{
+		rl_clear_history();
+		exit(EXIT_FAILURE);
 	}
 	return (error);
 }
