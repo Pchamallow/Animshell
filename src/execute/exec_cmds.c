@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/27 15:14:20 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/28 12:02:34 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@ void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
 	// array_buit_in[ENV]= ;
 	// array_buit_in[EXIT]= ;
 }
+
+
+
+
 
 // void	exec_built_in(t_minishell *minishell, t_pipe *pipe)
 // {
