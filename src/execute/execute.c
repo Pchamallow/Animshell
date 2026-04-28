@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/27 18:26:59 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/28 13:19:15 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void handle_sigint(int sig)
 {
-    /*struct termios oldt, newt;*/
+	/*struct termios oldt, newt;*/
 	/*t_token	*first_token;*/
 
 	/*first_token = NULL;*/
@@ -117,7 +117,12 @@ int find_first_pipe(t_token *token)
 
 void	init_heredoc(t_minishell *minishell)
 {
-	minishell->here_doc->path_explicite = 
+	minishell->here_doc = ft_calloc(1, sizeof(t_token));
+	// minishell->here_doc->path_explicite = "/tmp/minishell_heredoc";
+	minishell->here_doc->path_explicite = "minishell_heredoc";
+	// minishell->here_doc->value = "minishell_heredoc";
+	// minishell->here_doc->path_explicite = ft_strdup("/tmp/minishell_heredoc");
+	// minishell->here_doc->value = ft_strdup("minishell_heredoc");
 }
 
 /* 
@@ -136,11 +141,11 @@ void	init_exec(t_minishell *minishell)
 	int		first_pipe;
 
 	first_pipe = find_first_pipe(minishell->token);
-	// printf("index first pipe = %d\n", first_pipe);
 	if (first_pipe)
 		minishell->exec.index_pipe = first_pipe;
 	else
 		minishell->exec.index_pipe = lst_size(minishell->token);
+	// printf("index first pipe = %d\n", first_pipe);
 	// printf("nouvel index de la pipe = %d\n", minishell->exec.index_pipe);
 	
 	minishell->exec.input = 0;
@@ -241,7 +246,7 @@ int execute(t_minishell *minishell, char **envp)
 			minishell->exec.first_token = &first_token;
 		}
 		else
-    		minishell->token = NULL;
+			minishell->token = NULL;
 
 		init_exec(minishell);
 		
@@ -264,6 +269,7 @@ int execute(t_minishell *minishell, char **envp)
 		}
 		/************************************************/
 		free(minishell->prompt);
+		free_heredoc(minishell);
 		if (minishell->token)
 			ft_token_lstclear(minishell->exec.first_token);
 		if (minishell->exec.pipe_lst)

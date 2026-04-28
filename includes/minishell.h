@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/27 18:14:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/28 12:39:14 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,8 +161,8 @@ int		path_cmd(t_minishell *minishell, t_token *token);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
 // char	*is_path(t_minishell *minishell, char **envp);
 void	is_built_in(t_pipe *the_pipe, t_token *token);
-void	print_pauline(t_minishell *minishell);
 void	path_explicit(t_minishell *minishell, t_token *token);
+int		heredoc(t_minishell *minishell, t_pipe *pipe, t_token *token);
 
 /************************************************************ built-in */
 int		echo(t_minishell *minishell, t_pipe *pipe);
@@ -184,12 +184,14 @@ void	add_args(t_minishell *minishell, t_pipe *pipe, t_token *token);
 int		term_raw_mode(struct termios *oldt, struct termios *newt);
 /********************************************************** error_free */
 void	print_error_free(t_minishell *minishell, char *str, int error);
-void	free_strv(char **array);
 void	strerror_file(char *filename);
 void	strerror_free_structure(t_minishell *minishell, char *filename, int error);
 void	error_cmd_args(t_minishell *minishell, char *cmd, char *filename);
-void	free_all(t_minishell *minishell);
+/**************************************************************** free */
 void	lst_pipe_clear(t_pipe **head);
+void	free_all(t_minishell *minishell);
+void	free_strv(char **array);
+void    free_heredoc(t_minishell *minishell);
 
 /*************************************************************** utils */
 int		len_double(char **tab);
@@ -205,6 +207,7 @@ bool	find_built_in(char *token);
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);
+void	print_pauline(t_minishell *minishell);
 
 /************************************************************* parsing */
 char	*expand_line(char *line, char **envp);

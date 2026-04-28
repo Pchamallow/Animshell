@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/27 18:07:01 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/28 12:32:35 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 			}
 		}
 		else if (token->type == IS_DELIMITER)
-			here_doc(minishell, pipe, token);
+			heredoc(minishell, pipe, token);
 		
 		token = token->next;
 		i++;
