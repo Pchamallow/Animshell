@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 12:39:14 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/28 15:12:14 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,9 @@ typedef struct s_minishell
 /*                            SRC                                      */
 /***********************************************************************/
 int		main(int argc, char **argv, char **envp);
+/**************************************************************** init */
+void	init_exec(t_minishell *minishell);
+void	init_pipe(t_minishell *minishell);
 /************************************************************* execute */
 int		execute(t_minishell *minishell, char **envp);
 int		read_tokens(t_minishell *minishell, t_pipe *pipe);
@@ -163,6 +166,7 @@ void	cmd_explicit(t_minishell *minishell, t_token *token);
 void	is_built_in(t_pipe *the_pipe, t_token *token);
 void	path_explicit(t_minishell *minishell, t_token *token);
 int		heredoc(t_minishell *minishell, t_pipe *pipe, t_token *token);
+int		nb_pipes(t_token *first);
 
 /************************************************************ built-in */
 int		echo(t_minishell *minishell, t_pipe *pipe);
@@ -191,7 +195,8 @@ void	error_cmd_args(t_minishell *minishell, char *cmd, char *filename);
 void	lst_pipe_clear(t_pipe **head);
 void	free_all(t_minishell *minishell);
 void	free_strv(char **array);
-void    free_heredoc(t_minishell *minishell);
+void	free_heredoc(t_minishell *minishell);
+void	free_envp(t_minishell *minishell);
 
 /*************************************************************** utils */
 int		len_double(char **tab);
@@ -203,6 +208,7 @@ int		strv_dup(t_minishell *minishell, char ***dst, char **src);
 int		lst_size(t_token *token);
 int		count_chr(char *str, char c, bool followed);
 bool	find_built_in(char *token);
+void	ft_joinstr(t_minishell *minishell, char **result, char *str);
 
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete

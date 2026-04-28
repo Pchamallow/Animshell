@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/22 16:29:46 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 14:41:59 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/28 15:11:48 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,24 @@ int	strv_dup(t_minishell *minishell, char ***dst, char **src)
 		print_error_free(minishell, "PATH not found.\n", 2);
 	}
 	return (0);
+}
+
+void	ft_joinstr(t_minishell *minishell, char **result, char *str)
+{
+	char	*tmp;
+	
+	tmp = ft_strdup(*result);
+	if (!tmp)
+	{
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+		return ;
+	}
+	free(*result);
+	*result = ft_strjoin(tmp, str);
+	if (!*result)
+	{
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+		return ;
+	}
+	free(tmp);
 }

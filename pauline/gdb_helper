@@ -46,3 +46,5 @@ set follow-fork-mode child
 
 jkkhjkh | echo coucou
 echo -n coucou
+<< "'"eof"'"
+<< "'"eof
