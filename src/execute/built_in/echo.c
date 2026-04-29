@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/27 17:44:21 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 09:30:10 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void	print_no_quotes(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] != '\'' && str[i] != '"')
+		if (str[i] != '"')
 			ft_printf_fd(1, "%c", str[i]);
 		i++;
 	}
@@ -148,10 +148,10 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 	int		i;
 	int		j;
 	int		len;
-	int		quoted;
+	// int		quoted;
 
 	i = 0;
-	quoted = 0;
+	// quoted = 0;
 	args = NULL;
 	if (pipe->cmd->next)
 		args = pipe->cmd->next;
@@ -169,19 +169,20 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 		else if (ft_strnstr(args->value, "$?", len + 1) != NULL)
 		{
 			j = 0;
-			quoted = false;
+			// quoted = false;
+			printf("quotes = %d\n", args->quote);
 			while (args->value[j])
 			{
 				// if (args->value[j] == '\'' || args->value[j] == '"')
 				// 	quoted = true;
-				if (args->quote == NONE
+				if ((args->quote == NO || args->quote == DOUBLE)
 					&& args->value[j] == '$' && args->value[j + 1] == '?')
 				{
 					ft_printf_fd(1, "%d", minishell->exec.error);
 					j += 2;
 					continue;
 				}
-				if (args->value[j] != '\'' && args->value[j] != '"')
+				if (args->value[j] != '"')
 					ft_printf_fd(1, "%c", args->value[j]);
 				j++;
 			}

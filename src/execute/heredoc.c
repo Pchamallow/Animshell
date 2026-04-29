@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 17:26:38 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 09:18:08 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	heredoc_lines(t_minishell *minishell)
 	{
 		if (is_pipe == true)
 		{
+			// si quotes pas de expand !!!!!
 			line = readline("> ");
 			if (!ft_strcmp(line, minishell->here_doc->value))
 				break;
@@ -69,7 +70,6 @@ void	heredoc_lines(t_minishell *minishell)
 	}
 	free(minishell->here_doc->value);
 	minishell->here_doc->value = NULL;
-	// result = 
 }
 
 void	heredoc_delimiter_quotes(t_minishell *minishell)
@@ -77,8 +77,8 @@ void	heredoc_delimiter_quotes(t_minishell *minishell)
 	int		i = 0;
 	char	*original;
 	char	*result;
-	int		last_single;
-	int		last_doubleq;
+	// int		last_single;
+	// int		last_doubleq;
 	bool	open_double;
 	bool	open_single;
 	int		single;
@@ -112,7 +112,7 @@ void	heredoc_delimiter_quotes(t_minishell *minishell)
 		if (original[i] == '\'')
 		{
 			single++;
-			last_single = i;
+			// last_single = i;
 			// if (open_double == true && open_single == false)
 			if (open_double == true)
 				ft_joinchr(minishell, &result, original[i]);
@@ -124,7 +124,7 @@ void	heredoc_delimiter_quotes(t_minishell *minishell)
 		else if (original[i] == '"')
 		{
 			doubleq++;
-			last_doubleq = i;
+			// last_doubleq = i;
 			// if (open_single == true)
 			// 	ft_joinstr(minishell, &result, &original[i]);
 			if (open_double == true)
@@ -206,21 +206,21 @@ not expand
 // CTRL + D = error
 int	heredoc(t_minishell *minishell, t_pipe *pipe, t_token *token)
 {
-	t_token	*hd;
+	// t_token	*hd;
 	// int		*fd;
-	bool	to_expand;
+	// bool	to_expand;
 
-	hd = minishell->here_doc;
+	// hd = minishell->here_doc;
 	// fd = &hd->fd;
-	to_expand = true;
+	// to_expand = true;
 	(void)pipe;
 	// *fd = open(hd->path_explicite, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	
 	// if (heredoc_permissions(minishell, pipe, fd))
 	// 	return (0);
 	
-	if (ft_strchr(token->value, '\'') || ft_strchr(token->value, '"'))
-		to_expand = false;
+	// if (ft_strchr(token->value, '\'') || ft_strchr(token->value, '"'))
+	// 	to_expand = false;
 
 	heredoc_delimiter(minishell, token);
 	
