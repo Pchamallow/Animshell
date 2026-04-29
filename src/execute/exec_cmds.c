@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 17:03:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 10:03:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,6 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			// not_write = 1;
 		}
 
-
-
-		
 		// printf("current built-in = %d\n", current->builtin_kind);
 		//print
 		// if (current->cmd)
@@ -90,7 +87,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		{
 			// printf("create 1 pipe\n");
 			pipe(pipefd);
-			minishell->exec.pipe_lst->pipfd1 = pipefd[1];
+			// minishell->exec.pipe_lst->pipfd1 = pipefd[1];
 			is_next_pipe = 1;
 			at_least_one_pipe = 1;
 		}

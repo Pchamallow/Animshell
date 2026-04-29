@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 14:58:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 10:03:39 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	get_prompt(t_minishell *minishell)
 		minishell->builtin.echo.for_prompt = false;
 	}
 	else
-		minishell->prompt = ft_strdup("minishell$ ");
+		minishell->prompt = ft_strdup(base);
 	free(base);
 }
 
@@ -125,19 +125,7 @@ int execute(t_minishell *minishell, char **envp)
 		if (minishell->token)
 		{
 			init_pipe(minishell);
-			// init_line_to_exec(minishell, envp);
-			// read_all_pipes(minishell, envp);
 			exec_cmds_pipe(minishell);
-			// if (minishell->exec.pipe_lst->is_cmd == 1)
-			// {
-			// 	if (minishell->exec.nb_pipes > 0)
-			// 		exec_cmds_pipe(minishell, envp);
-			// 	else if (minishell->exec.pipe_lst->builtin_kind != NONE)
-			// 		echo(minishell);
-			// 	else
-			// 		exec_cmds_pipe(minishell, envp);
-			// 		// exec_cmd_no_pipe(minishell, envp);
-			// }
 		}
 		/************************************************/
 		free(minishell->prompt);
