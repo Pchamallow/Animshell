@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 12:35:42 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 17:26:41 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 11:23:55 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,20 @@ void	free_builtin(t_minishell *minishell)
 void	free_all(t_minishell *minishell)
 {
 	free_heredoc(minishell);
+	free_builtin(minishell);
 	if (minishell->exec.envp)
 		free_strv(minishell->exec.envp);
 	if (minishell->exec.paths_for_search_cmd)
 		free_strv(minishell->exec.paths_for_search_cmd);
-	free_builtin(minishell);
 	if (minishell->token)
 		ft_token_lstclear(minishell->exec.first_token);
 	if (minishell->exec.pipe_lst)
 		lst_pipe_clear(&minishell->exec.pipe_lst);
-	free(minishell->prompt);
+	if (minishell->prompt)
+	{
+		free(minishell->prompt);
+		minishell->prompt = NULL;
+	}
 	// print_pauline(minishell);// print la commande et les arguments
 }
 

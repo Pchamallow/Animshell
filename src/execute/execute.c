@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 10:03:39 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 11:26:59 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void	get_prompt(t_minishell *minishell)
 {
 	char	*base;
 
+	if (minishell->prompt)
+		free(minishell->prompt);
 	base = ft_strdup("minishell$ ");
 	if (minishell->builtin.echo.result)
 	{
@@ -128,8 +130,14 @@ int execute(t_minishell *minishell, char **envp)
 			exec_cmds_pipe(minishell);
 		}
 		/************************************************/
-		free(minishell->prompt);
+		if (minishell->prompt)
+		{
+			free(minishell->prompt);
+			minishell->prompt = NULL;
+		}
+			
 		free_heredoc(minishell);
+		
 		if (minishell->token)
 			ft_token_lstclear(minishell->exec.first_token);
 		if (minishell->exec.pipe_lst)

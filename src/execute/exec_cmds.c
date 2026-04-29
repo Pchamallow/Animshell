@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 10:42:37 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 16:17:18 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		if (pid == 0)
 		{
 			// printf("-------- child \n");
-			// printf("current->input = %d\n", current->input);
-			// printf("current->output = %d\n", current->output);
+			printf("current->input = %d\n", current->input);
+			printf("current->output = %d\n", current->output);
 
 			/* INPUT               */
 			if (current->input == IS_FILE && current->output == IS_FILE)
@@ -149,8 +149,10 @@ void	exec_cmds_pipe(t_minishell *minishell)
 
 			else if (current->input == IS_HEREDOC)
 			{
+				// printf("here doc fd = %d\n", minishell->here_doc->fd);
 				if (dup2(minishell->here_doc->fd, STDIN_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
+				// printf("close heredoc\n");
 				close_fd(minishell->here_doc->fd);
 			}
 
@@ -169,37 +171,19 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				// printf("pipefd 1 = %d\n", pipefd[1]);
 				if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
-				// if (pipefd[1] >= 0)
-				// 	close(pipefd[1]);
-				// output_fd = 
 			}
-			// input_fd = pipefd[0];
 			if (is_next_pipe)
 			{
-				// if (current->read == 1)
 				close_fd(pipefd[0]);
-				// if (current->write == 1)
 				close_fd(pipefd[1]);
-				// print_pipefd(pipefd[0], pipefd[1]);
 			}		
-			
-			// else
-			// {
-			// 	close(pipefd[0]);
-			// 	close(pipefd[1]);
-			// }
-			
+
 			close_fds_pipe(current);
-			
+
 			// printf("current = %s\n", current->cmd->value);
 			if (current->is_cmd && !current->error
 				&& current->builtin_kind == NONE)
 			{
-				// if (is_next_pipe)
-				// {
-				// 	close_fd(pipefd[0]);
-				// 	close_fd(pipefd[1]);
-				// }
 				execve(current->cmd->cmd_path, current->cmd->args_execve, minishell->exec.envp);
 				perror("execve");
 			}
@@ -215,9 +199,6 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		// printf("-------- parent \n");
 		if (is_next_pipe)
 		{
-			// printf("releve de input fd\n");
-			// if (not_write)
-			// 	close(pipefd[0]);
 			// else
 			// {
 				close_fd(input_fd);
@@ -225,36 +206,28 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			// }
 			// printf("input_fd = %d\n", input_fd);
 			close_fd(pipefd[1]);
-			// close_fd(pipefd[0]); impossible le lecture
-			// printf("close pipefd[1]\n");
 			
 		}
 		else if (at_least_one_pipe)
-		{
 			close_fd(pipefd[0]);
-			// printf("close pipefd[0]\n");
-		}
-		// close(current->outfile->fd);
-
-		// if (ft_strnstr(current->cmd->value, "ls", 20))
-		// 	close_fd(pipefd[0]);
 		
-		// if (at_least_one_pipe && !minishell->exec.nb_pipes)
-		// {
-		// 	close_fd(pipefd[0]);
-		// 	printf("close pipefd[0]\n");
-		// }
+		if (minishell->prompt)
+		{
+			free(minishell->prompt);
+			minishell->prompt = NULL;
+		}
+		
+		if (minishell->here_doc->fd != -1)
+		{
+			close_fd(minishell->here_doc->fd);
+			minishell->here_doc->fd = -1;
+		}
 		
 		close_fds_pipe(current);
+		// free_all(minishell);
 		current = current->next;
 	}
 	while(wait(NULL) > 0);
-	// close_fds_pipe(current);
-	
-	// waitpid(pid, NULL, 0);
-	// waitpid(pid, NULL, 0);
-	// close(input_fd);
-	// close(pipefd[0]);
 	ft_printf_fd(2, "--------------------------------------------\n");
 }
 

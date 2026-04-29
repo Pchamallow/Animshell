@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 14:47:49 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 14:57:39 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 11:12:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static void	init_heredoc(t_minishell *minishell)
 	// minishell->here_doc->path_explicite = "/tmp/minishell_heredoc";
 	// minishell->here_doc->path_explicite = "minishell_heredoc";
 	minishell->here_doc->value = NULL;
+	minishell->here_doc->fd = -1;
 	// minishell->here_doc->path_explicite = ft_strdup("/tmp/minishell_heredoc");
 	// minishell->here_doc->value = ft_strdup("minishell_heredoc");
 }

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 10:44:40 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 15:08:39 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,38 +20,20 @@ while line != delimiter
 void	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 {
 	char	*line;
-	bool	read;
-	bool	is_pipe;
 
-	read = true;
-	// is_pipe = false;
-	is_pipe = true;
-	while (read == true)
+	while (1)
 	{
-		if (is_pipe == true)
-		{
-			line = readline("> ");
-			if (!ft_strcmp(line, token->value))
-				break;
-			// si quotes pas de expand !!!!!
-			if (ft_strchr(line, '"') == NULL
-				&& ft_strchr(line, '\'') == NULL
-				&& token->quote == NO)
-				line = expand_line(line, minishell->exec.envp);
-			ft_printf_fd(fd, "%s\n", line);
-			free(line);
-		}
-		else
-		{
-			line = readline("> ");
-			if (!ft_strcmp(line, token->value))
-				break;
-			free(line);
-		}
+		line = readline("> ");
+		if (!ft_strcmp(line, token->value))
+			break;
+		// si quotes pas de expand !!!!!
+		if (ft_strchr(line, '"') == NULL
+			&& ft_strchr(line, '\'') == NULL
+			&& token->quote == NO)
+			line = expand_line(line, minishell->exec.envp);
+		ft_printf_fd(fd, "%s\n", line);
+		free(line);
 	}
-	// free(minishell->here_doc->value);// a dlete ? 
-	// delete la strcuture here doc si pas du tout utiliser
-	// minishell->here_doc->value = NULL;
 }
 
 /*
@@ -81,24 +63,17 @@ int	heredoc(t_minishell *minishell, t_token *token)
 {
 	pid_t	pid;
 	int		pipefd[2];
-	
-	(void)pipe;
-	
-	minishell->here_doc->value = ft_strdup(token->value);
-	
-	minishell->here_doc->fd = 0;
 
+	close_fd(minishell->here_doc->fd);
+	minishell->here_doc->fd = -1;
+	
 	pipe(pipefd);
-	
 	pid = fork();
-
 	if (pid == 0)
 	{
 		heredoc_lines(minishell, token, pipefd[1]);
-		
 		close_fd(pipefd[0]);
 		close_fd(pipefd[1]);
-		
 		free_all(minishell);
 		exit (0);
 	}
@@ -106,13 +81,9 @@ int	heredoc(t_minishell *minishell, t_token *token)
 	{
 		close_fd(minishell->here_doc->fd);
 		minishell->here_doc->fd = pipefd[0];
-		// close_fd(pipefd[0]);
 		close_fd(pipefd[1]);
 	}
-	// 	;
-	while(wait(NULL) > 0);
-	
-
+	waitpid(pid, NULL, 0);
+	// while(wait(NULL) > 0);
 	return (0);
-	
 }

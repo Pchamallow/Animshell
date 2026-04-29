@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 10:35:51 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 16:33:11 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,16 +106,21 @@ C. if there is a command and at least one arg
 static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *token;
-	int nb_cmd_args;
+	int		nb_cmd_args;
+	int		i;
 
+	i = minishell->exec.index_prev_pipe;
 	token = minishell->exec.last_pipe;
 	nb_cmd_args = nb_args(token);
 	// printf("----------------------begin init_cmd\n");
 
-	while (token)
+	while (token && i <= minishell->exec.index_pipe)
 	{
 		if (token->type == PIPE)
+		{
 			token = token->next;
+			i++;
+		}
 		else if (token->type == IS_CMD)
 		{
 			if (path_cmd(minishell, token) == 0)
@@ -144,11 +149,17 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 			pipe->is_cmd = 1;
 		}
 		token = token->next;
+		i++;
 	}
 	if (pipe->is_cmd && nb_cmd_args > 0)
 		init_cmd_args(minishell, pipe, nb_cmd_args);
 	if (!pipe->is_cmd)
 	{
+		if (pipe->input == IS_HEREDOC)
+		{
+			close_fd(minishell->here_doc->fd);
+			minishell->here_doc->fd = -1;
+		}
 		pipe->input = ERROR;
 		pipe->output = ERROR;
 	}
@@ -324,6 +335,8 @@ bool is_single_double_quoted(t_minishell *minishell, t_token *token)
 	single = 0;
 	doubled = 0;
 	str = token->value;
+	if (str[0] == '\0')
+		return (false);
 	if (str[i] == '\'')
 		single++;
 	if (str[i] == '"')
@@ -429,6 +442,7 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 	// minishell->exec.index_pipe = index_pipes;
 	if (find_input_output(minishell, pipe) || init_cmd(minishell, pipe))
 	{
+		minishell->exec.index_prev_pipe = minishell->exec.index_pipe;
 		index_next_pipe = next_pipe(minishell, token);
 		minishell->exec.index_pipe = minishell->exec.index_pipe + index_next_pipe;
 		return (-1);
@@ -436,6 +450,7 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 	
 	/**************************************************************/
 
+	minishell->exec.index_prev_pipe = minishell->exec.index_pipe;
 	index_next_pipe = next_pipe(minishell, token);
 
 	read_args(minishell, token, pipe);
