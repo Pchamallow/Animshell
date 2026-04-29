@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 10:03:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 10:42:37 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,13 @@ void	exec_cmds_pipe(t_minishell *minishell)
 					strerror_free_structure(minishell, "dup2", 2);
 				// printf("pas de probleme fd \n");
 				close_fd(input_fd);
+			}
+
+			else if (current->input == IS_HEREDOC)
+			{
+				if (dup2(minishell->here_doc->fd, STDIN_FILENO) == -1)
+					strerror_free_structure(minishell, "dup2", 2);
+				close_fd(minishell->here_doc->fd);
 			}
 
 			/* OUTPUT                          */

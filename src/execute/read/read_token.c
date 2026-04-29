@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/27 17:59:04 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 10:35:51 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -434,14 +434,6 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 		return (-1);
 	}
 	
-	// error_cmd = init_cmd(minishell, pipe);
-	
-	// // printf("read index de la pipe = %d\n", minishell->exec.index_pipe);
-	// if (!(error_files == 0 && error_cmd == 0))
-	// {
-	// 	next_pipe(minishell, token);
-	// 	return (-1);
-	// }
 	/**************************************************************/
 
 	index_next_pipe = next_pipe(minishell, token);
@@ -449,16 +441,5 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 	read_args(minishell, token, pipe);
 	minishell->exec.index_pipe = minishell->exec.index_pipe + index_next_pipe;
 
-	// if (!pipe->infile)
-	// {
-	// 	if (input_pipe == 1)
-	// 		pipe->input = IS_PIPE;
-	// 	// else
-	// 		// pipe->input = 0;
-	// }
-	// il y a un dernier infile, mais il y a une erreure
-	// donc une erreure a print apres echo
-	// if (minishell->exec.input == -1)
-	// ft_printf_fd(2, "ici\n");
 	return (0);
 }

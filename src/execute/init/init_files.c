@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 12:32:35 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 10:43:09 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,10 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *token;
 	int		i;
+	int		heredoc_pipe_to_free;
 
 	i = minishell->exec.index_prev_pipe;
+	heredoc_pipe_to_free = 0;
 	if (i > 0)
 		pipe->input = IS_PIPE;
 	token = minishell->exec.last_pipe;
@@ -117,11 +119,17 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 			}
 		}
 		else if (token->type == IS_DELIMITER)
-			heredoc(minishell, pipe, token);
+		{
+			heredoc(minishell, token);
+			heredoc_pipe_to_free = 1;
+			pipe->input = IS_HEREDOC;
+		}
 		
 		token = token->next;
 		i++;
 	}
+	if (heredoc_pipe_to_free && pipe->input != IS_HEREDOC)
+		close_fd(minishell->here_doc->fd);
 	if (pipe->input == ERROR || pipe->output == ERROR)
 		return (1);
 	minishell->exec.index_prev_pipe = minishell->exec.index_pipe;

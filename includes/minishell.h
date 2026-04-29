@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 09:08:38 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 10:37:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ typedef enum e_put
 	ERROR,
 	TERMINAL,
 	IS_FILE,
+	IS_HEREDOC,
 	IS_PIPE
 }			t_put;
 
@@ -166,7 +167,8 @@ void	cmd_explicit(t_minishell *minishell, t_token *token);
 // char	*is_path(t_minishell *minishell, char **envp);
 void	is_built_in(t_pipe *the_pipe, t_token *token);
 void	path_explicit(t_minishell *minishell, t_token *token);
-int		heredoc(t_minishell *minishell, t_pipe *pipe, t_token *token);
+// int		heredoc(t_minishell *minishell, t_pipe *pipe, t_token *token);
+int	heredoc(t_minishell *minishell, t_token *token);
 int		nb_pipes(t_token *first);
 
 /************************************************************ built-in */
