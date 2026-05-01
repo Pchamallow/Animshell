@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 12:02:34 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/01 09:43:21 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 	int		(*array_built_in[8])(t_minishell *, t_pipe *);
 	// int		not_write;
 	
+	ignore_signal();
 	current = minishell->exec.pipe_lst;
 	init_array_built_in(array_built_in);
 	// if (minishell->exec.pipe_lst->next)
@@ -114,6 +115,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		// printf("output pipe == %d\n", output_pipe);
 		if (pid == 0)
 		{
+			reset_signal_to_default();
 			// printf("-------- child \n");
 			// printf("current->input = %d\n", current->input);
 			// printf("current->output = %d\n", current->output);
@@ -241,7 +243,9 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		close_fds_pipe(current);
 		current = current->next;
 	}
-	while(wait(NULL) > 0);
+
+	get_exit_status(minishell);
+
 	// close_fds_pipe(current);
 	
 	// waitpid(pid, NULL, 0);
