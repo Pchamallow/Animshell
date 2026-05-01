@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/01 09:43:21 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/01 12:23:47 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
 {
 	array_built_in[IS_ECHO] = echo;
-	// array_buit_in[CD]= ;
-	// array_buit_in[PWD]= ;
-	// array_buit_in[EXPORT]= ;
-	// array_buit_in[UNSET]= ;
-	// array_buit_in[ENV]= ;
-	// array_buit_in[EXIT]= ;
+	// array_built_in[CD]= ;
+	// array_built_in[PWD]= ;
+	// array_built_in[EXPORT]= ;
+	// array_built_in[UNSET]= ;
+	 array_built_in[ENV]= env;
+	// array_built_in[EXIT]= ;
 }
 
 

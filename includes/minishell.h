@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/30 21:58:48 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/01 12:21:59 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ void	path_explicit(t_minishell *minishell, t_token *token);
 /************************************************************ built-in */
 int		echo(t_minishell *minishell, t_pipe *pipe);
 void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe);
+int		env(t_minishell *minishell, t_pipe *pipe);
 /***************************************************** tabs for execve */
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
 /**************************************************** execute commands */
