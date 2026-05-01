@@ -6,21 +6,21 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/27 15:16:17 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 22:28:35 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void handle_sigint(int sig)
-{
+/*void handle_sigint(int sig)*/
+/*{*/
     /*struct termios oldt, newt;*/
 	/*t_token	*first_token;*/
 
 	/*first_token = NULL;*/
-	(void)sig;
-	write(1, "\nminishell$ ", 12); // réaffiche le prompt
-}
+	/*(void)sig;*/
+	/*write(1, "\nminishell$ ", 12); // réaffiche le prompt*/
+/*}*/
 
 
 int	nb_pipes(t_token *first)
@@ -183,7 +183,7 @@ void	get_prompt(t_minishell *minishell)
 int execute(t_minishell *minishell, char **envp)
 {
 
-	signal(SIGINT, handle_sigint);
+	/*signal(SIGINT, handle_sigint);*/
 	
 	/*  BOUCLE WHILE  **********************************/
 	//variables pour boucle while :
@@ -201,6 +201,7 @@ int execute(t_minishell *minishell, char **envp)
 	
 	while (1)
 	{
+		set_signal_interactive();
 		get_prompt(minishell);
 		line = readline(minishell->prompt);
 		if (!line)
@@ -211,6 +212,8 @@ int execute(t_minishell *minishell, char **envp)
 			printf("exit\n");
 			exit (0);
 		}
+		
+		check_signal_value(minishell);
 
 		if (*line)
 			add_history(line);

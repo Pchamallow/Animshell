@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 22:39:13 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/30 21:58:48 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,8 +144,6 @@ typedef struct s_minishell
 	char		*prompt;
 }				t_minishell;
 
-# define CMD_LIST "echo, cd, pwd, export, unset, env, exit"
-
 /***********************************************************************/
 
 /***********************************************************************/
@@ -235,6 +233,12 @@ t_token	*ft_token_last(t_token *lst);
 void	ft_token_add_back(t_token **head, t_token *newer, char *line);
 void	ft_token_delone(t_token *lst, void (*del)(void *));
 void	ft_token_lstclear(t_token **head);
+/********************************************************** signals */
+void	set_signal_interactive(void);
+void	reset_signal_to_default(void);
+void	ignore_signal(void);
+void	check_signal_value(t_minishell *minishell);
+void	get_exit_status(t_minishell *minishell);
 /********************************************* tests print a supprimer */
 void	print_tokens_types(t_token *token);// pour tester
 void	print_tokens(t_token *token);// pour tester
