@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 14:11:33 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/02 22:48:55 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/03 12:52:12 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char	**envp_copy(char **envp)
 	len = 0;
 	while (envp[len])
 		len++;
-	new_envp = ft_calloc(len + 1, sizeof(char*));
+	new_envp = ft_calloc(len + 1, sizeof(char *));
 	if (!new_envp)
 		return (NULL);
 	i = 0;
@@ -80,7 +80,7 @@ static void	sort_envp(char **sorted_envp)
 	}
 }
 
-static int	print_sorted_envp(t_minishell *minishell)
+static int	print_sorted_envp(t_minishell *minishell, int fd)
 {
 	int		i;
 	int		j;
@@ -96,20 +96,20 @@ static int	print_sorted_envp(t_minishell *minishell)
 	while (sorted_envp[i])
 	{
 		j = 0;
-		write(1, "export ", 7);
+		write(fd, "export ", 7);
 		while (sorted_envp[i][j] && sorted_envp[i][j] != '=')
 		{
-			write(1, &sorted_envp[i][j], 1);
+			write(fd, &sorted_envp[i][j], 1);
 			j++;
 		}
 		if (sorted_envp[i][j] == '=')
 		{
-			write(1, "=\"", 2);
+			write(fd, "=\"", 2);
 			j++;
-			write(1, sorted_envp[i] + j, ft_strlen(sorted_envp[i] + j));
-			write(1, "\"", 1);
+			write(fd, sorted_envp[i] + j, ft_strlen(sorted_envp[i] + j));
+			write(fd, "\"", 1);
 		}
-		write(1, "\n", 1);
+		write(fd, "\n", 1);
 		i++;
 	}
 	free(sorted_envp);
@@ -206,7 +206,7 @@ void	replace_var(char **envp, char *var, t_minishell *minishell)
 ** - else : adds variables in char **envp
 **	*********************************************
 */
-int export(t_minishell *minishell, t_pipe *pipe)
+int	export(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token	*arg;
 	int		count;
@@ -217,7 +217,10 @@ int export(t_minishell *minishell, t_pipe *pipe)
 	minishell->exec.error = 0;
 	if (pipe->nb_args == 0)
 	{
-		print_sorted_envp(minishell);
+		if (pipe->output == IS_FILE)
+			print_sorted_envp(minishell, pipe->outfile->fd);
+		else
+			print_sorted_envp(minishell, 1);
 		return (minishell->exec.error);
 	}
 	arg = pipe->cmd->next;
@@ -256,7 +259,7 @@ int export(t_minishell *minishell, t_pipe *pipe)
 		while (minishell->exec.envp[i])
 			i++;
 		count += i;
-		new_envp = ft_calloc(count + 1, sizeof(char*));
+		new_envp = ft_calloc(count + 1, sizeof(char *));
 		if (!new_envp)
 			print_error_free(minishell, "malloc error in export\n", EXIT_FAILURE);
 		i = 0;

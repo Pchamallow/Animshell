@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/02 16:40:27 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/03 11:41:52 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,35 +101,17 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		// if (current->output ==  && is_next_pipe)
 		// 	current->error = 1;
 		
-		//Si pas de pipes && cmd == built-in -> pas de fork :
-		if (!at_least_one_pipe && current->builtin_kind)
+		//--------------------------------------------------------------
+		//Si pas de pipes && cmd == built-in et != IS_ECHO
+		//-> pas de fork :
+		if (!at_least_one_pipe && current->builtin_kind
+				&&current->builtin_kind != IS_ECHO)
 		{
-			if (current->input == IS_FILE && current->output == IS_FILE)
-			{
-				if (dup2(current->infile->fd, STDIN_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
-				if (dup2(current->outfile->fd, STDOUT_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
-				already_output = 1;
-			}
-			
-			else if (current->input == IS_FILE)
-			{
-				if (dup2(current->infile->fd, STDIN_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
-			}
-			
-			if (current->output == IS_FILE && already_output == 0)
-			{
-				if (dup2(current->outfile->fd, STDOUT_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
-				close_fd(current->outfile->fd);
-			}
-			
 			array_built_in[current->builtin_kind](minishell, current);
-			close_fds_pipe(current);
+			close_fds_pipe(current);//demander à Pauline si ça marche dans ce cas
 			return ;
 		}
+		//--------------------------------------------------------------
 
 		pid = fork();
 		already_output = 0;
