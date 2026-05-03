@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/01 12:23:47 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/03 11:41:52 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
 	array_built_in[IS_ECHO] = echo;
 	// array_built_in[CD]= ;
 	// array_built_in[PWD]= ;
-	// array_built_in[EXPORT]= ;
+	 array_built_in[EXPORT]= export;
 	// array_built_in[UNSET]= ;
 	 array_built_in[ENV]= env;
 	// array_built_in[EXIT]= ;
@@ -101,6 +101,18 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		// if (current->output ==  && is_next_pipe)
 		// 	current->error = 1;
 		
+		//--------------------------------------------------------------
+		//Si pas de pipes && cmd == built-in et != IS_ECHO
+		//-> pas de fork :
+		if (!at_least_one_pipe && current->builtin_kind
+				&&current->builtin_kind != IS_ECHO)
+		{
+			array_built_in[current->builtin_kind](minishell, current);
+			close_fds_pipe(current);//demander à Pauline si ça marche dans ce cas
+			return ;
+		}
+		//--------------------------------------------------------------
+
 		pid = fork();
 		already_output = 0;
 
