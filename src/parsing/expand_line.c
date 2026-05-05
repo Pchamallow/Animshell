@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/27 19:23:32 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/29 09:36:08 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,7 @@ char	*expand_line(char *line, char **envp)
 	quote = NO;
 	if (find_env_var(newline, ft_strlen(newline), &quote) != -1)
 		newline = expand_line(newline, envp);
-	ft_printf_fd(1, "EXPAND LINE:\n**%s**\n", newline);
+	// ft_printf_fd(1, "EXPAND LINE:\n**%s**\n", newline);
 	/*ft_printf_fd(1, "----------------------------------\n");*/
 	return (newline);
 }

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/27 18:00:26 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/04/29 16:33:23 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,10 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *token;
 	int		i;
+	int		heredoc_pipe_to_free;
 
 	i = minishell->exec.index_prev_pipe;
+	heredoc_pipe_to_free = 0;
 	if (i > 0)
 		pipe->input = IS_PIPE;
 	token = minishell->exec.last_pipe;
@@ -92,38 +94,41 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 			token->next->file_output = 1;
 		else if (token->type == IS_APPEND && token->next != NULL)
 			token->next->file_output = 2;
-
-		if (token->file_input)
+		else if (token->file_input && (init_infile(minishell, pipe, token) == 0))
 		{
-			if ((init_infile(minishell, pipe, token) == 0))
-			{
-				pipe->infile = token;
-				pipe->input = IS_FILE;
-			}
+			if (pipe->input == IS_FILE)
+				close_fd(pipe->infile->fd);
+			pipe->infile = token;
+			pipe->input = IS_FILE;
 		}
-		
-		if (i > minishell->exec.index_prev_pipe
+		else if (i > minishell->exec.index_prev_pipe
 			&& pipe->output != IS_FILE
 			&& pipe->output != ERROR && token->type == PIPE)
 			pipe->output = IS_PIPE;
 		
-		else if (token->file_output)
+		else if (token->file_output
+			&& init_outfile(minishell, pipe, token) == 0
+			&& pipe->output != ERROR)
 		{
-			if (init_outfile(minishell, pipe, token) == 0)
-			{
-				if (pipe->output != ERROR)
-				{
-					pipe->outfile = token;
-					pipe->output = IS_FILE;
-				}
-			}
+			if (pipe->output == IS_FILE)
+				close_fd(pipe->outfile->fd);
+			pipe->outfile = token;
+			pipe->output = IS_FILE;
+		}
+		else if (token->type == IS_DELIMITER)
+		{
+			heredoc(minishell, token);
+			heredoc_pipe_to_free = 1;
+			pipe->input = IS_HEREDOC;
 		}
 		
 		token = token->next;
 		i++;
 	}
+	if (heredoc_pipe_to_free && pipe->input != IS_HEREDOC)
+		close_fd(minishell->here_doc->fd);
+	// minishell->exec.index_prev_pipe = minishell->exec.index_pipe;
 	if (pipe->input == ERROR || pipe->output == ERROR)
 		return (1);
-	minishell->exec.index_prev_pipe = minishell->exec.index_pipe;
 	return (0);
 }

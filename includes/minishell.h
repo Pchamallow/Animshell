@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/02 22:59:33 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/04/29 10:37:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ typedef enum e_put
 	ERROR,
 	TERMINAL,
 	IS_FILE,
+	IS_HEREDOC,
 	IS_PIPE
 }			t_put;
 
@@ -111,6 +112,7 @@ typedef struct s_pipe
 	int				is_cmd;
 	int				nb_args;
 	int				error;
+	int				pipfd1;
 	t_put			input;
 	t_put			output;
 	// t_builtin		builtin;
@@ -140,6 +142,7 @@ typedef struct s_minishell
 {
 	t_exec		exec;
 	t_token		*token;
+	t_token		*here_doc;
 	t_builtin	builtin;
 	char		*prompt;
 }				t_minishell;
@@ -150,6 +153,9 @@ typedef struct s_minishell
 /*                            SRC                                      */
 /***********************************************************************/
 int		main(int argc, char **argv, char **envp);
+/**************************************************************** init */
+void	init_exec(t_minishell *minishell);
+void	init_pipe(t_minishell *minishell);
 /************************************************************* execute */
 int		execute(t_minishell *minishell, char **envp);
 int		read_tokens(t_minishell *minishell, t_pipe *pipe);
@@ -158,8 +164,10 @@ int		path_cmd(t_minishell *minishell, t_token *token);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
 // char	*is_path(t_minishell *minishell, char **envp);
 void	is_built_in(t_pipe *the_pipe, t_token *token);
-void	print_pauline(t_minishell *minishell);
 void	path_explicit(t_minishell *minishell, t_token *token);
+// int		heredoc(t_minishell *minishell, t_pipe *pipe, t_token *token);
+int	heredoc(t_minishell *minishell, t_token *token);
+int		nb_pipes(t_token *first);
 
 /************************************************************ built-in */
 int		echo(t_minishell *minishell, t_pipe *pipe);
@@ -183,12 +191,15 @@ void	add_args(t_minishell *minishell, t_pipe *pipe, t_token *token);
 int		term_raw_mode(struct termios *oldt, struct termios *newt);
 /********************************************************** error_free */
 void	print_error_free(t_minishell *minishell, char *str, int error);
-void	free_strv(char **array);
 void	strerror_file(char *filename);
 void	strerror_free_structure(t_minishell *minishell, char *filename, int error);
 void	error_cmd_args(t_minishell *minishell, char *cmd, char *filename);
-void	free_all(t_minishell *minishell);
+/**************************************************************** free */
 void	lst_pipe_clear(t_pipe **head);
+void	free_all(t_minishell *minishell);
+void	free_strv(char **array);
+void	free_heredoc(t_minishell *minishell);
+void	free_envp(t_minishell *minishell);
 
 /*************************************************************** utils */
 int		len_double(char **tab);
@@ -200,10 +211,14 @@ int		strv_dup(t_minishell *minishell, char ***dst, char **src);
 int		lst_size(t_token *token);
 int		count_chr(char *str, char c, bool followed);
 bool	find_built_in(char *token);
+void	ft_joinstr(t_minishell *minishell, char **result, char *str);
+void	ft_joinchr(t_minishell *minishell, char **result, char c);
+int		ft_strcmp(char *s1, char *s2);
 
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);
+void	print_pauline(t_minishell *minishell);
 
 /************************************************************* parsing */
 char	*expand_line(char *line, char **envp);

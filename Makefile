@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/02 09:07:04 by stkloutz         ###   ########.fr        #
+#    Updated: 2026/04/29 10:21:40 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,13 +36,16 @@ SRCS		:= 											\
 			src/execute/built_in/env.c					\
 			src/execute/built_in/export.c				\
 			src/execute/built_in/exec_built_in.c		\
-			src/execute/is_cmd/init_args.c				\
-			src/execute/is_cmd/init_cmd_args.c			\
+			src/execute/init/init_args.c				\
+			src/execute/init/init_cmd_args.c			\
+			src/execute/init/init_exec.c				\
+			src/execute/init/init_files.c				\
+			src/execute/init/init_pipe.c				\
 			src/execute/cmd_path/is_path.c				\
 			src/execute/cmd_path/path_explicit.c		\
-			src/execute/read/init_files.c				\
 			src/execute/read/read_token.c				\
 			src/execute/utils/error_free.c				\
+			src/execute/utils/free.c					\
 			src/execute/utils/strv_dup.c				\
 			src/execute/utils/count_chr.c				\
 			src/execute/utils/utils.c					\
@@ -50,6 +53,7 @@ SRCS		:= 											\
 			src/execute/exec_cmds.c						\
 			src/execute/execute.c						\
 			src/execute/term.c							\
+			src/execute/heredoc.c						\
 			src/parsing/expand_line.c					\
 			src/parsing/ft_token_list.c					\
 			src/parsing/handle_token_types.c			\
