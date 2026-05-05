@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 17:03:26 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/05 18:14:42 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
 {
 	array_built_in[IS_ECHO] = echo;
-	// array_built_in[CD]= ;
 	array_built_in[PWD] = pwd;
 	 array_built_in[EXPORT]= export;
 	// array_built_in[UNSET]= ;
 	 array_built_in[ENV]= env;
 	// array_built_in[EXIT]= ;
+	return ;
 }
 
 
@@ -97,8 +97,8 @@ void	exec_cmds_pipe(t_minishell *minishell)
 
 		if (current->builtin_kind == IS_ECHO)
 			echo_for_prompt(minishell, current);
-		// if (current->builtin_kind == PWD)
-		// 	pwd(minishell);
+		if (current->builtin_kind == CD)
+			cd(minishell, current);
 
 		// if (current->output ==  && is_next_pipe)
 		// 	current->error = 1;
@@ -205,7 +205,8 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				execve(current->cmd->cmd_path, current->cmd->args_execve, minishell->exec.envp);
 				perror("execve");
 			}
-			else if (current->builtin_kind)
+			else if (current->builtin_kind != NONE
+				&& current->builtin_kind != CD)
 				array_built_in[current->builtin_kind](minishell, current);
 				// exec_built_in(minishell, current);
 			

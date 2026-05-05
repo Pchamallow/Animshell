@@ -6,23 +6,23 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 14:37:28 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/05 17:30:36 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*static void	path_explicit(t_minishell *minishell, t_token *token)*/
-/*{*/
-	/*int	len;*/
+static void	path_explicit(t_minishell *minishell, t_token *token)
+{
+	int	len;
 
-	/*len = ft_strlen(token->value);*/
-	/*token->cmd_path = ft_calloc(sizeof(char *), len + 1);*/
-	/*if (!token->cmd_path)*/
-		/*print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);*/
-	/*ft_strlcpy(token->cmd_path, token->value, len + 1);*/
-	/*cmd_explicit(minishell, token);*/
-/*}*/
+	len = ft_strlen(token->value);
+	token->cmd_path = ft_calloc(sizeof(char *), len + 1);
+	if (!token->cmd_path)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	ft_strlcpy(token->cmd_path, token->value, len + 1);
+	cmd_explicit(minishell, token);
+}
 
 static int	is_valid_path(t_minishell *minishell, t_token *token)
 {

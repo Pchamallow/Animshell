@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 12:36:44 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/05 19:08:28 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,18 @@ void	strerror_free_structure(t_minishell *minishell, char *filename, int error)
 	exit(error);
 }
 
-void	error_cmd_args(t_minishell *minishell, char *cmd, char *filename)
+void	error_cmd_args(char *cmd, char *filename, char *error)
 {
 	/*    UTILISER ? */
-	ft_printf_fd(2, "%s", cmd);
+	if (filename)
+		ft_printf_fd(2, "minishell: %s: %s: %s\n", cmd, filename, error);
+	else
+		ft_printf_fd(2, "minishell: %s: %s\n", cmd, error);
 	// ft_printf_fd(2, "NOPE");
-	write(2, ": ", 2);
-	write(2, filename, strlen(filename));
-	write(2, "\n", 1);
-	free_all(minishell);
-	exit(minishell->exec.error);
+	// free_all(minishell);
+	// exit(minishell->exec.error);
 }
+
 
 void	strerror_file(char *filename)
 {
@@ -54,3 +55,4 @@ void	print_error_free(t_minishell *minishell, char *str, int error)
 	free_all(minishell);
 	exit(error);
 }
+
