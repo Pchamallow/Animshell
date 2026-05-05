@@ -33,6 +33,8 @@ NC			:='\033[0m'
 # Sources
 SRCS		:= 											\
 			src/execute/built_in/echo.c					\
+			src/execute/built_in/env.c					\
+			src/execute/built_in/export.c				\
 			src/execute/built_in/exec_built_in.c		\
 			src/execute/init/init_args.c				\
 			src/execute/init/init_cmd_args.c			\
@@ -59,6 +61,7 @@ SRCS		:= 											\
 			src/parsing/parsing_utils.c					\
 			src/parsing/parsing_errors_free.c			\
 			src/parsing/parsing.c						\
+			src/signals/signals.c						\
 			src/main.c									\
 
 

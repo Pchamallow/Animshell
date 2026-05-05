@@ -18,12 +18,12 @@
 void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
 {
 	array_built_in[IS_ECHO] = echo;
-	// array_buit_in[CD]= ;
-	// array_buit_in[PWD]= ;
-	// array_buit_in[EXPORT]= ;
-	// array_buit_in[UNSET]= ;
-	// array_buit_in[ENV]= ;
-	// array_buit_in[EXIT]= ;
+	// array_built_in[CD]= ;
+	// array_built_in[PWD]= ;
+	 array_built_in[EXPORT]= export;
+	// array_built_in[UNSET]= ;
+	 array_built_in[ENV]= env;
+	// array_built_in[EXIT]= ;
 }
 
 
@@ -54,6 +54,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 	int		(*array_built_in[8])(t_minishell *, t_pipe *);
 	// int		not_write;
 	
+	ignore_signal();
 	current = minishell->exec.pipe_lst;
 	init_array_built_in(array_built_in);
 	// if (minishell->exec.pipe_lst->next)
@@ -100,6 +101,18 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		// if (current->output ==  && is_next_pipe)
 		// 	current->error = 1;
 		
+		//--------------------------------------------------------------
+		//Si pas de pipes && cmd == built-in et != IS_ECHO
+		//-> pas de fork :
+		if (!at_least_one_pipe && current->builtin_kind
+				&&current->builtin_kind != IS_ECHO)
+		{
+			array_built_in[current->builtin_kind](minishell, current);
+			close_fds_pipe(current);//demander à Pauline si ça marche dans ce cas
+			return ;
+		}
+		//--------------------------------------------------------------
+
 		pid = fork();
 		already_output = 0;
 
@@ -114,6 +127,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		// printf("output pipe == %d\n", output_pipe);
 		if (pid == 0)
 		{
+			reset_signal_to_default();
 			// printf("-------- child \n");
 			printf("current->input = %d\n", current->input);
 			printf("current->output = %d\n", current->output);
@@ -227,7 +241,15 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		// free_all(minishell);
 		current = current->next;
 	}
-	while(wait(NULL) > 0);
+
+	get_exit_status(minishell);
+
+	// close_fds_pipe(current);
+	
+	// waitpid(pid, NULL, 0);
+	// waitpid(pid, NULL, 0);
+	// close(input_fd);
+	// close(pipefd[0]);
 	ft_printf_fd(2, "--------------------------------------------\n");
 }
 

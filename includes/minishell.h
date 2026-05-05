@@ -147,8 +147,6 @@ typedef struct s_minishell
 	char		*prompt;
 }				t_minishell;
 
-# define CMD_LIST "echo, cd, pwd, export, unset, env, exit"
-
 /***********************************************************************/
 
 /***********************************************************************/
@@ -174,6 +172,8 @@ int		nb_pipes(t_token *first);
 /************************************************************ built-in */
 int		echo(t_minishell *minishell, t_pipe *pipe);
 void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe);
+int		env(t_minishell *minishell, t_pipe *pipe);
+int 	export(t_minishell *minishell, t_pipe *pipe);
 /***************************************************** tabs for execve */
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
 /**************************************************** execute commands */
@@ -250,6 +250,12 @@ t_token	*ft_token_last(t_token *lst);
 void	ft_token_add_back(t_token **head, t_token *newer, char *line);
 void	ft_token_delone(t_token *lst, void (*del)(void *));
 void	ft_token_lstclear(t_token **head);
+/********************************************************** signals */
+void	set_signal_interactive(void);
+void	reset_signal_to_default(void);
+void	ignore_signal(void);
+void	check_signal_value(t_minishell *minishell);
+void	get_exit_status(t_minishell *minishell);
 /********************************************* tests print a supprimer */
 void	print_tokens_types(t_token *token);// pour tester
 void	print_tokens(t_token *token);// pour tester
