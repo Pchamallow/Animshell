@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 16:14:40 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/05 17:05:35 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,8 @@ int		nb_pipes(t_token *first);
 int		echo(t_minishell *minishell, t_pipe *pipe);
 void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
-int 	export(t_minishell *minishell, t_pipe *pipe);
+int		export(t_minishell *minishell, t_pipe *pipe);
+int		pwd(t_minishell *minishell, t_pipe *pipe);
 /***************************************************** tabs for execve */
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
 /**************************************************** execute commands */

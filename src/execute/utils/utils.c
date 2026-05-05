@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 16:21:47 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/05 16:47:02 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,4 +171,11 @@ bool find_built_in(char *token)
 		i++;
 	}
 	return (false);
+}
+
+void free_cpy(char **dst, char *src)
+{
+	if (*dst != NULL)
+		free(*dst);
+	*dst = ft_strdup(src);
 }

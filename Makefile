@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/29 10:21:40 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/05/05 16:57:11 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRCS		:= 											\
 			src/execute/built_in/echo.c					\
 			src/execute/built_in/env.c					\
 			src/execute/built_in/export.c				\
+			src/execute/built_in/pwd.c					\
 			src/execute/built_in/exec_built_in.c		\
 			src/execute/init/init_args.c				\
 			src/execute/init/init_cmd_args.c			\

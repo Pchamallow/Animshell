@@ -6,18 +6,11 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 16:35:37 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/05 16:47:05 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void free_cpy(char **dst, char *src)
-{
-	if (*dst != NULL)
-		free(*dst);
-	*dst = ft_strdup(src);
-}
 
 int next_pipe(t_minishell *minishell, t_token *token)
 {
@@ -209,104 +202,6 @@ void convert_to_single_quotes(t_minishell *minishell, t_token *token)
 	tmp_modify->value[len] = '\'';
 	free(original);
 }
-
-
-// int	is_single_double_single(t_token *token)
-// {
-// 	int	i;
-
-// 	i = 3;
-// 	if ((token->quote == SINGLE)
-// 		&&(token->next && token->next->quote == DOUBLE)
-// 		&&(token->next->next && token->next->next->quote == SINGLE))
-// 	{
-// 		token = token->next;
-// 		token = token->next;
-// 		token = token->next;
-// 		while (token && token->type == IS_ARG 
-// 			|| token->type == IS_FILENAME
-// 			|| token->type == IS_INPUT
-// 			|| token->type == IS_OUTPUT
-// 			|| token->type == ONE_SPACE
-// 			|| token->type == REDIRECTION)
-// 		{
-// 			token = token->next;
-// 			i++;
-// 		}
-// 		if ((token && token->quote == SINGLE)
-// 			&&(token->next && token->next->quote == DOUBLE)
-// 			&&(token->next->next && token->next->next->quote == SINGLE))
-// 			{
-// 				if (i == 3)
-// 					return (0);
-// 				return (i + 3);
-// 			}
-// 		else
-// 			return (0);
-// 	}
-// 	return (0);
-// }
-
-
-// void merge_in_one(t_minishell *minishell, t_token *token, int skip)
-// {
-// 	t_token	*original;
-// 	char	*result;
-// 	char	*tmp;
-// 	int		i;
-// 	int		only_first_word;
-
-// 	i = 0;
-// 	original = token;
-// 	only_first_word = 0;
-// 	result = ft_calloc(1, sizeof(char));
-// 	if (!result)
-// 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-// 	while (token)
-// 	{
-// 		while (token && token->quote != NO)
-// 		{
-// 			token = token->next;
-// 			i++;
-// 		}
-// 		if (token->type == IS_INPUT)
-// 		{
-// 			while (token && i < skip)
-// 			{
-// 				token = token->next;
-// 				if (token->type == IS_INPUT
-// 					|| token->type == IS_OUTPUT
-// 					|| token->type == ONE_SPACE)
-// 					only_first_word = 1;
-// 				if ((token->type = IS_ARG
-// 					|| token->type = IS_FILENAME)
-// 					&& only_first_word)
-// 				{
-// 					free(result);
-// 					result = ft_strdup(token->value);
-// 					break;
-// 				}
-// 				i++;
-// 			}
-// 			result = ft_strdup("'\"'");
-// 		}
-// 		if 
-
-		
-// 		tmp = ft_strdup(result);
-// 		free(result);
-// 		result = ft_strjoin(tmp, token->value);
-// 		free(tmp);
-// 		token = token->next;
-// 		i++;
-// 	}
-// 	if (i == skip)
-// 	{
-// 		free(original->value);
-// 		original->value = ft_strdup(result);
-// 		free(result);
-// 	}
-// }
 
 void	remove_quots(t_minishell *minishell, t_token *token)
 {
