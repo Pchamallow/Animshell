@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 15:03:49 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/05 16:28:18 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,9 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
 			}
-			if (is_next_pipe)
+			if (is_next_pipe
+				|| (current->input == ERROR && current->output == ERROR
+				&& is_next_pipe))
 			{
 				close_fd(pipefd[0]);
 				close_fd(pipefd[1]);
@@ -247,10 +249,6 @@ void	exec_cmds_pipe(t_minishell *minishell)
 
 	// close_fds_pipe(current);
 	
-	// waitpid(pid, NULL, 0);
-	// waitpid(pid, NULL, 0);
-	// close(input_fd);
-	// close(pipefd[0]);
 	ft_printf_fd(2, "--------------------------------------------\n");
 }
 

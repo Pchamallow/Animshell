@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 16:33:11 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/05 16:35:37 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,6 +335,8 @@ bool is_single_double_quoted(t_minishell *minishell, t_token *token)
 	single = 0;
 	doubled = 0;
 	str = token->value;
+	if (token->quote == SINGLE && is_double_quoted(token->value))
+		return (false);
 	if (str[0] == '\0')
 		return (false);
 	if (str[i] == '\'')
@@ -381,32 +383,12 @@ void read_args(t_minishell *minishell, t_token *token, t_pipe *pipe)
 	index_pipes = minishell->exec.index_pipe;
 	while (token != NULL && ((index_pipes == 0) || (index_pipes > 0 && i <= index_pipes)))
 	{
-		// ft_printf_fd(2, "pipe = %s\n", token->value);
-		// ft_printf_fd(2, "index_pipes = %d\n", index_pipes);
-		// if ((token->quote == DOUBLE ||
-		// 	 (token->quote == SINGLE && token->next && token->next->quote != DOUBLE)) &&
-		// 	(is_redirection(token) == true))
-		// 	convert_to_single_quotes(minishell, token);
 		if (token->type == IS_ARG)
+		{
 			is_single_double_quoted(minishell, token);
-		// if (token->quote == SINGLE)
-		// 	single++;
-		// else if (token->quote == DOUBLE)
-		// 	double++;
-		// skip = is_single_double_single(token);
-		// if (skip)
-		// {
-		// 	// merge en un seul dans le 1er token 
-		// 	// et skip les args qui y correspondent
-		// 	merge_in_one(minishell, token, skip);
-		// 	add_args(minishell, pipe, token);
-		// 	while (token && i < skip)
-		// 		token = token->next;
-		// 	continue;
-		// }
-		// printf("ICI = %s\n", token->value);
-		if (token->type == IS_ARG && pipe->is_cmd == 1)
-			add_args(minishell, pipe, token);
+			if (pipe->is_cmd == 1)
+				add_args(minishell, pipe, token);
+		}
 		token = token->next;
 		i++;
 	}
