@@ -14,6 +14,8 @@ display args->value[i]
 display args->value[j]
 display args->type
 display str[i]
+display original[i]
+display result
 display c
 display count
 display i
@@ -46,3 +48,5 @@ set follow-fork-mode child
 
 jkkhjkh | echo coucou
 echo -n coucou
+<< "'"eof"'"
+<< "'"eof

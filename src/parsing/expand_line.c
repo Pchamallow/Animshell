@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   expand_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
 /*   Updated: 2026/05/04 22:57:43 by stkloutz         ###   ########.fr       */
