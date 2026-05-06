@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 16:47:02 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/06 12:17:10 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,4 +178,27 @@ void free_cpy(char **dst, char *src)
 	if (*dst != NULL)
 		free(*dst);
 	*dst = ft_strdup(src);
+}
+
+void	ft_strcpy(char *dst, char *src)
+{
+	int	len_dst;
+	int	len_src;
+
+	len_dst = ft_strlen(dst);
+	len_src = ft_strlen(src);
+	if (len_dst > len_src)
+		ft_strlcpy(dst, (const char *)src, len_dst);
+	else
+		ft_strlcpy(dst, (const char *)src, len_src);
+}
+
+char *safe_join(char *s1, char *s2)
+{
+	char *res;
+
+	res = ft_strjoin(s1, s2);
+	if (!res)
+		return (NULL);
+	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 18:14:42 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/06 11:02:35 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,9 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			echo_for_prompt(minishell, current);
 		if (current->builtin_kind == CD)
 			cd(minishell, current);
+		// tester avec le return ici our chaque buuilt in certains 
+		// on besoin de lire et ecrire dans les dup, si return fonctionne 
+		// plus besoin d exclure dans le fork du tableau des functions
 
 		// if (current->output ==  && is_next_pipe)
 		// 	current->error = 1;
@@ -246,7 +249,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		// free_all(minishell);
 		current = current->next;
 	}
-	while(wait(NULL) > 0);
+	// while(wait(NULL) > 0);
 
 	get_exit_status(minishell);
 

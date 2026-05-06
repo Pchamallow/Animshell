@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 19:11:53 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/06 12:19:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,15 +92,25 @@ typedef enum e_put
 	IS_PIPE
 }			t_put;
 
+typedef enum e_path_kind
+{
+	ASCII,
+	ABSOLUTE,
+	RELATIVE_SINGLE,
+	RELATIVE_DOUBLE,
+}			t_path_kind;
+
 typedef struct s_builtin_content
 {
 	char		*result;
 	bool		for_prompt;
+	t_path_kind	path;
 }				t_builtin_content;
 
 typedef struct s_builtin
 {
 	t_builtin_content	echo;
+	t_builtin_content	cd;
 }				t_builtin;
 
 typedef struct s_pipe
@@ -218,6 +228,8 @@ void	ft_joinchr(t_minishell *minishell, char **result, char c);
 int		ft_strcmpp(char *s1, char *s2);
 int		is_double_quoted(char *str);
 char	*str_beginend_char(t_minishell *minishell, char *str, char c);
+void	ft_strcpy(char *dst, char *src);
+char	*safe_join(char *s1, char *s2);
 
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete
