@@ -30,7 +30,7 @@ void	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 		if (ft_strchr(line, '"') == NULL
 			&& ft_strchr(line, '\'') == NULL
 			&& token->quote == NO)
-			line = expand_line(line, minishell->exec.envp);
+			line = expand_line(line, minishell->exec.envp, minishell);
 		ft_printf_fd(fd, "%s\n", line);
 		free(line);
 	}

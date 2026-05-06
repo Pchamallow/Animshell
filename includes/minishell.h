@@ -237,7 +237,7 @@ void	print_pipefd(int fd1, int fd2);
 void	print_pauline(t_minishell *minishell);
 
 /************************************************************* parsing */
-char	*expand_line(char *line, char **envp);
+char	*expand_line(char *line, char **envp, t_minishell *minishell);
 int		handle_quotes(char *line, t_token **token_list, int *index,
 			t_minishell *minishell);
 void	handle_pipe(char *line, t_token **token_list, int *index);

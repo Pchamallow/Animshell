@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static int	ft_strcmp(const char *s1, const char *s2)
+static int	ft_env_cmp(const char *s1, const char *s2)
 {
 	size_t			i;
 	unsigned char	*str1;
@@ -66,7 +66,7 @@ static void	sort_envp(char **sorted_envp)
 		j = i + 1;
 		while (sorted_envp[j])
 		{
-			if (ft_strcmp(sorted_envp[smallest], sorted_envp[j]) > 0)
+			if (ft_env_cmp(sorted_envp[smallest], sorted_envp[j]) > 0)
 				smallest = j;
 			j++;
 		}
@@ -80,7 +80,7 @@ static void	sort_envp(char **sorted_envp)
 	}
 }
 
-static int	print_sorted_envp(t_minishell *minishell, int fd)
+static int	print_sorted_envp(t_minishell *minishell)
 {
 	int		i;
 	int		j;
@@ -96,20 +96,20 @@ static int	print_sorted_envp(t_minishell *minishell, int fd)
 	while (sorted_envp[i])
 	{
 		j = 0;
-		write(fd, "export ", 7);
+		write(1, "export ", 7);
 		while (sorted_envp[i][j] && sorted_envp[i][j] != '=')
 		{
-			write(fd, &sorted_envp[i][j], 1);
+			write(1, &sorted_envp[i][j], 1);
 			j++;
 		}
 		if (sorted_envp[i][j] == '=')
 		{
-			write(fd, "=\"", 2);
+			write(1, "=\"", 2);
 			j++;
-			write(fd, sorted_envp[i] + j, ft_strlen(sorted_envp[i] + j));
-			write(fd, "\"", 1);
+			write(1, sorted_envp[i] + j, ft_strlen(sorted_envp[i] + j));
+			write(1, "\"", 1);
 		}
-		write(fd, "\n", 1);
+		write(1, "\n", 1);
 		i++;
 	}
 	free(sorted_envp);
@@ -182,7 +182,7 @@ void	replace_var(char **envp, char *var, t_minishell *minishell)
 	i = found_var(envp, var);
 	if (i < 0)
 		return ;
-	if (ft_strcmp(envp[i], var) == 0)
+	if (ft_env_cmp(envp[i], var) == 0)
 		return ;
 	if (!ft_strchr(var, '='))
 		return ;
@@ -217,10 +217,7 @@ int	export(t_minishell *minishell, t_pipe *pipe)
 	minishell->exec.error = 0;
 	if (pipe->nb_args == 0)
 	{
-		if (pipe->output == IS_FILE)
-			print_sorted_envp(minishell, pipe->outfile->fd);
-		else
-			print_sorted_envp(minishell, 1);
+		print_sorted_envp(minishell);
 		return (minishell->exec.error);
 	}
 	arg = pipe->cmd->next;
