@@ -104,13 +104,13 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		//--------------------------------------------------------------
 		//Si pas de pipes && cmd == built-in et != IS_ECHO
 		//-> pas de fork :
-		if (!at_least_one_pipe && current->builtin_kind
-				&&current->builtin_kind != IS_ECHO)
-		{
-			array_built_in[current->builtin_kind](minishell, current);
-			close_fds_pipe(current);//demander à Pauline si ça marche dans ce cas
-			return ;
-		}
+		// if (!at_least_one_pipe && current->builtin_kind
+		// 		&&current->builtin_kind != IS_ECHO)
+		// {
+		// 	array_built_in[current->builtin_kind](minishell, current);
+		// 	close_fds_pipe(current);//demander à Pauline si ça marche dans ce cas
+		// 	return ;
+		// }
 		//--------------------------------------------------------------
 
 		pid = fork();

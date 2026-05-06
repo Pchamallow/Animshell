@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/04 22:57:43 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/06 11:30:14 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ char	*expand_line(char *line, char **envp, t_minishell *minishell)
 	quote = NO;
 	if (find_env_var(newline, ft_strlen(newline), &quote) != -1)
 		newline = expand_line(newline, envp, minishell);
-	ft_printf_fd(1, "EXPAND LINE:\n**%s**\n", newline);
+	/*ft_printf_fd(1, "EXPAND LINE:\n**%s**\n", newline);*/
 	/*ft_printf_fd(1, "----------------------------------\n");*/
 	return (newline);
 }

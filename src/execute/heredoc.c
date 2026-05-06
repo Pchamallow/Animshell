@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 15:08:39 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/06 11:21:05 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 		if (ft_strchr(line, '"') == NULL
 			&& ft_strchr(line, '\'') == NULL
 			&& token->quote == NO)
-			line = expand_line(line, minishell->exec.envp);
+			line = expand_line(line, minishell->exec.envp, minishell);
 		ft_printf_fd(fd, "%s\n", line);
 		free(line);
 	}
