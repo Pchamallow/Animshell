@@ -6,18 +6,11 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 16:33:11 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/05 16:47:05 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void free_cpy(char **dst, char *src)
-{
-	if (*dst != NULL)
-		free(*dst);
-	*dst = ft_strdup(src);
-}
 
 int next_pipe(t_minishell *minishell, t_token *token)
 {
@@ -210,104 +203,6 @@ void convert_to_single_quotes(t_minishell *minishell, t_token *token)
 	free(original);
 }
 
-
-// int	is_single_double_single(t_token *token)
-// {
-// 	int	i;
-
-// 	i = 3;
-// 	if ((token->quote == SINGLE)
-// 		&&(token->next && token->next->quote == DOUBLE)
-// 		&&(token->next->next && token->next->next->quote == SINGLE))
-// 	{
-// 		token = token->next;
-// 		token = token->next;
-// 		token = token->next;
-// 		while (token && token->type == IS_ARG 
-// 			|| token->type == IS_FILENAME
-// 			|| token->type == IS_INPUT
-// 			|| token->type == IS_OUTPUT
-// 			|| token->type == ONE_SPACE
-// 			|| token->type == REDIRECTION)
-// 		{
-// 			token = token->next;
-// 			i++;
-// 		}
-// 		if ((token && token->quote == SINGLE)
-// 			&&(token->next && token->next->quote == DOUBLE)
-// 			&&(token->next->next && token->next->next->quote == SINGLE))
-// 			{
-// 				if (i == 3)
-// 					return (0);
-// 				return (i + 3);
-// 			}
-// 		else
-// 			return (0);
-// 	}
-// 	return (0);
-// }
-
-
-// void merge_in_one(t_minishell *minishell, t_token *token, int skip)
-// {
-// 	t_token	*original;
-// 	char	*result;
-// 	char	*tmp;
-// 	int		i;
-// 	int		only_first_word;
-
-// 	i = 0;
-// 	original = token;
-// 	only_first_word = 0;
-// 	result = ft_calloc(1, sizeof(char));
-// 	if (!result)
-// 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-// 	while (token)
-// 	{
-// 		while (token && token->quote != NO)
-// 		{
-// 			token = token->next;
-// 			i++;
-// 		}
-// 		if (token->type == IS_INPUT)
-// 		{
-// 			while (token && i < skip)
-// 			{
-// 				token = token->next;
-// 				if (token->type == IS_INPUT
-// 					|| token->type == IS_OUTPUT
-// 					|| token->type == ONE_SPACE)
-// 					only_first_word = 1;
-// 				if ((token->type = IS_ARG
-// 					|| token->type = IS_FILENAME)
-// 					&& only_first_word)
-// 				{
-// 					free(result);
-// 					result = ft_strdup(token->value);
-// 					break;
-// 				}
-// 				i++;
-// 			}
-// 			result = ft_strdup("'\"'");
-// 		}
-// 		if 
-
-		
-// 		tmp = ft_strdup(result);
-// 		free(result);
-// 		result = ft_strjoin(tmp, token->value);
-// 		free(tmp);
-// 		token = token->next;
-// 		i++;
-// 	}
-// 	if (i == skip)
-// 	{
-// 		free(original->value);
-// 		original->value = ft_strdup(result);
-// 		free(result);
-// 	}
-// }
-
 void	remove_quots(t_minishell *minishell, t_token *token)
 {
 	char	*original;
@@ -335,6 +230,8 @@ bool is_single_double_quoted(t_minishell *minishell, t_token *token)
 	single = 0;
 	doubled = 0;
 	str = token->value;
+	if (token->quote == SINGLE && is_double_quoted(token->value))
+		return (false);
 	if (str[0] == '\0')
 		return (false);
 	if (str[i] == '\'')
@@ -381,32 +278,12 @@ void read_args(t_minishell *minishell, t_token *token, t_pipe *pipe)
 	index_pipes = minishell->exec.index_pipe;
 	while (token != NULL && ((index_pipes == 0) || (index_pipes > 0 && i <= index_pipes)))
 	{
-		// ft_printf_fd(2, "pipe = %s\n", token->value);
-		// ft_printf_fd(2, "index_pipes = %d\n", index_pipes);
-		// if ((token->quote == DOUBLE ||
-		// 	 (token->quote == SINGLE && token->next && token->next->quote != DOUBLE)) &&
-		// 	(is_redirection(token) == true))
-		// 	convert_to_single_quotes(minishell, token);
 		if (token->type == IS_ARG)
+		{
 			is_single_double_quoted(minishell, token);
-		// if (token->quote == SINGLE)
-		// 	single++;
-		// else if (token->quote == DOUBLE)
-		// 	double++;
-		// skip = is_single_double_single(token);
-		// if (skip)
-		// {
-		// 	// merge en un seul dans le 1er token 
-		// 	// et skip les args qui y correspondent
-		// 	merge_in_one(minishell, token, skip);
-		// 	add_args(minishell, pipe, token);
-		// 	while (token && i < skip)
-		// 		token = token->next;
-		// 	continue;
-		// }
-		// printf("ICI = %s\n", token->value);
-		if (token->type == IS_ARG && pipe->is_cmd == 1)
-			add_args(minishell, pipe, token);
+			if (pipe->is_cmd == 1)
+				add_args(minishell, pipe, token);
+		}
 		token = token->next;
 		i++;
 	}

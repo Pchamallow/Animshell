@@ -6,11 +6,28 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 11:07:19 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/06 12:17:10 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*str_beginend_char(t_minishell *minishell, char *str, char c)
+{
+	char	*new;
+	int		len;
+
+	if (!str)
+		return (NULL);
+	len = ft_strlen(str) + 3;
+	new = ft_calloc(len, sizeof(char));
+	if (!new)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	new[0] = c;
+	ft_strlcpy(&new[1], str, len);
+	new[len - 2] = c;
+	return (new);
+}
 
 int	lst_size(t_token *token)
 {
@@ -48,34 +65,23 @@ void	close_fd(int fd)
 		close(fd);
 }
 
-// /* cmd without spaces */
-// int	len_cmd(char *str)
-// {
-// 	int	i;
-// 	int	cmd;
+int	is_double_quoted(char *str)
+{
+	int	i;
+	int	doubled;
 
-// 	i = 0;
-// 	cmd = 0;
-// 	while (str[i])
-// 	{
-// 		if (str[i] != ' ')
-// 		{
-// 			cmd = 1;
-// 			while (str[i] && str[i] != ' ')
-// 				i++;
-// 			if (str[i] == ' ')
-// 			{
-// 				while (str[i] && str[i] == ' ')
-// 					i++;
-// 			}
-// 			break ;
-// 		}
-// 		i++;
-// 	}
-// 	if (cmd == 0)
-// 		return (0);
-// 	return (i);
-// }
+	i = 0;
+	doubled = 0;
+	while (str[i])
+	{
+		if (str[i] == '"')
+			doubled++;
+		i++;
+	}
+	if (str[i] == '\0' && doubled == 2)
+		return (1);
+	return (0);
+}
 
 int	len_double(char **tab)
 {
@@ -165,4 +171,34 @@ bool find_built_in(char *token)
 		i++;
 	}
 	return (false);
+}
+
+void free_cpy(char **dst, char *src)
+{
+	if (*dst != NULL)
+		free(*dst);
+	*dst = ft_strdup(src);
+}
+
+void	ft_strcpy(char *dst, char *src)
+{
+	int	len_dst;
+	int	len_src;
+
+	len_dst = ft_strlen(dst);
+	len_src = ft_strlen(src);
+	if (len_dst > len_src)
+		ft_strlcpy(dst, (const char *)src, len_dst);
+	else
+		ft_strlcpy(dst, (const char *)src, len_src);
+}
+
+char *safe_join(char *s1, char *s2)
+{
+	char *res;
+
+	res = ft_strjoin(s1, s2);
+	if (!res)
+		return (NULL);
+	return (res);
 }

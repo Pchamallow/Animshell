@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 16:17:18 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/06 11:02:35 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
 {
 	array_built_in[IS_ECHO] = echo;
-	// array_built_in[CD]= ;
-	// array_built_in[PWD]= ;
+	array_built_in[PWD] = pwd;
 	 array_built_in[EXPORT]= export;
 	// array_built_in[UNSET]= ;
 	 array_built_in[ENV]= env;
 	// array_built_in[EXIT]= ;
+	return ;
 }
 
 
@@ -97,6 +97,11 @@ void	exec_cmds_pipe(t_minishell *minishell)
 
 		if (current->builtin_kind == IS_ECHO)
 			echo_for_prompt(minishell, current);
+		if (current->builtin_kind == CD)
+			cd(minishell, current);
+		// tester avec le return ici our chaque buuilt in certains 
+		// on besoin de lire et ecrire dans les dup, si return fonctionne 
+		// plus besoin d exclure dans le fork du tableau des functions
 
 		// if (current->output ==  && is_next_pipe)
 		// 	current->error = 1;
@@ -186,7 +191,9 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
 			}
-			if (is_next_pipe)
+			if (is_next_pipe
+				|| (current->input == ERROR && current->output == ERROR
+				&& is_next_pipe))
 			{
 				close_fd(pipefd[0]);
 				close_fd(pipefd[1]);
@@ -201,7 +208,8 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				execve(current->cmd->cmd_path, current->cmd->args_execve, minishell->exec.envp);
 				perror("execve");
 			}
-			else if (current->builtin_kind)
+			else if (current->builtin_kind != NONE
+				&& current->builtin_kind != CD)
 				array_built_in[current->builtin_kind](minishell, current);
 				// exec_built_in(minishell, current);
 			
@@ -241,15 +249,12 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		// free_all(minishell);
 		current = current->next;
 	}
+	// while(wait(NULL) > 0);
 
 	get_exit_status(minishell);
 
 	// close_fds_pipe(current);
 	
-	// waitpid(pid, NULL, 0);
-	// waitpid(pid, NULL, 0);
-	// close(input_fd);
-	// close(pipefd[0]);
 	ft_printf_fd(2, "--------------------------------------------\n");
 }
 

@@ -46,6 +46,7 @@ set detach-on-fork off
 set follow-fork-mode child
 
 
+
 jkkhjkh | echo coucou
 echo -n coucou
 << "'"eof"'"

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 10:01:40 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/01/31 19:32:32 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/06 11:09:37 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 
 	i = 0;
 	len = 0;
+	if (!src)
+		return (0);
 	while (src[len])
 		len++;
 	if (size == 0)

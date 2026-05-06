@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/04/29 10:21:40 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/05/05 17:57:28 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,9 +32,11 @@ NC			:='\033[0m'
 
 # Sources
 SRCS		:= 											\
+			src/execute/built_in/cd.c					\
 			src/execute/built_in/echo.c					\
 			src/execute/built_in/env.c					\
 			src/execute/built_in/export.c				\
+			src/execute/built_in/pwd.c					\
 			src/execute/built_in/exec_built_in.c		\
 			src/execute/init/init_args.c				\
 			src/execute/init/init_cmd_args.c			\
@@ -42,7 +44,7 @@ SRCS		:= 											\
 			src/execute/init/init_files.c				\
 			src/execute/init/init_pipe.c				\
 			src/execute/cmd_path/is_path.c				\
-			src/execute/cmd_path/path_explicit.c		\
+			src/execute/cmd_path/cmd_explicit.c			\
 			src/execute/read/read_token.c				\
 			src/execute/utils/error_free.c				\
 			src/execute/utils/free.c					\
