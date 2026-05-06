@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/06 12:19:04 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/06 17:56:23 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,7 @@ int		count_chr(char *str, char c, bool followed);
 bool	find_built_in(char *token);
 void	ft_joinstr(t_minishell *minishell, char **result, char *str);
 void	ft_joinchr(t_minishell *minishell, char **result, char c);
-int		ft_strcmpp(char *s1, char *s2);
+int		ft_strcmp(char *s1, char *s2);
 int		is_double_quoted(char *str);
 char	*str_beginend_char(t_minishell *minishell, char *str, char c);
 void	ft_strcpy(char *dst, char *src);

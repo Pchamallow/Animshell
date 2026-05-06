@@ -6,13 +6,13 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/22 16:29:46 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 15:05:45 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/06 16:22:08 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
 
-int	ft_strcmpp(char *s1, char *s2)
+int	ft_strcmp(char *s1, char *s2)
 {
 	int	len_s1;
 	int	len_s2;

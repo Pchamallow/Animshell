@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 14:08:19 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/03/12 15:00:32 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/06 17:27:54 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	sb = (char *)malloc(sizeof(char) * (len + 1));
 	if (sb == NULL)
 		return (NULL);
-	while (i < (start + len))
+	while (s[i] && i < (start + len))
 		sb[j++] = s[i++];
 	sb[j] = '\0';
 	return (sb);
