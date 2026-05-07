@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:24:30 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/07 17:14:06 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/07 17:28:14 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ int	path_clean(t_minishell *minishell, char **path, int index_pwd)
 		if (path_replacefolder(&old_pwd, path))
 			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	}
-	free(old_pwd);
+	if (kind != RELATIVE_DOUBLE)
+		free(old_pwd);
 	return (0);
 }

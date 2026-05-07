@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/07 17:15:59 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/07 17:38:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,13 +168,16 @@ void	replace_oldpwd(t_minishell *minishell)
 	else if (result == -1)
 		return ;
 	result = strv_searchindex(minishell->exec.envp, "OLDPWD=");
+	printf("is oldpwd ? = %s\n", minishell->exec.envp[result]);//test
 	free(minishell->exec.envp[result]);
 	minishell->exec.envp[result] = ft_strjoin("OLDPWD=", path_pwd);
+	printf("is pwd ? = %s\n", path_pwd);//test
 	if (!minishell->exec.envp[result])
 	{
 		free(path_pwd);
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	}
+	printf("oldpwd = %s\n", minishell->exec.envp[result]);//test
 	free(path_pwd);
 }
 
@@ -261,12 +264,14 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 	else
 	{
 		path_kind(minishell, &path);
-		replace_oldpwd(minishell);
-		if (minishell->builtin.cd.path != STAY)
-			replace_pwd(minishell, &path);
 		ft_printf_fd(2, "error = %d\n", error);
 		ft_printf_fd(2, "path = %s\n", path);
-		free(path);
+		if (minishell->builtin.cd.path != STAY)
+			replace_pwd(minishell, &path);
+		else
+			free(path);
+		replace_oldpwd(minishell);
+		// free(path);
 	}
 	return (0);
 }
