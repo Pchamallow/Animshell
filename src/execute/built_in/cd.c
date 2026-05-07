@@ -5,38 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/05 17:10:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/06 18:16:54 by pswirgie         ###   ########.fr       */
+/*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
+/*   Updated: 2026/05/07 16:12:52 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-copy a new
-free new
-malloc new with a new len
-*/
-// CONVERTIR LE NEW EN ** POUR NE PAS EN FAIRE UNE COPIE SEULEEMNT
-// char	*str_cpyinit(char *original, char *new, int new_len)
-// {
-// 	if (new)
-// 	{
-// 		original = ft_strdup(new);
-// 		if (!original)
-// 			return (NULL);
-// 		free(new);
-// 		new = ft_calloc(new_len, sizeof(char));
-// 		if (!new)
-// 		{
-// 			free(original);
-// 			return (NULL);
-// 		}
-// 		ft_printf_fd(2, " c est bien copi'e = %s\n", original);
-// 		return (new);
-// 	}
-// 	return (NULL);
-// }
 
 static void	path_kind(t_minishell *minishell, char **path)
 {
@@ -48,6 +22,8 @@ static void	path_kind(t_minishell *minishell, char **path)
 		minishell->builtin.cd.path = RELATIVE_SINGLE;
 	else if ((*path)[0] == '/')
 		minishell->builtin.cd.path = ABSOLUTE;
+	else if ((*path)[0] == '0' && !(*path)[1])
+		minishell->builtin.cd.path = STAY;
 	else if (ft_isalpha((*path)[0]))
 	{
 		new_path = ft_strjoin("./", *path);
@@ -125,133 +101,6 @@ char	*path_replacefolder(char *old_pwd, char **path)
 // }
 
 
-int	remove_begin(char **str, char c)
-{
-	char	*new;
-	int		end;
-	int		i;
-
-	i = 0;
-	end = 0;
-	if ((*str)[0] == '.' && (*str)[1] == '/')
-	{
-		i += 2;
-		end = i;
-		while ((*str)[i] && (*str)[i] == c)
-		{
-			i++;
-			end++;
-		}
-	}
-	end--;
-	if (end == 0)
-		return (0);
-	new = ft_substr(*str, end, ft_strlen(*str) - end);
-	if (!new)
-		return (1);
-	printf("new == %s\n", new);
-	free(*str);
-	*str = new;
-	return (0);
-}
-
-int	remove_end(char **str, char c)
-{
-	char	*new;
-	int		end;
-
-	end = ft_strlen(*str) - 1;
-	while (end > 0 && (*str)[end] && (*str)[end] == c)
-		end--;
-	end++;
-	new = ft_substr(*str, 0, end);
-	if (!new)
-		return (1);
-	free(*str);
-	*str = new;
-	return (0);
-}
-
-int	has_alpha(char *str)
-{
-	int	alpha;
-	int	end;
-	int	i;
-
-	i = 0;
-	alpha = 0;
-	end = ft_strlen(str) - 1;
-	if (end <= 0)
-		return (0);
-	while (str[end] && end > 0)
-	{
-		if (ft_isalpha(str[end]))
-		{
-			alpha = 1;
-			break;
-		}
-		end--;
-	}
-	return (alpha);
-}
-
-/*
-** PATH_CLEAN *********************************************
-** 1. if needed, remove several / 
-** 		- if we have a alpha remove the / or // at end of path,
-		- begin .// -> /
-** 2. clean the path by kend
-**		- absolute (path = /home/documents)
-**			new_pwd = "PWD=" + path
-**		- relative single (path = ./documents)
-**			new_pwd = old_pwd + path (without ./)
-**		- relative double (path = ../documents)
-**			new_pwd = old_pwd (without last folder)
-**						+ path (without ./)
-** 
-*/
-static int	path_clean(t_minishell *minishell, char **path, int index_pwd)
-{
-	t_path_kind kind;
-	char		*new_path;
-	char		*old_pwd;
-
-	new_path = NULL;
-	kind = minishell->builtin.cd.path;
-	if (has_alpha(*path))
-	{
-		if (remove_begin(path, '/') || remove_end(path, '/'))
-			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	}
-	printf("kind == %d\n", kind);
-	if (kind == ABSOLUTE)
-	{
-		new_path = ft_strjoin("PWD=", *path);
-		if (!new_path)
-			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-		free(*path);
-		*path = new_path;
-	}
-	else if (kind == RELATIVE_SINGLE)
-	{
-		old_pwd = ft_strdup(minishell->exec.envp[index_pwd]);
-		if (!old_pwd)
-			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-		new_path = ft_strjoin(old_pwd, *path);
-		if (!new_path)
-			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-		free(old_pwd);
-		free(*path);
-		*path = new_path;
-	}
-	// else if (kind == RELATIVE_DOUBLE)
-	// {
-	// 	// faire aussi si je n ai rien apres /
-	// 	// new_path = path_replacefolder();
-	// }
-	return (0);
-}
-
 static void	replace_pwd(t_minishell *minishell, char **path)
 {
 	char	**new_envp;
@@ -259,7 +108,7 @@ static void	replace_pwd(t_minishell *minishell, char **path)
 	int		i;
 
 	i = 0;
-	index_pwd = find_pwd(minishell);
+	index_pwd = strv_searchindex(minishell->exec.envp, "PWD=");
 	path_clean(minishell, path, index_pwd);
 	if (index_pwd != -1)
 	{
@@ -285,6 +134,21 @@ static void	replace_pwd(t_minishell *minishell, char **path)
 	}
 }
 
+int	is_root(t_minishell *minishell, char **path)
+{
+	char	*path_home;
+	int		home;
+
+	home = strv_searchindex(minishell->exec.envp, "HOME=");
+	if (home == -1)
+		return (-1);
+	path_home = ft_substr(minishell->exec.envp[home], 5,
+		ft_strlen(minishell->exec.envp[home]));
+	*path = ft_strdup(path_home);
+	if (!*path)
+		return (-1);
+	return (0);
+}
 
 /*
 ** CD *********************************************
@@ -314,11 +178,11 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 	char	*path;
 	int		error;
 
-	path = NULL;
+	path = NULL; 
 	if (!pipe->cmd->cmd_args || !pipe->cmd->cmd_args[0])
 	{
-		error_cmd_args("cd", NULL, "require one argument");
-		minishell->exec.error = 1;
+		if (is_root(minishell, &path) == 1)
+			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	}
 	else if (pipe->cmd->cmd_args[1])
 	{
@@ -334,20 +198,23 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 		// if (ft_strcmp(path, "//") == 0)
 		if (ft_strcmp(path, "./") == 0)
 			return (0);
-		path_kind(minishell, &path);
 		ft_printf_fd(2, " c est bien restitue = %s\n", path);
-		error = chdir(path);
-		if (error != 0)
-		{
-			ft_printf_fd(2, "minishell: cd: ");
-			perror(path);
-			minishell->exec.error = 1;
-		}
-		else
-			replace_pwd(minishell, &path);
-		ft_printf_fd(2, "error = %d\n", error);
-		ft_printf_fd(2, "path = %s\n", path);
-		// free(path);
 	}
+	error = chdir(path);
+	if (error != 0)
+	{
+		ft_printf_fd(2, "minishell: cd: ");
+		perror(path);
+		minishell->exec.error = 1;
+	}
+	else
+	{
+		path_kind(minishell, &path);
+		replace_pwd(minishell, &path);
+		
+	}
+	ft_printf_fd(2, "error = %d\n", error);
+	ft_printf_fd(2, "path = %s\n", path);
+	// free(path);
 	return (0);
 }

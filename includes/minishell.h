@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/06 17:56:23 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/07 15:45:00 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,11 @@ typedef enum e_put
 typedef enum e_path_kind
 {
 	ASCII,
+	ROOT,
 	ABSOLUTE,
 	RELATIVE_SINGLE,
 	RELATIVE_DOUBLE,
+	STAY
 }			t_path_kind;
 
 typedef struct s_builtin_content
@@ -179,7 +181,10 @@ int	heredoc(t_minishell *minishell, t_token *token);
 int		nb_pipes(t_token *first);
 
 /************************************************************ built-in */
+/** cd */
 int		cd(t_minishell *minishell, t_pipe *pipe);
+int		path_clean(t_minishell *minishell, char **path, int index_pwd);
+/******/
 int		echo(t_minishell *minishell, t_pipe *pipe);
 void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
@@ -223,20 +228,27 @@ int		strv_dup(t_minishell *minishell, char ***dst, char **src);
 int		lst_size(t_token *token);
 int		count_chr(char *str, char c, bool followed);
 bool	find_built_in(char *token);
-void	ft_joinstr(t_minishell *minishell, char **result, char *str);
+int		ft_joinstr(char **result, char *str, bool reverse_order);
 void	ft_joinchr(t_minishell *minishell, char **result, char c);
 int		ft_strcmp(char *s1, char *s2);
-int		is_double_quoted(char *str);
-char	*str_beginend_char(t_minishell *minishell, char *str, char c);
 void	ft_strcpy(char *dst, char *src);
 char	*safe_join(char *s1, char *s2);
-
+/************************************************************** utils_char */
+char	*str_beginend_char(t_minishell *minishell, char *str, char c);
+int		index_lastchar(char *str, char c);
+int		remove_begin(char **str, char c);
+int		remove_end(char **str, char c);
+int		join_oldnew(char **old, char **new);
+/*************************************************************** utils_str */
+int		strv_searchindex(char **strv, char *search);
+int		is_double_quoted(char *str);
+int		has_alpha(char *str);
+int		str_copy_and_free(char **src, char **dst);
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);
 void	print_pauline(t_minishell *minishell);
-
-/************************************************************* parsing */
+/*********************************************************8888**** parsing */
 char	*expand_line(char *line, char **envp, t_minishell *minishell);
 int		handle_quotes(char *line, t_token **token_list, int *index,
 			t_minishell *minishell);

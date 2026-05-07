@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/06 11:02:35 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/07 14:04:33 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 
 		if (current->builtin_kind == IS_ECHO)
 			echo_for_prompt(minishell, current);
-		if (current->builtin_kind == CD)
+		if (current->builtin_kind == CD && at_least_one_pipe == 0)
 			cd(minishell, current);
 		// tester avec le return ici our chaque buuilt in certains 
 		// on besoin de lire et ecrire dans les dup, si return fonctionne 
@@ -214,7 +214,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				// exec_built_in(minishell, current);
 			
 			free_all(minishell);
-			exit(1);
+			exit(minishell->exec.error);
 			
 		}
 		// printf("pipe to execute = %d\n", pipe_to_execute);
@@ -249,7 +249,6 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		// free_all(minishell);
 		current = current->next;
 	}
-	// while(wait(NULL) > 0);
 
 	get_exit_status(minishell);
 

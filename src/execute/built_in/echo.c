@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 09:30:10 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/07 14:10:05 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,6 @@ void	print_no_quotes(char *str)
 	
 }
 
-
 // ECHO ****************
 /*- print a given string
 conditions
@@ -148,10 +147,8 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 	int		i;
 	int		j;
 	int		len;
-	// int		quoted;
 
 	i = 0;
-	// quoted = 0;
 	args = NULL;
 	if (pipe->cmd->next)
 		args = pipe->cmd->next;
@@ -166,15 +163,13 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 		if (args->type == IS_INPUT || args->type == IS_OUTPUT
 			|| args->type == IS_APPEND || args->type == HEREDOC)
 			break;
+		// retirer gestion $? pour economiser des lignes (deja prensent dans le parsing)
 		else if (ft_strnstr(args->value, "$?", len + 1) != NULL)
 		{
 			j = 0;
-			// quoted = false;
-			printf("quotes = %d\n", args->quote);
+			// printf("quotes = %d\n", args->quote);//test
 			while (args->value[j])
 			{
-				// if (args->value[j] == '\'' || args->value[j] == '"')
-				// 	quoted = true;
 				if ((args->quote == NO || args->quote == DOUBLE)
 					&& args->value[j] == '$' && args->value[j + 1] == '?')
 				{
@@ -189,7 +184,6 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 		}
 		else
 			print_no_quotes(args->value);
-		// ft_printf_fd(2, "%d", args->type);
 		args = args->next;
 		i++;
 	}
