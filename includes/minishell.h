@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/07 15:45:00 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/07 16:40:27 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,6 +244,7 @@ int		strv_searchindex(char **strv, char *search);
 int		is_double_quoted(char *str);
 int		has_alpha(char *str);
 int		str_copy_and_free(char **src, char **dst);
+int		cpy_strvindex(char **result, char **src, char *search);
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);

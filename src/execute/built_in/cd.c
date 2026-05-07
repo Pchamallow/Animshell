@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/07 16:12:52 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/07 17:15:59 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	path_kind(t_minishell *minishell, char **path)
 		minishell->builtin.cd.path = RELATIVE_SINGLE;
 	else if ((*path)[0] == '/')
 		minishell->builtin.cd.path = ABSOLUTE;
-	else if ((*path)[0] == '0' && !(*path)[1])
+	else if ((*path)[0] == '.' && !(*path)[1])
 		minishell->builtin.cd.path = STAY;
 	else if (ft_isalpha((*path)[0]))
 	{
@@ -137,17 +137,65 @@ static void	replace_pwd(t_minishell *minishell, char **path)
 int	is_root(t_minishell *minishell, char **path)
 {
 	char	*path_home;
-	int		home;
+	int		result;
 
-	home = strv_searchindex(minishell->exec.envp, "HOME=");
-	if (home == -1)
-		return (-1);
-	path_home = ft_substr(minishell->exec.envp[home], 5,
-		ft_strlen(minishell->exec.envp[home]));
+	path_home = NULL;
+	result = cpy_strvindex(&path_home, minishell->exec.envp, "HOME=");
+	if (result == 1)
+		return (1);
+	else if (result == -1)
+		return (0);
 	*path = ft_strdup(path_home);
+	// printf("path == %s\n", *path);//test
 	if (!*path)
-		return (-1);
+	{
+		free(path_home);
+		return (1);
+	}
+	free(path_home);
 	return (0);
+}
+
+void	replace_oldpwd(t_minishell *minishell)
+{
+	char	*path_pwd;
+	int		result;
+
+	path_pwd = NULL;
+	result = cpy_strvindex(&path_pwd, minishell->exec.envp, "PWD=");
+	if (result == 1)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	else if (result == -1)
+		return ;
+	result = strv_searchindex(minishell->exec.envp, "OLDPWD=");
+	free(minishell->exec.envp[result]);
+	minishell->exec.envp[result] = ft_strjoin("OLDPWD=", path_pwd);
+	if (!minishell->exec.envp[result])
+	{
+		free(path_pwd);
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	}
+	free(path_pwd);
+}
+
+void	root_with_folder(t_minishell *minishell, char **path)
+{
+	char	*home;
+	char	*folder;
+	int		result;
+
+	result = cpy_strvindex(&home, minishell->exec.envp, "HOME=");
+	if (result == 1)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	else if (result == -1)
+		return ;
+	folder = ft_substr(*path, 1, ft_strlen(*path) - 1);
+	if (!folder)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	free(*path);
+	*path = ft_strjoin(home, folder);
+	free(folder);
+	free(home);
 }
 
 /*
@@ -188,14 +236,16 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 	{
 		error_cmd_args("cd", NULL, "too many arguments");
 		minishell->exec.error = 1;
+		return (0);
 	}
 	else if (pipe->cmd->cmd_args[0])
 	{
 		path = ft_strdup(pipe->cmd->cmd_args[0]);
 		if (!path)
 			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+		if (path[0] == '~')
+			root_with_folder(minishell, &path);
 		ft_printf_fd(2, "strdup path = %s\n", path);
-		// if (ft_strcmp(path, "//") == 0)
 		if (ft_strcmp(path, "./") == 0)
 			return (0);
 		ft_printf_fd(2, " c est bien restitue = %s\n", path);
@@ -206,15 +256,17 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 		ft_printf_fd(2, "minishell: cd: ");
 		perror(path);
 		minishell->exec.error = 1;
+		free(path);
 	}
 	else
 	{
 		path_kind(minishell, &path);
-		replace_pwd(minishell, &path);
-		
+		replace_oldpwd(minishell);
+		if (minishell->builtin.cd.path != STAY)
+			replace_pwd(minishell, &path);
+		ft_printf_fd(2, "error = %d\n", error);
+		ft_printf_fd(2, "path = %s\n", path);
+		free(path);
 	}
-	ft_printf_fd(2, "error = %d\n", error);
-	ft_printf_fd(2, "path = %s\n", path);
-	// free(path);
 	return (0);
 }
