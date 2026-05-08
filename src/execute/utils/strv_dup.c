@@ -6,13 +6,13 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/22 16:29:46 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 15:05:45 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/07 15:02:47 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
 
-int	ft_strcmpp(char *s1, char *s2)
+int	ft_strcmp(char *s1, char *s2)
 {
 	int	len_s1;
 	int	len_s2;
@@ -70,24 +70,28 @@ int	strv_dup(t_minishell *minishell, char ***dst, char **src)
 	return (0);
 }
 
-void	ft_joinstr(t_minishell *minishell, char **result, char *str)
+int	ft_joinstr(char **result, char *str, bool reverse_order)
 {
 	char	*tmp;
 	
 	tmp = ft_strdup(*result);
 	if (!tmp)
-	{
-		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-		return ;
-	}
+		return (1);
 	free(*result);
-	*result = ft_strjoin(tmp, str);
-	if (!*result)
+	if (reverse_order == false)
 	{
-		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-		return ;
+		*result = ft_strjoin(tmp, str);
+		if (!*result)
+			return (1);
+	}
+	else
+	{
+		*result = ft_strjoin(str, tmp);
+		if (!*result)
+			return (1);
 	}
 	free(tmp);
+	return (0);
 }
 
 void	ft_joinchr(t_minishell *minishell, char **result, char c)

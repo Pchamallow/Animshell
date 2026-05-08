@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 12:11:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 12:13:16 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				// exec_built_in(minishell, current);
 			
 			free_all(minishell);
-			exit(1);
+			exit(minishell->exec.error);
 			
 		}
 		// printf("pipe to execute = %d\n", pipe_to_execute);
@@ -254,7 +254,6 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		// free_all(minishell);
 		current = current->next;
 	}
-	// while(wait(NULL) > 0);
 
 	get_exit_status(minishell);
 

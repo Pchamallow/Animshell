@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 15:06:10 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/06 16:22:08 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 	while (1)
 	{
 		line = readline("> ");
-		if (!ft_strcmpp(line, token->value))
+		if (!ft_strcmp(line, token->value))
 			break;
 		// si quotes pas de expand !!!!!
 		if (ft_strchr(line, '"') == NULL

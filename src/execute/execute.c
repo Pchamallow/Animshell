@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/04 22:50:13 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/08 11:58:54 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int execute(t_minishell *minishell, char **envp)
 	minishell->builtin.echo.for_prompt = false;
 	minishell->exec.envp = NULL;
 	strv_dup(minishell, &minishell->exec.envp, envp);
+	init_pwd(minishell);
 	
 	while (1)
 	{
@@ -94,6 +95,8 @@ int execute(t_minishell *minishell, char **envp)
 		{
 			free(minishell->prompt);
 			free_envp(minishell);
+			if (minishell->builtin.pwd.result)
+				free(minishell->builtin.pwd.result);
 			rl_clear_history();
 			printf("exit\n");
 			exit (0);
@@ -145,7 +148,7 @@ int execute(t_minishell *minishell, char **envp)
 			ft_token_lstclear(minishell->exec.first_token);
 		if (minishell->exec.pipe_lst)
 			lst_pipe_clear(&minishell->exec.pipe_lst);
-		
+			
 	}
 	return (0);
 }

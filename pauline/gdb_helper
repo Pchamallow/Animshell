@@ -51,3 +51,6 @@ jkkhjkh | echo coucou
 echo -n coucou
 << "'"eof"'"
 << "'"eof
+
+/home/pswirgie/documents/Minishell
+~/documents/Minishell
