@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 16:05:01 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 18:33:43 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,6 @@ int		env(t_minishell *minishell, t_pipe *pipe);
 void	is_exit(t_minishell *minishell);
 int		export_print(t_minishell *minishell, t_pipe *pipe);
 int		export(t_minishell *minishell, t_pipe *pipe);
-void	export_print(t_minishell *minishell, t_pipe *pipe);
 bool	is_concat(char *arg, int i);
 int		found_var(char **envp, char *var);
 int		unset(t_minishell *minishell, t_pipe *pipe);
