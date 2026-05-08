@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 14:11:33 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/05 19:09:23 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/07 22:37:36 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,25 @@ static int	ft_env_cmp(const char *s1, const char *s2)
 	size_t			i;
 	unsigned char	*str1;
 	unsigned char	*str2;
+	unsigned char	c1;
+	unsigned char	c2;
 
 	i = 0;
 	str1 = (unsigned char *) s1;
 	str2 = (unsigned char *) s2;
-	while (str1[i] || str2[i])
+	c1 = str1[i];
+	c2 = str2[i];
+	while (c1 || c2)
 	{
-		if (str1[i] != str2[i])
-			return (str1[i] - str2[i]);
+		if (c1 == '=')
+			c1 = 1;
+		if (c2 == '=')
+			c2 = 1;
+		if (c1 != c2)
+			return (c1 - c2);
 		i++;
+		c1 = str1[i];
+		c2 = str2[i];
 	}
 	return (0);
 }
@@ -116,10 +126,29 @@ static int	print_sorted_envp(t_minishell *minishell)
 	return (0);
 }
 
+bool	is_concat(char *arg, int i)
+{
+	if (arg[i] == '+' && arg[i + 1] == '=')
+		return (true);
+	return (false);
+}
+
+int	concat_found(char *arg)
+{
+	int		i;
+
+	i = 0;
+	while (arg[i] && arg[i] != '=' && arg[i] != '+')
+		i++;
+	if (!arg[i] || !is_concat(arg, i))
+		return (-1);
+	return (i);
+}
+
 /*
 ** is_valid_arg checks for:
-** valid variable name (name = part before '='):
-**	- starts with '_' or alphabetical characters
+** valid variable name (name = part before '=' or '+='):
+**	- starts with an alphabetical character or '_'
 **	- contains only alphanumerical characters or '_'
 ** valid variable value:
 **	- any printable characters
@@ -131,7 +160,7 @@ bool	is_valid_arg(char *arg)
 	if (!ft_isalpha(arg[0]) && arg[0] != '_')
 		return (false);
 	i = 1;
-	while (arg[i] && arg[i] != '=')
+	while (arg[i] && arg[i] != '=' && !is_concat(arg, i))
 	{
 		if (!ft_isalnum(arg[i]) && arg[i] != '_')
 			return (false);
@@ -162,12 +191,13 @@ int	found_var(char **envp, char *var)
 	while (envp[i])
 	{
 		j = 0;
-		while (envp[i][j] && envp[i][j] != '=')
+		while (envp[i][j] && envp[i][j] != '=' && !is_concat(var, j))
 		{
 			if (envp[i][j] != var[j])
 				break ;
 			j++;
-			if ((envp[i][j] == '=' || !envp[i][j]) && (var[j] == '=' || !var[j]))
+			if ((!envp[i][j] || envp[i][j] == '=')
+					&& (!var[j] || var[j] == '=' || is_concat(var, j)))
 				return (i);
 		}
 		i++;
@@ -175,24 +205,69 @@ int	found_var(char **envp, char *var)
 	return (-1);
 }
 
-void	replace_var(char **envp, char *var, t_minishell *minishell)
+void	concat_var(char **envp, char *var, t_minishell *minishell)
 {
-	int	i;
+	int		i;
+	int		j;
+	char	*tmp;
 
 	i = found_var(envp, var);
-	if (i < 0)
+	if (i < 0 || !ft_env_cmp(envp[i], var) || !ft_strchr(var, '='))
 		return ;
-	if (ft_env_cmp(envp[i], var) == 0)
-		return ;
-	if (!ft_strchr(var, '='))
+	j = concat_found(var);
+	if (ft_strchr(envp[i], '='))
+		j += 2;
+	else
+		j += 1;
+	tmp = safe_join(envp[i], var + j);
+	if (!tmp)
+	{
+		free(envp);
+		print_error_free(minishell, "malloc error in export\n", EXIT_FAILURE);
+	}
+	free(envp[i]);
+	envp[i] = tmp;
+}
+
+void	replace_var(char **envp, char *var, t_minishell *minishell)
+{
+	int		i;
+
+	i = found_var(envp, var);
+	if (i < 0 || !ft_env_cmp(envp[i], var) || !ft_strchr(var, '='))
 		return ;
 	free(envp[i]);
 	envp[i] = ft_strdup(var);
 	if (!envp[i])
 	{
-		free_strv(envp);
+		free(envp);
 		print_error_free(minishell, "malloc error in export\n", EXIT_FAILURE);
 	}
+}
+
+char	*new_concat(char *arg)
+{
+	char	*str;
+	int		i;
+	int		j;
+	int		len;
+
+	len = ft_strlen(arg);
+	str = ft_calloc(len, sizeof(char));
+	if (!str)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (arg[i])
+	{
+		if (arg[i] != '+')
+		{
+			str[j] = arg[i];
+			j++;
+		}
+		i++;
+	}
+	return (str);
 }
 
 /*
@@ -275,11 +350,17 @@ int	export(t_minishell *minishell, t_pipe *pipe)
 			}
 			if (found_var(new_envp, arg->value) >= 0)
 			{
-				replace_var(new_envp, arg->value, minishell);
+				if (concat_found(arg->value) >=0)
+					concat_var(new_envp, arg->value, minishell);
+				else
+					replace_var(new_envp, arg->value, minishell);
 				arg = arg->next;
 				continue ;
 			}
-			new_envp[i] = ft_strdup(arg->value);
+			if (concat_found(arg->value) >= 0)
+				new_envp[i] = new_concat(arg->value);
+			else
+				new_envp[i] = ft_strdup(arg->value);
 			if (!new_envp[i])
 			{
 				free_strv(new_envp);
