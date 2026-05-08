@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 14:11:33 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/07 22:37:36 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/08 14:17:40 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,6 +270,17 @@ char	*new_concat(char *arg)
 	return (str);
 }
 
+/** tests Pauline *****************************************/
+void	export_print(t_minishell *minishell, t_pipe *pipe)
+{
+	if (pipe->nb_args == 0)
+	{
+		print_sorted_envp(minishell);
+		return ;
+	}
+}
+/**********************************************************/
+
 /*
 ** EXPORT ***************************************
 ** - no options, as requested by the subject
@@ -292,7 +303,7 @@ int	export(t_minishell *minishell, t_pipe *pipe)
 	minishell->exec.error = 0;
 	if (pipe->nb_args == 0)
 	{
-		print_sorted_envp(minishell);
+	// 	print_sorted_envp(minishell);
 		return (minishell->exec.error);
 	}
 	arg = pipe->cmd->next;

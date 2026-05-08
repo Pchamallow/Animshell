@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 11:28:05 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 14:07:32 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,7 @@ int		echo(t_minishell *minishell, t_pipe *pipe);
 void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
 int		export(t_minishell *minishell, t_pipe *pipe);
+void	export_print(t_minishell *minishell, t_pipe *pipe);
 // int		find_pwd(t_minishell *minishell);
 void	init_pwd(t_minishell *minishell);
 int		pwd(t_minishell *minishell, t_pipe *pipe);
@@ -252,7 +253,7 @@ int		cpy_strv(char ***dst, char **src, int max);
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);
 void	print_pauline(t_minishell *minishell);
-/*********************************************************8888**** parsing */
+/***************************************************************** parsing */
 char	*expand_line(char *line, char **envp, t_minishell *minishell);
 int		handle_quotes(char *line, t_token **token_list, int *index,
 			t_minishell *minishell);

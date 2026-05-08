@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 12:13:16 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 14:20:07 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,23 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			echo_for_prompt(minishell, current);
 		if (current->builtin_kind == CD && at_least_one_pipe == 0)
 			cd(minishell, current);
-
+		if (current->builtin_kind == EXPORT && !at_least_one_pipe)
+			export(minishell, current);
+		// pas de pipe = si arg modifie l env, si pas arg -> se fait dans le fork
+		// 
+		
+		// pourvoir utiliser export dans le fork
+		// sans fork = > outfile ne focntionne pas, mais fonctionne
+		// avec fork = 
+			// deconnecter du env de minishell, ne pas ajouter dedans
+			// ne peux que dupliquer l env actuel dans le outfile
+			// > outfile fonctionne
+		// relier a l env
+			// - avant fork : si on a un arg = mettre a jour env
+			// - fork :
+						// si arg = rien 
+						// pas de arg -> print nouveau env avec export dans outfile ou pipe
+		
 		/*if (current->builtin_kind == CD)*/
 			/*cd(minishell, current);*/
 		// if (current->builtin_kind >= IS_ECHO)
@@ -214,10 +230,13 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				perror("execve");
 			}
 			else if (current->builtin_kind != NONE
-				&& current->builtin_kind != CD)
+				&& current->builtin_kind != CD
+				&& current->builtin_kind != EXPORT)
 				array_built_in[current->builtin_kind](minishell, current);
-				// exec_built_in(minishell, current);
 			
+			if (current->builtin_kind == EXPORT)
+				export_print(minishell, current);
+				
 			free_all(minishell);
 			exit(minishell->exec.error);
 			
