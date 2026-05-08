@@ -19,9 +19,9 @@ void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
 {
 	array_built_in[IS_ECHO] = echo;
 	array_built_in[PWD] = pwd;
-	 array_built_in[EXPORT] = export_print;
-	// array_built_in[UNSET]= ;
-	 array_built_in[ENV] = env;
+	array_built_in[EXPORT] = export_print;
+  array_built_in[UNSET]= unset;
+	array_built_in[ENV] = env;
 	return ;
 }
 
@@ -100,6 +100,8 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			cd(minishell, current);
 		if (current->builtin_kind == EXPORT && !at_least_one_pipe)
 			export(minishell, current);
+		if (current->builtin_kind == UNSET && !at_least_one_pipe)
+			unset(minishell, current);
 		// pas de pipe = si arg modifie l env, si pas arg -> se fait dans le fork
 		// 
 		
