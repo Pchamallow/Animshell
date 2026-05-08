@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 16:47:05 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 14:38:13 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,7 @@ int nb_args(t_token *token)
 	while (tmp != NULL && tmp->type != PIPE)
 	{
 		if (tmp->type == IS_ARG)
-		{
 			args++;
-			// ft_printf_fd(2, "args == %s\n", tmp->value);
-		}
 		tmp = tmp->next;
 	}
 	return (args);

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 11:55:53 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 14:25:43 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,25 +34,6 @@ static void	path_kind(t_minishell *minishell, char **path)
 		minishell->builtin.cd.path = RELATIVE_SINGLE;
 	}
 }
-
-// static char	**init_new_envp(char **envp)
-// {
-// 	int		len;
-// 	char	**new_envp;
-
-// 	len = 0;
-// 	while (envp[len])
-// 		len++;
-// 	new_envp = ft_calloc(len + 1, sizeof(char *));
-// 	if (!new_envp)
-// 		return (NULL);
-// 	new_envp[len] = NULL;
-// 	return (new_envp);
-// }
-
-// pas de PWD de trouver = utiliser result pwd 
-// donner le nouveau pwd a result pwd
-
 
 static void	replace_pwd(t_minishell *minishell, char **path)
 {
@@ -84,7 +65,6 @@ int	is_root(t_minishell *minishell, char **path)
 	else if (result == -1)
 		return (0);
 	*path = ft_strdup(path_home);
-	// printf("path == %s\n", *path);//test
 	if (!*path)
 	{
 		free(path_home);
@@ -218,7 +198,6 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 	}
 	else
 	{
-		// printf("is pwd ? = %s\n", minishell->exec.envp[]);//test
 		path_kind(minishell, &path);
 		ft_printf_fd(2, "error = %d\n", error);
 		ft_printf_fd(2, "path = %s\n", path);
@@ -228,7 +207,6 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 			replace_pwd(minishell, &path);
 		else
 			free(path);
-		// free(path);
 	}
 	return (0);
 }
