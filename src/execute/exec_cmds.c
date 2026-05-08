@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 14:20:07 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 15:31:35 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
 	array_built_in[IS_ECHO] = echo;
 	array_built_in[PWD] = pwd;
 	 array_built_in[EXPORT]= export;
-	// array_built_in[UNSET]= ;
+	 array_built_in[UNSET]= unset;
 	 array_built_in[ENV]= env;
 	// array_built_in[EXIT]= ;
 	return ;
@@ -101,6 +101,8 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			cd(minishell, current);
 		if (current->builtin_kind == EXPORT && !at_least_one_pipe)
 			export(minishell, current);
+		if (current->builtin_kind == UNSET && !at_least_one_pipe)
+			unset(minishell, current);
 		// pas de pipe = si arg modifie l env, si pas arg -> se fait dans le fork
 		// 
 		

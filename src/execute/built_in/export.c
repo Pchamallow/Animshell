@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 14:11:33 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/08 14:17:40 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 15:28:22 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,12 +126,12 @@ static int	print_sorted_envp(t_minishell *minishell)
 	return (0);
 }
 
-bool	is_concat(char *arg, int i)
-{
-	if (arg[i] == '+' && arg[i + 1] == '=')
-		return (true);
-	return (false);
-}
+/*bool	is_concat(char *arg, int i)*/
+/*{*/
+	/*if (arg[i] == '+' && arg[i + 1] == '=')*/
+		/*return (true);*/
+	/*return (false);*/
+/*}*/
 
 int	concat_found(char *arg)
 {
@@ -182,28 +182,28 @@ bool	is_valid_arg(char *arg)
 **		- if @var is encountered it returns @i index of the line
 **		- else it returns -1
 */
-int	found_var(char **envp, char *var)
-{
-	int	i;
-	int	j;
+/*int	found_var(char **envp, char *var)*/
+/*{*/
+	/*int	i;*/
+	/*int	j;*/
 
-	i = 0;
-	while (envp[i])
-	{
-		j = 0;
-		while (envp[i][j] && envp[i][j] != '=' && !is_concat(var, j))
-		{
-			if (envp[i][j] != var[j])
-				break ;
-			j++;
-			if ((!envp[i][j] || envp[i][j] == '=')
-					&& (!var[j] || var[j] == '=' || is_concat(var, j)))
-				return (i);
-		}
-		i++;
-	}
-	return (-1);
-}
+	/*i = 0;*/
+	/*while (envp[i])*/
+	/*{*/
+		/*j = 0;*/
+		/*while (envp[i][j] && envp[i][j] != '=' && !is_concat(var, j))*/
+		/*{*/
+			/*if (envp[i][j] != var[j])*/
+				/*break ;*/
+			/*j++;*/
+			/*if ((!envp[i][j] || envp[i][j] == '=')*/
+					/*&& (!var[j] || var[j] == '=' || is_concat(var, j)))*/
+				/*return (i);*/
+		/*}*/
+		/*i++;*/
+	/*}*/
+	/*return (-1);*/
+/*}*/
 
 void	concat_var(char **envp, char *var, t_minishell *minishell)
 {
