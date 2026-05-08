@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:28:00 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 09:56:20 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 11:16:30 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,21 @@
 // 	return (tmp);
 // }
 
+int	cpy_strv(char ***dst, char **src, int max)
+{
+	int	i;
+
+	i = 0;
+	if (!*dst || !**dst || !src || !*src)
+		return (1);
+	while ((src[i] && max == 0) || (i < max))
+	{
+		(*dst)[i] = src[i];
+		i++;
+	}
+	return (0);
+}
+
 int	cpy_strvindex(char **result, char **src, char *search)
 {
 	int	index;
@@ -42,7 +57,6 @@ int	cpy_strvindex(char **result, char **src, char *search)
 
 	len_search = ft_strlen(search);
 	index = strv_searchindex(src, search);
-	printf("index find? = %d\n", index);//test
 	if (index == -1)
 		return (-1);
 	*result = ft_substr(src[index], len_search, ft_strlen(src[index]) - len_search);

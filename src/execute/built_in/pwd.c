@@ -6,15 +6,29 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 16:47:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/07 13:37:14 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 11:55:00 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	init_pwd(t_minishell *minishell)
+{
+	int	i;
+
+	i = strv_searchindex(minishell->exec.envp, "PWD=");
+	if (i == -1)
+	{
+		minishell->builtin.pwd.result = NULL;
+		return ;
+	}
+	minishell->builtin.pwd.result = ft_strdup(minishell->exec.envp[i]);
+	if (!minishell->builtin.pwd.result)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+}
+
 int	pwd(t_minishell *minishell, t_pipe *pipe)
 {
-	char	*path;
 	int		i;
 
 	i = 0;
@@ -23,13 +37,9 @@ int	pwd(t_minishell *minishell, t_pipe *pipe)
 		return (0);
 	i = strv_searchindex(minishell->exec.envp, "PWD=");
 	if (i != -1)
-	{
-		path = ft_strdup(&minishell->exec.envp[i][4]);
-		ft_printf_fd(1, "%s\n", path);
-		free(path);
-	}
+	// if (i == -1)
+		ft_printf_fd(1, "%s\n", &minishell->exec.envp[i][4]);
 	else
-		ft_printf_fd(2, "minishell: Can't find pwd.\n");
-		//erreur si je ne trouve pas pwd ?
+		ft_printf_fd(1, "%s\n", &minishell->builtin.pwd.result[4]);
 	return (0);
 }

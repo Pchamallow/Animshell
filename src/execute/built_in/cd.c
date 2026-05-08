@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 09:52:55 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 11:55:53 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,78 +35,40 @@ static void	path_kind(t_minishell *minishell, char **path)
 	}
 }
 
-static char	**init_new_envp(char **envp)
-{
-	int		len;
-	char	**new_envp;
+// static char	**init_new_envp(char **envp)
+// {
+// 	int		len;
+// 	char	**new_envp;
 
-	len = 0;
-	while (envp[len])
-		len++;
-	new_envp = ft_calloc(len + 1, sizeof(char *));
-	if (!new_envp)
-		return (NULL);
-	new_envp[len] = NULL;
-	return (new_envp);
-}
+// 	len = 0;
+// 	while (envp[len])
+// 		len++;
+// 	new_envp = ft_calloc(len + 1, sizeof(char *));
+// 	if (!new_envp)
+// 		return (NULL);
+// 	new_envp[len] = NULL;
+// 	return (new_envp);
+// }
 
-char	*path_replacefolder(char *old_pwd, char **path)
-{
-	char	*new_pwd;
-	// char	*new_path;
-	char	*tmp;
-	int		max_old;
+// pas de PWD de trouver = utiliser result pwd 
+// donner le nouveau pwd a result pwd
 
-	max_old = ft_strlen(old_pwd) - 1; // verifier qu il va jusqu bout
-	// if (!find_ascii(old_pwd))
-		//suppr le dernier folder sans le remplacer
-		// return
-	new_pwd = NULL;
-	// le / de fin n est pas cens'e exister, il ne doit pas il y avoir
-	while (old_pwd[max_old]
-		&& old_pwd[max_old] != '/')
-		max_old--;
-	if (max_old > 0)
-	{
-		new_pwd = ft_substr(old_pwd, 0, max_old);
-		// new_path = ft_substr
-		tmp = ft_strdup(new_pwd);
-		free(new_pwd);
-		new_pwd = ft_strjoin(tmp, *path);
-	}
-	return (new_pwd);
-}
 
 static void	replace_pwd(t_minishell *minishell, char **path)
 {
-	char	**new_envp;
 	int		index_pwd;
-	int		i;
 
-	i = 0;
 	index_pwd = strv_searchindex(minishell->exec.envp, "PWD=");
 	path_clean(minishell, path, index_pwd);
+	if (minishell->builtin.pwd.result)
+		free(minishell->builtin.pwd.result);
+	minishell->builtin.pwd.result = ft_strdup(*path);
+	if (!minishell->builtin.pwd.result)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	if (index_pwd != -1)
 	{
-		new_envp = init_new_envp(minishell->exec.envp);
-		while (i < index_pwd)
-		{
-			new_envp[i] = minishell->exec.envp[i];
-			i++;
-		}
 		free(minishell->exec.envp[index_pwd]);
-		new_envp[index_pwd] = *path;
-		// printf("new envp good = %s\n", new_envp[index_pwd]);
-		i++;
-		while (minishell->exec.envp[i])
-		{
-			new_envp[i] = minishell->exec.envp[i];
-			i++;
-		}
-		free(minishell->exec.envp);
-		minishell->exec.envp = new_envp;
-		// printf("new envp effective = %s\n", minishell->exec.envp[index_pwd]);
-		
+		minishell->exec.envp[index_pwd] = *path;
 	}
 }
 
@@ -138,24 +100,28 @@ void	replace_oldpwd(t_minishell *minishell)
 	int		result;
 
 	path_pwd = NULL;
-	printf("PWD\n");//test
 	result = cpy_strvindex(&path_pwd, minishell->exec.envp, "PWD=");
-	printf("is pwd ? = %s\n", path_pwd);//test
 	if (result == 1)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	else if (result == -1)
-		return ;
-	printf("OLD PWD\n");//test
+	{
+		path_pwd = ft_strdup(minishell->builtin.pwd.result);
+		if (!path_pwd)
+			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	}
 	result = strv_searchindex(minishell->exec.envp, "OLDPWD=");
+	if (result == -1)
+	{
+		free(path_pwd);
+		return ;
+	}
 	free(minishell->exec.envp[result]);
 	minishell->exec.envp[result] = ft_strjoin("OLDPWD=", path_pwd);
-	// printf("is oldpwd ? = %s\n", minishell->exec.envp[result]);//test
 	if (!minishell->exec.envp[result])
 	{
 		free(path_pwd);
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	}
-	printf("oldpwd = %s\n", minishell->exec.envp[result]);//test
 	free(path_pwd);
 }
 
@@ -177,6 +143,17 @@ void	root_with_folder(t_minishell *minishell, char **path)
 	*path = ft_strjoin(home, folder);
 	free(folder);
 	free(home);
+}
+
+void	is_pwd_in_env(t_minishell *minishell)
+{
+	int		is_pwd;
+
+	is_pwd = strv_searchindex(minishell->exec.envp, "PWD=");
+	if (is_pwd == -1)
+	{
+		
+	}
 }
 
 /*
@@ -245,6 +222,7 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 		path_kind(minishell, &path);
 		ft_printf_fd(2, "error = %d\n", error);
 		ft_printf_fd(2, "path = %s\n", path);
+		is_pwd_in_env(minishell);
 		replace_oldpwd(minishell);
 		if (minishell->builtin.cd.path != STAY)
 			replace_pwd(minishell, &path);

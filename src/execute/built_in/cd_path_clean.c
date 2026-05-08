@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:24:30 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/07 17:28:14 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 11:36:39 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,32 @@ static int	path_replacefolder(char **old_pwd, char **path)
 	return (0);
 }
 
+// char	*path_replacefolder(char *old_pwd, char **path)
+// {
+// 	char	*new_pwd;
+// 	char	*tmp;
+// 	int		max_old;
+
+// 	max_old = ft_strlen(old_pwd) - 1; // verifier qu il va jusqu bout
+// 	// if (!find_ascii(old_pwd))
+// 		//suppr le dernier folder sans le remplacer
+// 		// return
+// 	new_pwd = NULL;
+// 	// le / de fin n est pas cens'e exister, il ne doit pas il y avoir
+// 	while (old_pwd[max_old]
+// 		&& old_pwd[max_old] != '/')
+// 		max_old--;
+// 	if (max_old > 0)
+// 	{
+// 		new_pwd = ft_substr(old_pwd, 0, max_old);
+// 		// new_path = ft_substr
+// 		tmp = ft_strdup(new_pwd);
+// 		free(new_pwd);
+// 		new_pwd = ft_strjoin(tmp, *path);
+// 	}
+// 	return (new_pwd);
+// }
+
 /*
 ** PATH_CLEAN *********************************************
 ** 1. if needed, remove several / 
@@ -91,7 +117,10 @@ int	path_clean(t_minishell *minishell, char **path, int index_pwd)
 
 	new_path = NULL;
 	kind = minishell->builtin.cd.path;
-	old_pwd = ft_strdup(minishell->exec.envp[index_pwd]);
+	if (index_pwd == -1)
+		old_pwd = ft_strdup(minishell->builtin.pwd.result);
+	else 
+		old_pwd = ft_strdup(minishell->exec.envp[index_pwd]);
 	if (!old_pwd)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	if (has_alpha(*path))

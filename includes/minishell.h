@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/07 16:40:27 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 11:28:05 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ typedef struct s_builtin
 {
 	t_builtin_content	echo;
 	t_builtin_content	cd;
+	t_builtin_content	pwd;
 }				t_builtin;
 
 typedef struct s_pipe
@@ -189,7 +190,8 @@ int		echo(t_minishell *minishell, t_pipe *pipe);
 void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
 int		export(t_minishell *minishell, t_pipe *pipe);
-int		find_pwd(t_minishell *minishell);
+// int		find_pwd(t_minishell *minishell);
+void	init_pwd(t_minishell *minishell);
 int		pwd(t_minishell *minishell, t_pipe *pipe);
 /***************************************************** tabs for execve */
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
@@ -245,6 +247,7 @@ int		is_double_quoted(char *str);
 int		has_alpha(char *str);
 int		str_copy_and_free(char **src, char **dst);
 int		cpy_strvindex(char **result, char **src, char *search);
+int		cpy_strv(char ***dst, char **src, int max);
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);
