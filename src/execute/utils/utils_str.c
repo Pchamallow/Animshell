@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:28:00 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/07 17:34:16 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/08 09:56:20 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,10 @@ int	cpy_strvindex(char **result, char **src, char *search)
 
 	len_search = ft_strlen(search);
 	index = strv_searchindex(src, search);
+	printf("index find? = %d\n", index);//test
 	if (index == -1)
 		return (-1);
-	*result = ft_substr(src[index], len_search, ft_strlen(*src) + 1);
+	*result = ft_substr(src[index], len_search, ft_strlen(src[index]) - len_search);
 	if (!result)
 		return (1);
 	return (0);
