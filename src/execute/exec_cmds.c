@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 10:57:31 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/08 12:11:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,13 @@ void	exec_cmds_pipe(t_minishell *minishell)
 
 		if (current->builtin_kind == IS_ECHO)
 			echo_for_prompt(minishell, current);
+		if (current->builtin_kind == CD && at_least_one_pipe == 0)
+			cd(minishell, current);
+
 		/*if (current->builtin_kind == CD)*/
 			/*cd(minishell, current);*/
-		if (current->builtin_kind >= IS_ECHO)
-			array_built_in[current->builtin_kind](minishell, current);
+		// if (current->builtin_kind >= IS_ECHO)
+		// 	array_built_in[current->builtin_kind](minishell, current);
 		// tester avec le return ici our chaque buuilt in certains 
 		// on besoin de lire et ecrire dans les dup, si return fonctionne 
 		// plus besoin d exclure dans le fork du tableau des functions
