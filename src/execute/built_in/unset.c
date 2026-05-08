@@ -6,23 +6,11 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 11:41:13 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/08 16:25:05 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/08 23:29:30 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	get_envp_len(char **envp)
-{
-	int	i;
-
-	if (!envp)
-		return (0);
-	i = 0;
-	while (envp[i])
-		i++;
-	return (i);
-}
 
 bool	found_unset_var(char *env_var, t_token *arg)
 {

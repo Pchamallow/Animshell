@@ -6,132 +6,11 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 14:11:33 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/08 15:28:22 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/08 23:27:47 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	ft_env_cmp(const char *s1, const char *s2)
-{
-	size_t			i;
-	unsigned char	*str1;
-	unsigned char	*str2;
-	unsigned char	c1;
-	unsigned char	c2;
-
-	i = 0;
-	str1 = (unsigned char *) s1;
-	str2 = (unsigned char *) s2;
-	c1 = str1[i];
-	c2 = str2[i];
-	while (c1 || c2)
-	{
-		if (c1 == '=')
-			c1 = 1;
-		if (c2 == '=')
-			c2 = 1;
-		if (c1 != c2)
-			return (c1 - c2);
-		i++;
-		c1 = str1[i];
-		c2 = str2[i];
-	}
-	return (0);
-}
-
-static char	**envp_copy(char **envp)
-{
-	int		i;
-	int		len;
-	char	**new_envp;
-
-	len = 0;
-	while (envp[len])
-		len++;
-	new_envp = ft_calloc(len + 1, sizeof(char *));
-	if (!new_envp)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		new_envp[i] = envp[i];
-		i++;
-	}
-	new_envp[i] = NULL;
-	return (new_envp);
-}
-
-static void	sort_envp(char **sorted_envp)
-{
-	int		i;
-	int		j;
-	int		smallest;
-	char	*tmp;
-
-	i = 0;
-	while (sorted_envp[i])
-	{
-		smallest = i;
-		j = i + 1;
-		while (sorted_envp[j])
-		{
-			if (ft_env_cmp(sorted_envp[smallest], sorted_envp[j]) > 0)
-				smallest = j;
-			j++;
-		}
-		if (smallest != i)
-		{
-			tmp = sorted_envp[i];
-			sorted_envp[i] = sorted_envp[smallest];
-			sorted_envp[smallest] = tmp;
-		}
-		i++;
-	}
-}
-
-static int	print_sorted_envp(t_minishell *minishell)
-{
-	int		i;
-	int		j;
-	char	**sorted_envp;
-
-	if (!minishell->exec.envp)
-		return (0);
-	sorted_envp = envp_copy(minishell->exec.envp);
-	if (!sorted_envp)
-		print_error_free(minishell, "malloc error in export\n", EXIT_FAILURE);
-	sort_envp(sorted_envp);
-	i = 0;
-	while (sorted_envp[i])
-	{
-		j = 0;
-		write(1, "export ", 7);
-		while (sorted_envp[i][j] && sorted_envp[i][j] != '=')
-		{
-			write(1, &sorted_envp[i][j], 1);
-			j++;
-		}
-		if (sorted_envp[i][j] == '=')
-		{
-			write(1, "=\"", 2);
-			j++;
-			write(1, sorted_envp[i] + j, ft_strlen(sorted_envp[i] + j));
-			write(1, "\"", 1);
-		}
-		write(1, "\n", 1);
-		i++;
-	}
-	free(sorted_envp);
-	return (0);
-}
-
-/*bool	is_concat(char *arg, int i)*/
-/*{*/
-	/*if (arg[i] == '+' && arg[i + 1] == '=')*/
-		/*return (true);*/
-	/*return (false);*/
-/*}*/
 
 int	concat_found(char *arg)
 {
@@ -174,36 +53,6 @@ bool	is_valid_arg(char *arg)
 	}
 	return (true);
 }
-
-/*
-**	found_var
-**	checks if the name of @var already exists in @envp:
-**		- browses each line until '='
-**		- if @var is encountered it returns @i index of the line
-**		- else it returns -1
-*/
-/*int	found_var(char **envp, char *var)*/
-/*{*/
-	/*int	i;*/
-	/*int	j;*/
-
-	/*i = 0;*/
-	/*while (envp[i])*/
-	/*{*/
-		/*j = 0;*/
-		/*while (envp[i][j] && envp[i][j] != '=' && !is_concat(var, j))*/
-		/*{*/
-			/*if (envp[i][j] != var[j])*/
-				/*break ;*/
-			/*j++;*/
-			/*if ((!envp[i][j] || envp[i][j] == '=')*/
-					/*&& (!var[j] || var[j] == '=' || is_concat(var, j)))*/
-				/*return (i);*/
-		/*}*/
-		/*i++;*/
-	/*}*/
-	/*return (-1);*/
-/*}*/
 
 void	concat_var(char **envp, char *var, t_minishell *minishell)
 {
@@ -270,24 +119,52 @@ char	*new_concat(char *arg)
 	return (str);
 }
 
-/** tests Pauline *****************************************/
-int	export_print(t_minishell *minishell, t_pipe *pipe)
+int	count_lines_to_add(t_minishell *minishell, t_token *arg,
+		bool *valid_var_to_add)
 {
-	if (pipe->nb_args == 0)
-		print_sorted_envp(minishell);
-	return (0);
+	int	count;
+
+	count = 0;
+	while (arg && arg->type != PIPE)
+	{
+		if (arg->type == IS_ARG && !is_valid_arg(arg->value))
+		{
+			ft_printf_fd(2, "minishell: export: \'%s\' :", arg->value);
+			ft_printf_fd(2, " not a valid identifier\n");
+			minishell->exec.error = 1;
+		}
+		else if (arg->type == IS_ARG && is_valid_arg(arg->value))
+		{
+			*valid_var_to_add = true;
+			if (found_var(minishell->exec.envp, arg->value) < 0)
+		/*il faudrait verifier aussi que plusieurs arg n'ont pas le meme nom*/
+				count++;
+		}
+		arg = arg->next;
+	}
+	return (count);
 }
-/**********************************************************/
+
+bool	export_option_error(t_minishell *minishell, t_token *arg)
+{
+	if (arg->type == IS_ARG && arg->value[0] == '-' && arg->value[1] != '\0')
+	{
+		ft_putstr_fd("minishell: export: -", 2);
+		write(2, &arg->value[1], 1);
+		ft_putstr_fd(" : invalid option\n", 2);
+		ft_putstr_fd("export: usage: export [nom[=valeur] ...]\n", 2);
+		minishell->exec.error = 2;
+		return (true);
+	}
+	return (false);
+}
 
 /*
-** EXPORT ***************************************
+** EXPORT WITH ARGUMENTS ************************
 ** - no options, as requested by the subject
-** - if no arguments :
-**		- lists all environment variables
-**		- in alphabetical order
-**		- preceeded with "export "
-**		- the variable value is enclosed with quotes
-** - else : adds variables in char **envp
+** - adds valid variables in char **envp
+** ! if export is called without arguments :
+**		-> see export_print function
 **	*********************************************
 */
 int	export(t_minishell *minishell, t_pipe *pipe)
@@ -300,56 +177,20 @@ int	export(t_minishell *minishell, t_pipe *pipe)
 
 	minishell->exec.error = 0;
 	if (pipe->nb_args == 0)
-	{
-	// 	print_sorted_envp(minishell);
 		return (minishell->exec.error);
-	}
 	arg = pipe->cmd->next;
-	valid_var_to_add = false;
-	//erreur si option:
-	if (arg->type == IS_ARG && arg->value[0] == '-' && arg->value[1] != '\0')
-	{
-		ft_printf_fd(2, "minishell: export: -%c :", arg->value[1]);
-		ft_printf_fd(2, " invalid option\n");
-		ft_printf_fd(2, "export: usage: export [nom[=valeur] ...]\n");
-		minishell->exec.error = 2;
+	if (export_option_error(minishell, arg))
 		return (minishell->exec.error);
-	}
-	//compte combien de lignes à rajouter à envp:
-	count = 0;
-	while (arg && arg->type != PIPE)
-	{
-		if (arg->type == IS_ARG && !is_valid_arg(arg->value))
-		{
-			ft_printf_fd(2, "minishell: export: \'%s\' :", arg->value);
-			ft_printf_fd(2, " not a valid identifier\n");
-			minishell->exec.error = 1;
-		}
-		else if (arg->type == IS_ARG && is_valid_arg(arg->value))
-		{
-			valid_var_to_add = true;
-			if (found_var(minishell->exec.envp, arg->value) < 0)
-				count++;
-		}
-		arg = arg->next;
-	}
+	valid_var_to_add = false;
+	count = count_lines_to_add(minishell, arg, &valid_var_to_add);
 	//ajoute les variables valides à envp:
 	if (valid_var_to_add)
 	{
-		i = 0;
-		while (minishell->exec.envp[i])
-			i++;
+		i = get_envp_len(minishell->exec.envp);
 		count += i;
-		new_envp = ft_calloc(count + 1, sizeof(char *));
+		new_envp = envp_copy(minishell->exec.envp, count);
 		if (!new_envp)
-			print_error_free(minishell, "malloc error in export\n", EXIT_FAILURE);
-		i = 0;
-		while (minishell->exec.envp[i])
-		{
-			new_envp[i] = minishell->exec.envp[i];
-			i++;
-		}
-		arg = pipe->cmd->next;
+			print_error_free(minishell, "malloc error in export\n", 1);
 		while (arg)
 		{
 			if (arg->type != IS_ARG || !is_valid_arg(arg->value))
@@ -359,7 +200,7 @@ int	export(t_minishell *minishell, t_pipe *pipe)
 			}
 			if (found_var(new_envp, arg->value) >= 0)
 			{
-				if (concat_found(arg->value) >=0)
+				if (concat_found(arg->value) >= 0)
 					concat_var(new_envp, arg->value, minishell);
 				else
 					replace_var(new_envp, arg->value, minishell);
@@ -373,7 +214,7 @@ int	export(t_minishell *minishell, t_pipe *pipe)
 			if (!new_envp[i])
 			{
 				free_strv(new_envp);
-				print_error_free(minishell, "malloc error in export\n", EXIT_FAILURE);
+				print_error_free(minishell, "malloc error in export\n", 1);
 			}
 			arg = arg->next;
 			i++;
