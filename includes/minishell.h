@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 15:28:31 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/08 16:05:01 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,7 @@ void	init_pipe(t_minishell *minishell);
 /************************************************************* execute */
 int		execute(t_minishell *minishell, char **envp);
 int		read_tokens(t_minishell *minishell, t_pipe *pipe);
+int		nb_args(t_token *token);
 int		find_input_output(t_minishell *minishell, t_pipe *pipe);
 int		path_cmd(t_minishell *minishell, t_token *token);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
@@ -189,6 +190,8 @@ int		path_clean(t_minishell *minishell, char **path, int index_pwd);
 int		echo(t_minishell *minishell, t_pipe *pipe);
 void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
+void	is_exit(t_minishell *minishell);
+int		export_print(t_minishell *minishell, t_pipe *pipe);
 int		export(t_minishell *minishell, t_pipe *pipe);
 void	export_print(t_minishell *minishell, t_pipe *pipe);
 bool	is_concat(char *arg, int i);

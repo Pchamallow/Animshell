@@ -271,13 +271,11 @@ char	*new_concat(char *arg)
 }
 
 /** tests Pauline *****************************************/
-void	export_print(t_minishell *minishell, t_pipe *pipe)
+int	export_print(t_minishell *minishell, t_pipe *pipe)
 {
 	if (pipe->nb_args == 0)
-	{
 		print_sorted_envp(minishell);
-		return ;
-	}
+	return (0);
 }
 /**********************************************************/
 
