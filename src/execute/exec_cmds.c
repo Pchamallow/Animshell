@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 14:35:19 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/09 16:57:13 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
 	array_built_in[IS_ECHO] = echo;
 	array_built_in[PWD] = pwd;
 	array_built_in[EXPORT] = export_print;
-  array_built_in[UNSET]= unset;
+	array_built_in[UNSET]= unset;
 	array_built_in[ENV] = env;
 	return ;
 }
@@ -98,7 +98,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			echo_for_prompt(minishell, current);
 		if (current->builtin_kind == CD && at_least_one_pipe == 0)
 			cd(minishell, current);
-		if (current->builtin_kind == EXPORT && !at_least_one_pipe)
+		if (current->builtin_kind == EXPORT)
 			export(minishell, current);
 		if (current->builtin_kind == UNSET && !at_least_one_pipe)
 			unset(minishell, current);

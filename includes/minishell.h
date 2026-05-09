@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 15:39:08 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/09 17:25:36 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,10 +194,14 @@ void	is_exit(t_minishell *minishell);
 int		export_print(t_minishell *minishell, t_pipe *pipe);
 int		export(t_minishell *minishell, t_pipe *pipe);
 bool	is_concat(char *arg, int i);
+int		concat_found(char *arg);
+char	*new_concat(char *arg);
+bool	is_valid_arg(char *arg);
 int		found_var(char **envp, char *var);
 int		ft_env_cmp(const char *s1, const char *s2);
 int		get_envp_len(char **envp);
 char	**envp_copy(char **envp, int len);
+char	**update_envp(t_minishell *minishell, t_token *arg, int count);
 bool	is_same_name(char *env_var, t_token *arg);
 int		unset(t_minishell *minishell, t_pipe *pipe);
 // int		find_pwd(t_minishell *minishell);

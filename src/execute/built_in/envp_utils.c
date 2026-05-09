@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 15:18:00 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/08 23:30:38 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/09 17:18:57 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,18 @@ bool	is_concat(char *arg, int i)
 	if (arg[i] == '+' && arg[i + 1] == '=')
 		return (true);
 	return (false);
+}
+
+int	concat_found(char *arg)
+{
+	int		i;
+
+	i = 0;
+	while (arg[i] && arg[i] != '=' && arg[i] != '+')
+		i++;
+	if (!arg[i] || !is_concat(arg, i))
+		return (-1);
+	return (i);
 }
 
 /*
