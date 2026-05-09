@@ -64,6 +64,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 	
 	while (current)
 	{
+		
 		// printf(ERROR_MSG("new command -----------------------\n"));
 		if (read_tokens(minishell, current) != -1)
 		{
@@ -72,11 +73,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			// not_write = 0;
 		}
 		else
-		{
-			// printf("WRONG CMD OR FILE\n");
 			current->error = 1;
-			// not_write = 1;
-		}
 
 		// printf("current built-in = %d\n", current->builtin_kind);
 		//print

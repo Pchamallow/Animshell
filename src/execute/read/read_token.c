@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 14:38:13 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/09 15:36:40 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,6 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 	i = minishell->exec.index_prev_pipe;
 	token = minishell->exec.last_pipe;
 	nb_cmd_args = nb_args(token);
-	// printf("----------------------begin init_cmd\n");
-
 	while (token && i <= minishell->exec.index_pipe)
 	{
 		if (token->type == PIPE)
@@ -131,9 +129,6 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 		}
 		else if (token->type == IS_BUILT_IN)
 		{
-			// printf("cmd attribu'e\n");
-			// printf("%s\n", token->value);
-			// printf("%s\n", token->next->value);
 			is_built_in(pipe, token);
 			pipe->cmd = token;
 			pipe->is_cmd = 1;
@@ -153,9 +148,6 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 		pipe->input = ERROR;
 		pipe->output = ERROR;
 	}
-	// if (!pipe->cmd)
-	// printf("----------------------end init_cmd\n");
-	
 	return (0);
 }
 

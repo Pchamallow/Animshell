@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 13:59:57 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/01/31 19:32:51 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/09 15:28:57 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static char	**ft_tab(char **tab, char *s, char c)
 	start = 0;
 	nb = 0;
 	nbwords = ft_nbwords(s, c);
-	while (s[start] == c)
+	while (s[start] && s[start] == c)
 		start++;
 	while (nb < nbwords)
 	{
@@ -81,7 +81,7 @@ static char	**ft_tab(char **tab, char *s, char c)
 			return (NULL);
 		}
 		start = start + sizeword;
-		while (s[start] == c)
+		while (start <= ft_strlen(s) && s[start] && s[start] == c)
 			start++;
 	}
 	tab[nb] = NULL;

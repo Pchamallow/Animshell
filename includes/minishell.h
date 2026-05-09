@@ -171,6 +171,7 @@ void	init_exec(t_minishell *minishell);
 void	init_pipe(t_minishell *minishell);
 /************************************************************* execute */
 int		execute(t_minishell *minishell, char **envp);
+void	get_paths_for_cmd(t_minishell *minishell);
 int		read_tokens(t_minishell *minishell, t_pipe *pipe);
 int		nb_args(t_token *token);
 int		find_input_output(t_minishell *minishell, t_pipe *pipe);
