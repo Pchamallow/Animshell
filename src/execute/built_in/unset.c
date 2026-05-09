@@ -6,13 +6,13 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 11:41:13 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/08 23:29:30 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/09 15:33:29 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	found_unset_var(char *env_var, t_token *arg)
+bool	is_same_name(char *env_var, t_token *arg)
 {
 	int	i;
 
@@ -45,7 +45,7 @@ char	**copy_unset_envp(t_minishell *minishell, t_token *arg, int envp_len)
 	j = 0;
 	while (minishell->exec.envp[i])
 	{
-		if (found_unset_var(minishell->exec.envp[i], arg))
+		if (is_same_name(minishell->exec.envp[i], arg))
 		{
 			free(minishell->exec.envp[i]);
 			i++;

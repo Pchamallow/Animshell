@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 14:11:33 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/08 23:27:47 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/09 16:39:14 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,21 @@ char	*new_concat(char *arg)
 	return (str);
 }
 
+bool	is_unique(t_token *arg)
+{
+	t_token	*first_arg;
+
+	first_arg = arg;
+	arg = arg->next;
+	while (arg)
+	{
+		if (is_same_name(first_arg->value, arg))
+			return (false);
+		arg = arg->next;
+	}
+	return (true);
+}
+
 int	count_lines_to_add(t_minishell *minishell, t_token *arg,
 		bool *valid_var_to_add)
 {
@@ -136,8 +151,8 @@ int	count_lines_to_add(t_minishell *minishell, t_token *arg,
 		else if (arg->type == IS_ARG && is_valid_arg(arg->value))
 		{
 			*valid_var_to_add = true;
-			if (found_var(minishell->exec.envp, arg->value) < 0)
-		/*il faudrait verifier aussi que plusieurs arg n'ont pas le meme nom*/
+			if (found_var(minishell->exec.envp, arg->value) < 0
+				&& is_unique(arg))
 				count++;
 		}
 		arg = arg->next;
@@ -159,6 +174,52 @@ bool	export_option_error(t_minishell *minishell, t_token *arg)
 	return (false);
 }
 
+void	update_var(t_minishell *minishell, char **new_envp, char *arg)
+{
+	if (concat_found(arg) >= 0)
+		concat_var(new_envp, arg, minishell);
+	else
+		replace_var(new_envp, arg, minishell);
+}
+
+void	create_var(t_minishell *minishell, char **new_envp, char *arg, int i)
+{
+	if (concat_found(arg) >= 0)
+		new_envp[i] = new_concat(arg);
+	else
+		new_envp[i] = ft_strdup(arg);
+	if (!new_envp[i])
+	{
+		free_strv(new_envp);
+		print_error_free(minishell, "malloc error in export\n", 1);
+	}
+}
+
+char	**update_envp(t_minishell *minishell, t_token *arg, int count)
+{
+	int		i;
+	char	**new_envp;
+
+	i = get_envp_len(minishell->exec.envp);
+	new_envp = envp_copy(minishell->exec.envp, count + i);
+	if (!new_envp)
+		print_error_free(minishell, "malloc error in export\n", EXIT_FAILURE);
+	while (arg)
+	{
+		if (arg->type == IS_ARG && is_valid_arg(arg->value)
+			&& found_var(new_envp, arg->value) >= 0)
+			update_var(minishell, new_envp, arg->value);
+		else if (arg->type == IS_ARG && is_valid_arg(arg->value))
+		{
+			create_var(minishell, new_envp, arg->value, i);
+			i++;
+		}
+		arg = arg->next;
+	}
+	new_envp[i] = NULL;
+	return (new_envp);
+}
+
 /*
 ** EXPORT WITH ARGUMENTS ************************
 ** - no options, as requested by the subject
@@ -171,7 +232,6 @@ int	export(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token	*arg;
 	int		count;
-	int		i;
 	char	**new_envp;
 	bool	valid_var_to_add;
 
@@ -183,43 +243,11 @@ int	export(t_minishell *minishell, t_pipe *pipe)
 		return (minishell->exec.error);
 	valid_var_to_add = false;
 	count = count_lines_to_add(minishell, arg, &valid_var_to_add);
-	//ajoute les variables valides à envp:
+	if (pipe->next)
+		return (minishell->exec.error);
 	if (valid_var_to_add)
 	{
-		i = get_envp_len(minishell->exec.envp);
-		count += i;
-		new_envp = envp_copy(minishell->exec.envp, count);
-		if (!new_envp)
-			print_error_free(minishell, "malloc error in export\n", 1);
-		while (arg)
-		{
-			if (arg->type != IS_ARG || !is_valid_arg(arg->value))
-			{
-				arg = arg->next;
-				continue ;
-			}
-			if (found_var(new_envp, arg->value) >= 0)
-			{
-				if (concat_found(arg->value) >= 0)
-					concat_var(new_envp, arg->value, minishell);
-				else
-					replace_var(new_envp, arg->value, minishell);
-				arg = arg->next;
-				continue ;
-			}
-			if (concat_found(arg->value) >= 0)
-				new_envp[i] = new_concat(arg->value);
-			else
-				new_envp[i] = ft_strdup(arg->value);
-			if (!new_envp[i])
-			{
-				free_strv(new_envp);
-				print_error_free(minishell, "malloc error in export\n", 1);
-			}
-			arg = arg->next;
-			i++;
-		}
-		new_envp[i] = NULL;
+		new_envp = update_envp(minishell, arg, count);
 		free(minishell->exec.envp);
 		minishell->exec.envp = new_envp;
 	}
