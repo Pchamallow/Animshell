@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 17:25:36 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/09 17:20:49 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,7 +253,8 @@ char	*safe_join(char *s1, char *s2);
 /************************************************************** utils_char */
 char	*str_beginend_char(t_minishell *minishell, char *str, char c);
 int		index_lastchar(char *str, char c);
-int		remove_begin(char **str, char c);
+int	remove_begin(char **str, char c, int start, int end);
+// int		remove_begin(char **str, char c);
 int		remove_end(char **str, char c);
 int		join_oldnew(char **old, char **new);
 /*************************************************************** utils_str */

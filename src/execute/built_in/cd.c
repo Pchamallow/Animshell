@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 14:25:43 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/09 17:51:10 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,10 @@ static void	replace_pwd(t_minishell *minishell, char **path)
 	if (index_pwd != -1)
 	{
 		free(minishell->exec.envp[index_pwd]);
-		minishell->exec.envp[index_pwd] = *path;
+		minishell->exec.envp[index_pwd] = ft_strdup(*path);
 	}
+	if (*path)
+		free(*path);
 }
 
 int	is_root(t_minishell *minishell, char **path)
@@ -80,12 +82,9 @@ void	replace_oldpwd(t_minishell *minishell)
 	int		result;
 
 	path_pwd = NULL;
-	result = cpy_strvindex(&path_pwd, minishell->exec.envp, "PWD=");
-	if (result == 1)
-		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	else if (result == -1)
+	if (minishell->builtin.pwd.result)
 	{
-		path_pwd = ft_strdup(minishell->builtin.pwd.result);
+		path_pwd = ft_substr(minishell->builtin.pwd.result, 4, ft_strlen(minishell->builtin.pwd.result) - 4);
 		if (!path_pwd)
 			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	}
@@ -125,15 +124,33 @@ void	root_with_folder(t_minishell *minishell, char **path)
 	free(home);
 }
 
-void	is_pwd_in_env(t_minishell *minishell)
+char	*cd_get_args(t_minishell *minishell, t_pipe *pipe)
 {
-	int		is_pwd;
+	char	*path;
 
-	is_pwd = strv_searchindex(minishell->exec.envp, "PWD=");
-	if (is_pwd == -1)
+	path = NULL;
+	if (!pipe->cmd->cmd_args || !pipe->cmd->cmd_args[0])
 	{
-		
+		if (is_root(minishell, &path) == 1)
+			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	}
+	else if (pipe->cmd->cmd_args[1])
+	{
+		error_cmd_args("cd", NULL, "too many arguments");
+		minishell->exec.error = 1;
+		return (NULL);
+	}
+	else if (pipe->cmd->cmd_args[0])
+	{
+		path = ft_strdup(pipe->cmd->cmd_args[0]);
+		if (!path)
+			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+		if (path[0] == '~')
+			root_with_folder(minishell, &path);
+		if (ft_strcmp(path, "./") == 0)
+			return (NULL);
+	}
+	return (path);
 }
 
 /*
@@ -162,34 +179,11 @@ void	is_pwd_in_env(t_minishell *minishell)
 int	cd(t_minishell *minishell, t_pipe *pipe)
 {
 	char	*path;
-	int		error;
 
-	path = NULL; 
-	if (!pipe->cmd->cmd_args || !pipe->cmd->cmd_args[0])
-	{
-		if (is_root(minishell, &path) == 1)
-			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	}
-	else if (pipe->cmd->cmd_args[1])
-	{
-		error_cmd_args("cd", NULL, "too many arguments");
-		minishell->exec.error = 1;
+	path = cd_get_args(minishell, pipe);
+	if (!path)
 		return (0);
-	}
-	else if (pipe->cmd->cmd_args[0])
-	{
-		path = ft_strdup(pipe->cmd->cmd_args[0]);
-		if (!path)
-			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-		if (path[0] == '~')
-			root_with_folder(minishell, &path);
-		ft_printf_fd(2, "strdup path = %s\n", path);
-		if (ft_strcmp(path, "./") == 0)
-			return (0);
-		ft_printf_fd(2, " c est bien restitue = %s\n", path);
-	}
-	error = chdir(path);
-	if (error != 0)
+	if (chdir(path) != 0)
 	{
 		ft_printf_fd(2, "minishell: cd: ");
 		perror(path);
@@ -198,10 +192,12 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 	}
 	else
 	{
+		if (!minishell->builtin.pwd.result)
+		{
+			free(path);
+			return (0);
+		}
 		path_kind(minishell, &path);
-		ft_printf_fd(2, "error = %d\n", error);
-		ft_printf_fd(2, "path = %s\n", path);
-		is_pwd_in_env(minishell);
 		replace_oldpwd(minishell);
 		if (minishell->builtin.cd.path != STAY)
 			replace_pwd(minishell, &path);

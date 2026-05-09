@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:28:00 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 15:58:07 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/09 17:45:59 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ int	strv_searchindex(char **strv, char *search)
 	int	len;
 
 	i = 0;
+	if (!*strv)
+		return (-1);
 	len = ft_strlen(search);
 	while (strv[i])
 	{
