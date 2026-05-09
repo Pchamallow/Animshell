@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 15:16:43 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/09 15:36:55 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 	
 	while (current)
 	{
+		
 		// printf(ERROR_MSG("new command -----------------------\n"));
 		if (read_tokens(minishell, current) != -1)
 		{
@@ -72,11 +73,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			// not_write = 0;
 		}
 		else
-		{
-			// printf("WRONG CMD OR FILE\n");
 			current->error = 1;
-			// not_write = 1;
-		}
 
 		// printf("current built-in = %d\n", current->builtin_kind);
 		//print

@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/08 15:04:52 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/05/09 14:57:38 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,8 @@ SRCS		:= 											\
 			src/execute/init/init_exec.c				\
 			src/execute/init/init_files.c				\
 			src/execute/init/init_pipe.c				\
-			src/execute/cmd_path/is_path.c				\
+			src/execute/cmd_path/is_valid_path.c		\
+			src/execute/cmd_path/get_paths.c			\
 			src/execute/cmd_path/cmd_explicit.c			\
 			src/execute/read/read_token.c				\
 			src/execute/utils/error_free.c				\
