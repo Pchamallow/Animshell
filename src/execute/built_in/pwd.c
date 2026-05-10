@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 16:47:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 18:08:49 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/10 11:09:42 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,11 @@
 
 void	init_pwd(t_minishell *minishell)
 {
-	minishell->builtin.pwd.result = ft_strjoin("PWD=", getcwd(NULL, 0));
+	char	*str;
+
+	str = getcwd(NULL, 0);
+	minishell->builtin.pwd.result = ft_strjoin("PWD=", str);
+	free(str);
 	if (!minishell->builtin.pwd.result)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 }
