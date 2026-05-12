@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/10 22:38:11 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/12 23:26:36 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,11 @@ size_t	ft_strlcat_minishell(char *dst, const char *src, size_t size)
 	size_t	i;
 	size_t	j;
 
-	j = ft_strlen(src);
+	i = 0;
 	if (dst)
 		i = ft_strlen(dst);
-	else
-		i = 0;
 	j = 0;
-	while ((i + j < (size)) && src[j])
+	while ((i + j) < size && src[j])
 	{
 		dst[i + j] = src[j];
 		j++;
@@ -44,6 +42,14 @@ int	replace_exit_status(char *line, t_expand *expand, int exit_status)
 	return (2);
 }
 
+/*
+** replace_var_name
+** replaces the $name of ENV VAR
+** by its value.
+** If the value contains quotes inside
+** it encloses each word with quotes
+** in order to keep inside quotes.
+*/
 int	replace_var_name(char *line, t_expand *expand,
 		t_minishell *minishell, int i)
 {
@@ -56,10 +62,8 @@ int	replace_var_name(char *line, t_expand *expand,
 	{
 		if (quote_found(minishell->exec.envp[j]) && expand->quote == NO)
 		{
-			ft_strlcat_minishell(expand->newline, "\"", expand->count + 1);
-			ft_strlcat_minishell(expand->newline,
+			ft_strlcat_add_quotes(expand->newline,
 				minishell->exec.envp[j] + wd_len + 1, expand->count + 1);
-			ft_strlcat_minishell(expand->newline, "\"", expand->count + 1);
 		}
 		else
 		{

@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 22:15:28 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/10 22:17:39 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/12 22:40:36 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,6 @@ void	toggle_quote(char c, t_quote_type *quote)
 		else if (*quote == SINGLE)
 			*quote = NO;
 	}
-}
-
-int	find_env_var(char *line, int len, t_quote_type *quote)
-{
-	int				i;
-
-	i = 0;
-	while (i < len - 1)
-	{
-		toggle_quote(line[i], quote);
-		if (*quote != SINGLE && line[i] == '$' && line[i + 1] != '$'
-			&& !is_separator(line[i + 1]))
-			return (i);
-		i++;
-	}
-	return (-1);
 }
 
 int	get_var_name_len(char *line)
@@ -87,4 +71,33 @@ bool	quote_found(char *str)
 		i++;
 	}
 	return (false);
+}
+
+void	ft_strlcat_add_quotes(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	if (dst)
+		i = ft_strlen(dst);
+	j = 0;
+	while ((i + j) < size && src[j])
+	{
+		dst[i + j] = '\"';
+		i++;
+		while ((i + j) < size && src[j] && !is_whitespace(src[j]))
+		{
+			dst[i + j] = src[j];
+			j++;
+		}
+		dst[i + j] = '\"';
+		i++;
+		while ((i + j) < size && src[j] && is_whitespace(src[j]))
+		{
+			dst[i + j] = src[j];
+			j++;
+		}
+	}
+	dst[i + j] = '\0';
 }

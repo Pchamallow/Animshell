@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/10 22:26:50 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/12 22:34:59 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,6 +282,7 @@ int		get_var_name_len(char *line);
 int		get_var(char *line, char **envp, int wd_len);
 bool	quote_found(char *str);
 int		count_total_char(char *line, int len, t_minishell *minishell);
+void	ft_strlcat_add_quotes(char *dst, const char *src, size_t size);
 char	*expand_line(char *line, char **envp, t_minishell *minishell);
 /***************************************************************** parsing */
 int		handle_quotes(char *line, t_token **token_list, int *index,
