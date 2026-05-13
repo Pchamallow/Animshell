@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 14:26:02 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/08 16:48:32 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 17:00:09 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ static int	error_overflow(long nb)
 ** return
 **	0	= not a only number or sign
 **	1	= number
-**	2	= +number
 **	-1	= -number
 */
 int	is_num_single_sign(char *str)
@@ -37,8 +36,6 @@ int	is_num_single_sign(char *str)
 	sign = 1;
 	if (str[0] == '-' && (str[1] >= '0' && str[1] <= '9'))
 		sign = -1;
-	if (str[0] == '+' && (str[1] >= '0' && str[1] <= '9'))
-		sign = 2;
 	while (str[i]
 			&& ((str[i] >= '0' && str[i] <= '9')
 			|| str[i] == '-' || str[i] == '+'))
@@ -100,27 +97,21 @@ int	exit_gestion_args(t_minishell *minishell, char *nb)
 	return (0);
 }
 
-void	is_exit(t_minishell *minishell)
+void	is_exit(t_minishell *minishell, t_pipe *pipe)
 {
-	if (ft_strcmp(minishell->token->value, "exit") == 0
-		&& !nb_pipes(minishell->token))
-	{
+	if (pipe->builtin_kind != EXIT)
+		return ;
+
+	if (!minishell->exec.nb_pipes)
 		ft_printf_fd(1, "exit\n");
-		if (minishell->token->next)
-		{
-			if (exit_gestion_args(minishell, minishell->token->next->value) == 0)
-			{
-				free_all(minishell);
-				exit(minishell->exec.error);
-			}
-		}
-		else
-		{
-			free_all(minishell);
-			exit(minishell->exec.error);
-		}
+	if (pipe->cmd->next)
+		exit_gestion_args(minishell, pipe->cmd->next->value);
+	if (!minishell->exec.nb_pipes)
+	{
+		free_all(minishell);
+		exit(minishell->exec.error);
 	}
-	else if (ft_strcmp(minishell->token->value, "exit") == 0
-		&& nb_pipes(minishell->token))
-		minishell->exec.error = 2;
+	if (!minishell->exec.error)
+		minishell->exec.error = 1;
+	printf("error = %d\n", minishell->exec.error);//test
 }

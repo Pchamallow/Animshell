@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/05 15:59:06 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 16:11:32 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,20 +46,15 @@ static int	init_outfile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 		token->fd = open(token->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
 		token->fd = open(token->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	// printf("fd out = %d\n", token->fd);
-	// printf("fd out = %s\n", token->value);
 	if (token->fd < 0)
 	{
 		pipe->output = ERROR;
-		printf("error out\n");
 		if (pipe->input != ERROR)
 			strerror_file(token->value);
 		minishell->exec.error = 2;
 	}
 	if (access(token->value, W_OK) != 0)
 	{
-		// printf("error out\n");
-		// strerror_file(token->value);
 		pipe->output = ERROR;
 		minishell->exec.error = 1;
 		return (-1);
@@ -131,7 +126,6 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 	}
 	if (heredoc_pipe_to_free && pipe->input != IS_HEREDOC)
 		close_fd(minishell->here_doc->fd);
-	// minishell->exec.index_prev_pipe = minishell->exec.index_pipe;
 	if (pipe->input == ERROR || pipe->output == ERROR)
 		return (1);
 	return (0);

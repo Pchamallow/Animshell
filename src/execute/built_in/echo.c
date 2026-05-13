@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/07 14:10:05 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 16:10:11 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,6 @@ void	print_no_quotes(char *str)
 			ft_printf_fd(1, "%c", str[i]);
 		i++;
 	}
-	
 }
 
 // ECHO ****************
@@ -145,7 +144,6 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *args;
 	int		i;
-	int		j;
 	int		len;
 
 	i = 0;
@@ -153,37 +151,20 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 	if (pipe->cmd->next)
 		args = pipe->cmd->next;
 	else
+	{
+		ft_printf_fd(1, "\n");
 		return (0);
+	}
 	if (minishell->builtin.echo.for_prompt == true)
 		return (0);
 	while (args && (minishell->exec.index_pipe == 0
 		|| i < minishell->exec.index_pipe))
 	{
 		len = ft_strlen(args->value);
-		if (args->type == IS_INPUT || args->type == IS_OUTPUT
-			|| args->type == IS_APPEND || args->type == HEREDOC)
+		if (args->type > REDIRECTION)
 			break;
-		// retirer gestion $? pour economiser des lignes (deja prensent dans le parsing)
-		else if (ft_strnstr(args->value, "$?", len + 1) != NULL)
-		{
-			j = 0;
-			// printf("quotes = %d\n", args->quote);//test
-			while (args->value[j])
-			{
-				if ((args->quote == NO || args->quote == DOUBLE)
-					&& args->value[j] == '$' && args->value[j + 1] == '?')
-				{
-					ft_printf_fd(1, "%d", minishell->exec.error);
-					j += 2;
-					continue;
-				}
-				if (args->value[j] != '"')
-					ft_printf_fd(1, "%c", args->value[j]);
-				j++;
-			}
-		}
 		else
-			print_no_quotes(args->value);
+			ft_printf_fd(1, "%s", args->value);
 		args = args->next;
 		i++;
 	}

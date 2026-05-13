@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 14:55:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/28 14:55:55 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 14:54:29 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	init_pipe(t_minishell *minishell)
 
 	i = 0;
 	max = nb_pipes(minishell->token);
+	minishell->exec.nb_pipes = max;
 	// printf("max = %d\n", max);
 	minishell->exec.pipe_lst = ft_calloc(1, sizeof(t_pipe));
 	if (!minishell->exec.pipe_lst)
