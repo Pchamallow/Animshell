@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 12:35:42 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 16:26:44 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 12:52:13 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	free_builtin(t_minishell *minishell)
 		free(minishell->builtin.echo.result);
 	if (minishell->builtin.pwd.result)
 		free(minishell->builtin.pwd.result);
+	if (minishell->builtin.cd.result)
+		free(minishell->builtin.cd.result);
 	// minishell->builtin.echo.for_prompt = false;
 }
 

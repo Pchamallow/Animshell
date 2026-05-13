@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:28:00 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 17:45:59 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 13:02:32 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,6 @@
 // 		// rappeler la fonction jusqu' a que toutes la string soit clean
 // 	return (tmp);
 // }
-
-
-
-int	cpy_strv(char ***dst, char **src, int max)
-{
-	int	i;
-
-	i = 0;
-	if (!*dst || !**dst || !src || !*src)
-		return (1);
-	while ((src[i] && max == 0) || (i < max))
-	{
-		(*dst)[i] = src[i];
-		i++;
-	}
-	return (0);
-}
 
 int	cpy_strvindex(char **result, char **src, char *search)
 {

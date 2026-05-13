@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 14:47:49 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/29 11:12:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 12:52:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,6 @@ void	init_exec(t_minishell *minishell)
 		tmp = tmp->next;
 	}
 	minishell->builtin.echo.result = NULL;
+	minishell->builtin.cd.result = NULL;
 	init_heredoc(minishell);
 }

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 17:20:49 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 12:26:23 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,10 +184,7 @@ int	heredoc(t_minishell *minishell, t_token *token);
 int		nb_pipes(t_token *first);
 
 /************************************************************ built-in */
-/** cd */
 int		cd(t_minishell *minishell, t_pipe *pipe);
-int		path_clean(t_minishell *minishell, char **path, int index_pwd);
-/******/
 int		echo(t_minishell *minishell, t_pipe *pipe);
 void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
@@ -205,14 +202,13 @@ char	**envp_copy(char **envp, int len);
 char	**update_envp(t_minishell *minishell, t_token *arg, int count);
 bool	is_same_name(char *env_var, t_token *arg);
 int		unset(t_minishell *minishell, t_pipe *pipe);
-// int		find_pwd(t_minishell *minishell);
-void	init_pwd(t_minishell *minishell);
 int		pwd(t_minishell *minishell, t_pipe *pipe);
+void	init_pwd_envp(t_minishell *minishell);
+void	init_pwd(t_minishell *minishell);
 /***************************************************** tabs for execve */
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
 /**************************************************** execute commands */
 void	exec_cmds_pipe(t_minishell *minishell);
-// void	exec_cmd_no_pipe(t_minishell *minishell, char **envp);
 
 /********************************************************** struct env */
 // void    init_struct_env(t_env *env);
@@ -263,7 +259,9 @@ int		is_double_quoted(char *str);
 int		has_alpha(char *str);
 int		str_copy_and_free(char **src, char **dst);
 int		cpy_strvindex(char **result, char **src, char *search);
-int		cpy_strv(char ***dst, char **src, int max);
+/************************************************************** utils_strv */
+int		memcpy_strv(char **dst, char **src, int max);
+// int		memcpy_strv2(char **dst, char **src, int max);
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);

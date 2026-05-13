@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/09 17:23:57 by stkloutz         ###   ########.fr        #
+#    Updated: 2026/05/13 11:52:56 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,6 @@ NC			:='\033[0m'
 
 # Sources
 SRCS		:= 											\
-			src/execute/built_in/cd_path_clean.c		\
 			src/execute/built_in/cd.c					\
 			src/execute/built_in/echo.c					\
 			src/execute/built_in/env.c					\
@@ -60,6 +59,7 @@ SRCS		:= 											\
 			src/execute/utils/count_chr.c				\
 			src/execute/utils/utils_char.c				\
 			src/execute/utils/utils_str.c				\
+			src/execute/utils/utils_strv.c				\
 			src/execute/utils/utils.c					\
 			src/execute/TO_DELETE.c						\
 			src/execute/exec_cmds.c						\

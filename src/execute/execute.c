@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 15:51:09 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 13:00:23 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int execute(t_minishell *minishell, char **envp)
 	minishell->exec.paths_for_search_cmd = NULL;
 	minishell->builtin.pwd.result = NULL;
 	strv_dup(minishell, &minishell->exec.envp, envp);
-	init_pwd(minishell);
+	init_pwd_envp(minishell);
 	
 	while (1)
 	{
@@ -155,6 +155,8 @@ int execute(t_minishell *minishell, char **envp)
 			ft_token_lstclear(minishell->exec.first_token);
 		if (minishell->exec.pipe_lst)
 			lst_pipe_clear(&minishell->exec.pipe_lst);
+		if (minishell->builtin.cd.result)
+			free(minishell->builtin.cd.result);
 			
 	}
 	return (0);
