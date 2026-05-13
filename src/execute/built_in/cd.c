@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 13:22:06 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 15:18:41 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	replace_oldpwd(t_minishell *minishell, t_pipe *pipe)
 	free(path_pwd);
 }
 
-void	root_with_folder(t_minishell *minishell, char **path)
+void	root_with_folder(t_minishell *minishell)
 {
 	char	*home;
 	char	*folder;
@@ -89,10 +89,11 @@ void	root_with_folder(t_minishell *minishell, char **path)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	else if (result == -1)
 		return ;
-	folder = ft_substr(*path, 1, ft_strlen(*path) - 1);
+	folder = ft_substr(minishell->builtin.cd.result , 1, ft_strlen(minishell->builtin.cd.result ) - 1);
 	if (!folder)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	*path = ft_strjoin(home, folder);
+	free(minishell->builtin.cd.result);
+	minishell->builtin.cd.result = ft_strjoin(home, folder);
 	free(folder);
 	free(home);
 }
@@ -100,7 +101,7 @@ void	root_with_folder(t_minishell *minishell, char **path)
 int	cd_errors_args(t_minishell *minishell, t_pipe *pipe)
 {
 	(void)pipe;
-	if (pipe->cmd->cmd_args[1])
+	if (pipe->cmd->cmd_args && pipe->cmd->cmd_args[1])
 	{
 		error_cmd_args("cd", NULL, "too many arguments");
 		minishell->exec.error = 1;
@@ -111,12 +112,10 @@ int	cd_errors_args(t_minishell *minishell, t_pipe *pipe)
 
 int cd_get_args(t_minishell *minishell, t_pipe *pipe)
 {
-
 	if (!pipe->cmd->cmd_args || !pipe->cmd->cmd_args[0])
 	{
 		if (is_root(minishell) == 1)
 			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-		printf("no args\n");
 		return (0);
 	}
 	if (cd_errors_args(minishell, pipe))
@@ -128,9 +127,10 @@ int cd_get_args(t_minishell *minishell, t_pipe *pipe)
 			pwd(minishell, pipe);
 			return (1);
 		}
-		if (pipe->cmd->cmd_args[0][0] == '~')
-			root_with_folder(minishell, pipe->cmd->cmd_args);
-		if (ft_strcmp(pipe->cmd->cmd_args[0], "./") == 0)
+		minishell->builtin.cd.result = ft_strdup(pipe->cmd->cmd_args[0]);
+		if (minishell->builtin.cd.result[0] == '~')
+			root_with_folder(minishell);
+		if (!ft_strcmp(minishell->builtin.cd.result, "./"))
 			return (0);
 	}
 	return (0);
@@ -153,6 +153,13 @@ void	modify_pwd_in_envp(t_minishell *minishell)
 		minishell->exec.envp[i] = ft_strdup(minishell->builtin.pwd.result);
 	}
 }
+
+// void	return_oldpwd(t_minishell *minishell)
+// {
+	
+// 	chdir(minishell->builtin.cd.result);
+	
+// }
 
 /*
 ** CD *********************************************
@@ -179,32 +186,31 @@ void	modify_pwd_in_envp(t_minishell *minishell)
 */
 int	cd(t_minishell *minishell, t_pipe *pipe)
 {
-	char	*path;
+	int error;
 
-	// path = cd_get_args(minishell, pipe);
+	if (minishell->builtin.cd.result)
+	{
+		free(minishell->builtin.cd.result);
+		minishell->builtin.cd.result = NULL;
+	}
 	if (cd_get_args(minishell, pipe))
 		return (0);
-	if (minishell->builtin.cd.result)
-		path = minishell->builtin.cd.result;
-	else
-		path = pipe->cmd->cmd_args[0];
-	if (chdir(path) != 0)
+	error = chdir(minishell->builtin.cd.result);
+	if (error != 0)
 	{
 		ft_printf_fd(2, "minishell: cd: ");
-		perror(path);
+		perror(minishell->builtin.cd.result);
 		minishell->exec.error = 1;
-		// free(path);
 	}
-	else
+	if (minishell->exec.nb_pipes)
 	{
-		// if (!minishell->builtin.pwd.result)
-		// {
-		// 	free(path);
-		// 	return (0);
-		// }
+		chdir(&minishell->builtin.pwd.result[4]);
+		return (0);
+	}
+	if (error == 0)
+	{
 		replace_oldpwd(minishell, pipe);
 		modify_pwd_in_envp(minishell);
-		// free(path);
 	}
 	return (0);
 }

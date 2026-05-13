@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 14:37:53 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/07 14:05:06 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 17:07:32 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,12 @@ void	get_exit_status(t_minishell *minishell)
 
 	while(wait(&child_exit_status) > 0)
 	{
-		if (WIFEXITED(child_exit_status))
-			minishell->exec.error = WEXITSTATUS(child_exit_status);
-		else if (WIFSIGNALED(child_exit_status))
+		// if (WIFEXITED(child_exit_status))
+		// {
+		// 	minishell->exec.error = WEXITSTATUS(child_exit_status);
+		// 	printf("error get exit status = %d\n", minishell->exec.error);//test
+		// }
+		if (WIFSIGNALED(child_exit_status))
 		{
 			exit_signal = WTERMSIG(child_exit_status);
 			if (exit_signal == SIGINT)

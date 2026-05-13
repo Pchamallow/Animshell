@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 12:26:23 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 16:24:36 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,21 +92,11 @@ typedef enum e_put
 	IS_PIPE
 }			t_put;
 
-typedef enum e_path_kind
-{
-	ASCII,
-	ROOT,
-	ABSOLUTE,
-	RELATIVE_SINGLE,
-	RELATIVE_DOUBLE,
-	STAY
-}			t_path_kind;
-
 typedef struct s_builtin_content
 {
 	char		*result;
 	bool		for_prompt;
-	t_path_kind	path;
+	// t_path_kind	path;
 }				t_builtin_content;
 
 typedef struct s_builtin
@@ -145,7 +135,7 @@ typedef struct s_exec
 	int			output; // 0 pas de output(donc terminal), 1 = file, 2 = pipe
 	int			index_pipe;
 	int			index_prev_pipe;
-	// int			nb_pipes;
+	int			nb_pipes;
 	t_pipe		*pipe_lst;
 	t_token		*last_pipe;
 	t_token		**first_token;
@@ -188,7 +178,7 @@ int		cd(t_minishell *minishell, t_pipe *pipe);
 int		echo(t_minishell *minishell, t_pipe *pipe);
 void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
-void	is_exit(t_minishell *minishell);
+void	is_exit(t_minishell *minishell, t_pipe *pipe);
 int		export_print(t_minishell *minishell, t_pipe *pipe);
 int		export(t_minishell *minishell, t_pipe *pipe);
 bool	is_concat(char *arg, int i);
