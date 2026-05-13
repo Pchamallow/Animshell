@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/28 21:09:08 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/13 11:52:03 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ static bool	is_quote_closed(char *line, int *index, char quote)
 	int	i;
 
 	i = *index;
+	if (!line[i])
+		return (false);
 	while (line[i] != quote)
 	{
 		i++;
-		if (line[i] == '\0')
+		if (!line[i])
 			return (false);
 	}
 	*index = i;

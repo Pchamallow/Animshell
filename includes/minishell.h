@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 17:20:49 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/12 22:34:59 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,13 @@ typedef enum e_path_kind
 	RELATIVE_DOUBLE,
 	STAY
 }			t_path_kind;
+
+typedef struct	s_expand
+{
+	char			*newline;
+	int				count;
+	t_quote_type	quote;
+}				t_expand;
 
 typedef struct s_builtin_content
 {
@@ -268,8 +275,16 @@ int		cpy_strv(char ***dst, char **src, int max);
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);
 void	print_pauline(t_minishell *minishell);
-/***************************************************************** parsing */
+/****************************************************************** expand */
+void	toggle_quote(char c, t_quote_type *quote);
+int		find_env_var(char *line, int len, t_quote_type *quote);
+int		get_var_name_len(char *line);
+int		get_var(char *line, char **envp, int wd_len);
+bool	quote_found(char *str);
+int		count_total_char(char *line, int len, t_minishell *minishell);
+void	ft_strlcat_add_quotes(char *dst, const char *src, size_t size);
 char	*expand_line(char *line, char **envp, t_minishell *minishell);
+/***************************************************************** parsing */
 int		handle_quotes(char *line, t_token **token_list, int *index,
 			t_minishell *minishell);
 void	handle_pipe(char *line, t_token **token_list, int *index);

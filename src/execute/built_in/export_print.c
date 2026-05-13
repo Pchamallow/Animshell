@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 14:11:33 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/08 22:52:37 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/10 12:35:30 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**envp_copy(char **envp, int len)
 	if (!new_envp)
 		return (NULL);
 	i = 0;
-	while (i < len)
+	while (envp[i])
 	{
 		new_envp[i] = envp[i];
 		i++;
