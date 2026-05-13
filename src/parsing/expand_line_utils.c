@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 22:15:28 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/12 22:40:36 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/13 12:28:54 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,31 @@ bool	quote_found(char *str)
 	return (false);
 }
 
+char	chose_quote(const char *str)
+{
+	int	i;
+
+	//cherche si quote dans mot
+	//si oui :
+	//quote = l'autre quote
+	//return quote
+	i = 0;
+	while (str[i] && !is_whitespace(str[i]))
+	{
+		if (str[i] == '\'')
+			return ('\"');
+		if (str[i] == '\"')
+			return ('\'');
+		i++;
+	}
+	return ('\"');
+}
+
 void	ft_strlcat_add_quotes(char *dst, const char *src, size_t size)
 {
 	size_t	i;
 	size_t	j;
+	char	quote;
 
 	i = 0;
 	if (dst)
@@ -84,14 +105,15 @@ void	ft_strlcat_add_quotes(char *dst, const char *src, size_t size)
 	j = 0;
 	while ((i + j) < size && src[j])
 	{
-		dst[i + j] = '\"';
+		quote = chose_quote(src + j);
+		dst[i + j] = quote;
 		i++;
 		while ((i + j) < size && src[j] && !is_whitespace(src[j]))
 		{
 			dst[i + j] = src[j];
 			j++;
 		}
-		dst[i + j] = '\"';
+		dst[i + j] = quote;
 		i++;
 		while ((i + j) < size && src[j] && is_whitespace(src[j]))
 		{
