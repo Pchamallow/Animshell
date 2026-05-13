@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 11:48:05 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/13 17:50:52 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,17 +256,13 @@ void read_args(t_minishell *minishell, t_token *token, t_pipe *pipe)
 {
 	int index_pipes;
 	int i;
-	// int	skip;
-	// int	single;
-	// int	double;
 
-	i = 0;
-	// skip = 0;
-	// single = 0;
-	// double = 0;
+	i = minishell->exec.index_prev_pipe;
 	index_pipes = minishell->exec.index_pipe;
+	// gestion index pipes mauvaises
 	while (token != NULL && ((index_pipes == 0) || (index_pipes > 0 && i <= index_pipes)))
 	{
+		// printf("token = %s\n", token->value);//test
 		if (token->type == IS_ARG)
 		{
 			is_single_double_quoted(minishell, token);
@@ -291,21 +287,10 @@ Pipe :
 */
 int read_tokens(t_minishell *minishell, t_pipe *pipe)
 {
-	// int error_files;
-	// int error_cmd;
 	t_token *token;
 	int		index_next_pipe;
 
 	token = minishell->exec.last_pipe;
-	// printf("token actuel = %s\n", token->value);
-
-	// printf ("READ TOKENS\n");
-
-	/* CMD et Infile et Outfile valides **************************/
-	// printf("ancien index de la pipe = %d\n", minishell->exec.index_pipe);
-	// index_pipes = find_pipe(token, minishell->exec.index_pipe);
-	// printf("nouvel index de la pipe = %d\n", index_pipes);
-	// minishell->exec.index_pipe = index_pipes;
 	if (find_input_output(minishell, pipe) || init_cmd(minishell, pipe))
 	{
 		minishell->exec.index_prev_pipe = minishell->exec.index_pipe;
@@ -313,13 +298,9 @@ int read_tokens(t_minishell *minishell, t_pipe *pipe)
 		minishell->exec.index_pipe = minishell->exec.index_pipe + index_next_pipe;
 		return (-1);
 	}
-	
-	/**************************************************************/
-
+	read_args(minishell, token, pipe);
 	minishell->exec.index_prev_pipe = minishell->exec.index_pipe;
 	index_next_pipe = next_pipe(minishell, token);
-
-	read_args(minishell, token, pipe);
 	minishell->exec.index_pipe = minishell->exec.index_pipe + index_next_pipe;
 
 	return (0);
