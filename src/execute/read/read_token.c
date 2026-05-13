@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 15:36:40 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 11:48:05 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,7 +238,7 @@ bool is_single_double_quoted(t_minishell *minishell, t_token *token)
 	}
 	if (single > 1 && str[i] == '\'')
 		remove_quots(minishell, token);
-	if (doubled > 1)
+	if (doubled > 1 && str[i] == '\"')
 		remove_quots(minishell, token);
 	return (false);
 }
