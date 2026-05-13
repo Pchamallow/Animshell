@@ -67,6 +67,8 @@ SRCS		:= 											\
 			src/execute/term.c							\
 			src/execute/heredoc.c						\
 			src/parsing/expand_line.c					\
+			src/parsing/expand_line_count.c				\
+			src/parsing/expand_line_utils.c				\
 			src/parsing/ft_token_list.c					\
 			src/parsing/handle_token_types.c			\
 			src/parsing/separate_into_tokens.c			\
