@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 17:03:54 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 22:43:51 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,9 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		if (pid == 0)
 		{
 			reset_signal_to_default();
-			printf("current->value = %s\n", current->cmd->value);
-			printf("current->input = %d\n", current->input);
-			printf("current->output = %d\n", current->output);
+			/*printf("current->value = %s\n", current->cmd->value);*/
+			/*printf("current->input = %d\n", current->input);*/
+			/*printf("current->output = %d\n", current->output);*/
 
 			/* INPUT               */
 			if (current->input == IS_FILE && current->output == IS_FILE)

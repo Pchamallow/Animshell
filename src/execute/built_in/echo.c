@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 16:10:11 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 19:55:53 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *args;
 	int		i;
-	int		len;
+	/*int		len;*/
 
 	i = 0;
 	args = NULL;
@@ -160,7 +160,7 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 	while (args && (minishell->exec.index_pipe == 0
 		|| i < minishell->exec.index_pipe))
 	{
-		len = ft_strlen(args->value);
+		/*len = ft_strlen(args->value);*/
 		if (args->type > REDIRECTION)
 			break;
 		else

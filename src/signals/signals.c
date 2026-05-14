@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 14:37:53 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/13 17:07:32 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/14 23:01:02 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,20 @@ void	signal_handler(int signal)
 		rl_replace_line("",0);
 		rl_on_new_line();
 		rl_redisplay();
-		write(1, "\nminishell$ ", 12);
+		write(1, "\nminipouet$ ", 12);
+	}
+}
+
+void	signal_handler_heredoc(int signal)
+{
+	g_sig_value = signal;
+	if (signal == SIGINT)
+	{
+		write(1, "^C\n", 3);
+		rl_replace_line("",0);
+		rl_on_new_line();
+		rl_redisplay();
+		exit(0);
 	}
 }
 
@@ -30,6 +43,20 @@ void	check_signal_value(t_minishell *minishell)
 {
 	if (g_sig_value == SIGINT)
 		minishell->exec.error = 130;
+	g_sig_value = 0;
+}
+
+void	check_signal_value_heredoc(t_minishell *minishell)
+{
+	if (g_sig_value == SIGINT)
+	{
+		minishell->exec.error = 130;
+		/*write(1, "^C\n\n\n", 3);*/
+		/*rl_replace_line("",0);*/
+		/*rl_on_new_line();*/
+		/*rl_redisplay();*/
+	}
+	
 	g_sig_value = 0;
 }
 
@@ -43,6 +70,24 @@ void	set_signal_interactive(void)
 	ft_bzero(&sa_sigquit, sizeof(struct sigaction));
 	//fonction a executer en cas de reception d'un signal:
 	sa_sigint.sa_handler = &signal_handler;
+	sa_sigquit.sa_handler = SIG_IGN;
+	//flags (utile ?) :
+	sa_sigint.sa_flags = SA_RESTART;
+	//sigaction avec les signaux a intercepter:
+	sigaction(SIGINT, &sa_sigint, NULL);
+	sigaction(SIGQUIT, &sa_sigquit, NULL);
+}
+
+void	set_signal_heredoc(void)
+{
+	struct sigaction	sa_sigint;
+	struct sigaction	sa_sigquit;
+
+	//on initialise toute la struct à 0:
+	ft_bzero(&sa_sigint, sizeof(struct sigaction));
+	ft_bzero(&sa_sigquit, sizeof(struct sigaction));
+	//fonction a executer en cas de reception d'un signal:
+	sa_sigint.sa_handler = &signal_handler_heredoc;
 	sa_sigquit.sa_handler = SIG_IGN;
 	//flags (utile ?) :
 	sa_sigint.sa_flags = SA_RESTART;

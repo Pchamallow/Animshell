@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/06 16:22:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/14 22:58:42 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,21 @@ void	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 {
 	char	*line;
 
+	set_signal_heredoc();
 	while (1)
 	{
 		line = readline("> ");
+		//ctrl D:
+		if (!line)
+		{
+			ft_printf_fd(2, "minishell: warning: ");
+			ft_printf_fd(2, "here-document delimited by end-of-file ");
+			ft_printf_fd(2, "(wanted '%s')\n", token->value);
+			return ;
+		}
+		//ctrl C
+		if (g_sig_value == SIGINT)
+			return ;
 		if (!ft_strcmp(line, token->value))
 			break;
 		// si quotes pas de expand !!!!!
@@ -84,6 +96,7 @@ int	heredoc(t_minishell *minishell, t_token *token)
 		close_fd(pipefd[1]);
 	}
 	waitpid(pid, NULL, 0);
+	check_signal_value_heredoc(minishell);//ou check_signal_value tout court ?
 	// while(wait(NULL) > 0);
 	return (0);
 }
