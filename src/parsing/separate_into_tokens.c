@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/13 17:53:55 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/14 10:50:19 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	separate_into_tokens(char *line, t_token **token_list,
 		handle_spaces(line, token_list, &i);
 	}
 	//tests : *******
-	/*print_tokens_types(*token_list);*/
+	print_tokens_types(*token_list);
 	// print_tokens(*token_list);
 	// **************
 	return (0);

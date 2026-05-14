@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 15:18:41 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/14 10:36:54 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,9 @@ void	replace_oldpwd(t_minishell *minishell, t_pipe *pipe)
 	path_pwd = NULL;
 	if (pipe->cmd->cmd_args && pipe->cmd->cmd_args[0] && !ft_strcmp(pipe->cmd->cmd_args[0], "."))
 		init_pwd(minishell);
-	if (minishell->builtin.pwd.result)
-	{
-		path_pwd = ft_substr(minishell->builtin.pwd.result, 4, ft_strlen(minishell->builtin.pwd.result) - 4);
-		if (!path_pwd)
-			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	}
+	path_pwd = ft_substr(minishell->builtin.pwd.result, 4, ft_strlen(minishell->builtin.pwd.result) - 4);
+	if (!path_pwd)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	result = strv_searchindex(minishell->exec.envp, "OLDPWD=");
 	if (result == -1)
 	{
@@ -154,12 +151,21 @@ void	modify_pwd_in_envp(t_minishell *minishell)
 	}
 }
 
-// void	return_oldpwd(t_minishell *minishell)
-// {
-	
-// 	chdir(minishell->builtin.cd.result);
-	
-// }
+int	cd_move_dir(t_minishell *minishell)
+{
+	if (chdir(minishell->builtin.cd.result) != 0)
+	{
+		ft_printf_fd(2, "minishell: cd: ");
+		perror(minishell->builtin.cd.result);
+		minishell->exec.error = 1;
+	}
+	if (minishell->exec.nb_pipes)
+	{
+		chdir(&minishell->builtin.pwd.result[4]);
+		return (-1);
+	}
+	return (0);
+}
 
 /*
 ** CD *********************************************
@@ -186,8 +192,6 @@ void	modify_pwd_in_envp(t_minishell *minishell)
 */
 int	cd(t_minishell *minishell, t_pipe *pipe)
 {
-	int error;
-
 	if (minishell->builtin.cd.result)
 	{
 		free(minishell->builtin.cd.result);
@@ -195,19 +199,7 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 	}
 	if (cd_get_args(minishell, pipe))
 		return (0);
-	error = chdir(minishell->builtin.cd.result);
-	if (error != 0)
-	{
-		ft_printf_fd(2, "minishell: cd: ");
-		perror(minishell->builtin.cd.result);
-		minishell->exec.error = 1;
-	}
-	if (minishell->exec.nb_pipes)
-	{
-		chdir(&minishell->builtin.pwd.result[4]);
-		return (0);
-	}
-	if (error == 0)
+	if (cd_move_dir(minishell) == 0)
 	{
 		replace_oldpwd(minishell, pipe);
 		modify_pwd_in_envp(minishell);

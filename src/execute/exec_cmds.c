@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 17:52:21 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/14 13:57:28 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,52 +96,70 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		if (pid == 0)
 		{
 			reset_signal_to_default();
-			// printf("current->value = %s\n", current->cmd->value);
-			// printf("current->input = %d\n", current->input);
-			// printf("current->output = %d\n", current->output);
+			printf("current->value = %s\n", current->cmd->value);
+			printf("current->input = %d\n", current->input);
+			printf("current->output = %d\n", current->output);
+			printf("current->pipefd[0] = %d\n", pipefd[0]);
+			printf("current->pipefd[1] = %d\n", pipefd[1]);
 
-			/* INPUT               */
+			/* INPUT ***********************************************************/
+
+			// if (current->input != IS_PIPE)
+			// 	close_fd(input_fd);
+
+			printf("DEBUG: CHILD input_fd = %d\n", input_fd);
 			if (current->input == IS_FILE && current->output == IS_FILE)
 			{
 				if (dup2(current->infile->fd, STDIN_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 input infile", 2);
 				if (dup2(current->outfile->fd, STDOUT_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 input outfile", 2);
 				already_output = 1;
 			}
 			
 			else if (current->input == IS_FILE)
 			{
 				if (dup2(current->infile->fd, STDIN_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 input infile", 2);
 			}
 			
 			else if (current->input == IS_PIPE)
 			{
 				if (dup2(input_fd, STDIN_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 input pipe", 2);
 				close_fd(input_fd);
 			}
 
 			else if (current->input == IS_HEREDOC)
 			{
 				if (dup2(minishell->here_doc->fd, STDIN_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 input heredoc", 2);
 				close_fd(minishell->here_doc->fd);
 			}
 
-			/* OUTPUT                          */
+			/* OUTPUT **********************************************************/
 			if (current->output == IS_FILE && already_output == 0)
 			{
 				if (dup2(current->outfile->fd, STDOUT_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 output file", 2);
 				close_fd(current->outfile->fd);
 			}
-			else if (current->output == IS_PIPE
-				&& already_output == 0)
+			// else if (current->output == IS_PIPE
+			// 	&& already_output == 0)
+			// {
+			// 	if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+			// 		strerror_free_structure(minishell, "dup2 output pipe", 2);
+			// }
+			else if (current->input == IS_PIPE)
 			{
-				if (dup2(pipefd[1], STDOUT_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+				if (input_fd < 0)
+				{
+					ft_printf_fd(2, "ERROR: input_fd invalide\n");
+					exit(1);
+				}
+				if (dup2(input_fd, STDIN_FILENO) == -1)
+					perror("dup2 input pipe");
+				close_fd(input_fd);
 			}
 			if (is_next_pipe
 				|| (current->input == ERROR && current->output == ERROR
@@ -157,7 +175,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				&& current->builtin_kind == NONE)
 			{
 				execve(current->cmd->cmd_path, current->cmd->args_execve, minishell->exec.envp);
-				perror("execve");
+				perror("minishell: execve");
 			}
 			else if (current->builtin_kind == IS_ECHO
 				|| current->builtin_kind == PWD
@@ -172,12 +190,15 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		}
 		if (is_next_pipe)
 		{
-			close_fd(input_fd);
+			if (input_fd != 0)
+				close_fd(input_fd);
 			input_fd = pipefd[0];
 			close_fd(pipefd[1]);
+			// close_fd(pipefd[0]);
+			printf("PARENT: new input_fd = %d\n", pipefd[0]);
 		}
-		else if (at_least_one_pipe)
-			close_fd(pipefd[0]);
+		// else if (at_least_one_pipe)
+		// 	close_fd(pipefd[0]);
 		
 		if (minishell->prompt)
 		{
@@ -194,7 +215,6 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		close_fds_pipe(current);
 		current = current->next;
 	}
-
 	get_exit_status(minishell);
 	ft_printf_fd(2, "--------------------------------------------\n");
 }

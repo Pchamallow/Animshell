@@ -6,32 +6,34 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 16:10:11 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/14 13:01:07 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-dst = src only ?
-examples :
--------nnnnnn = true
------nnnannnnn = false
-*/
-bool	only_str(char *dst, char *src)
+int	echo_skip_options(char *str)
 {
 	int	i;
+	int	option;
 
 	i = 0;
-	while (dst[i])
+	option = 0;
+	if (!ft_strcmp(str, "-n"))
+		return (1);
+	if (str[i] && str[i] == '-')
 	{
-		if (dst[i] != src[0] && dst[i] != src[1])
-			return (false);
 		i++;
+		while (str[i] && str[i] == 'n')
+		{
+			option++;
+			i++;
+		}
 	}
-	return (true);
+	if (option)
+		return (1);
+	return (0);
 }
-
 
 /*
 Content print by echo before the prompt
@@ -50,11 +52,11 @@ void	echo_content(t_minishell *minishell, t_token *args)
 	int		i;
 	int		is_content;
 
-	i = 0;
+	i = minishell->exec.index_prev_pipe;
 	is_content = 0;
 	result = ft_strdup("");
 	while ((args->type == ONE_SPACE
-		|| only_str(args->value, "-n")) && args && args->next)
+		|| echo_skip_options(args->value)) && args && args->next)
 	{
 		args = args->next;
 		i++;
@@ -129,6 +131,56 @@ void	print_no_quotes(char *str)
 	}
 }
 
+void	echo_args(t_minishell *minishell, t_token *args)
+{
+	int	i;
+
+	i = minishell->exec.index_prev_pipe;
+	while (args)
+	{
+		if (args->type == PIPE)
+			break ;
+		else if (args->type > REDIRECTION)
+			ft_printf_fd(1, " ");
+		else if (args->type < REDIRECTION
+			&& !args->file_input && !args->file_output)
+			ft_printf_fd(1, "%s", args->value);
+		args = args->next;
+		i++;
+	}
+}
+
+int	ft_iswhitespaces(char c)
+{
+	if ((c >= 8 && c <= 13) || c == 32)
+		return (1);
+	return (0);
+}
+
+int	echo_args_whitespaces(t_token *args)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	// if (!args)
+	// 	return (0);
+	while (args)
+	{
+		j = 0;
+		while (args->value[j])
+		{
+			if (!ft_iswhitespaces(args->value[j]))
+				return (0);
+			j++;
+		}
+		args = args->next;
+		i++;
+	}
+	return (1);
+}
+
 // ECHO ****************
 /*- print a given string
 conditions
@@ -142,31 +194,16 @@ conditions
 // *********************
 int echo(t_minishell *minishell, t_pipe *pipe)
 {
-	t_token *args;
-	int		i;
-	int		len;
+	t_token	*args;
 
-	i = 0;
 	args = NULL;
-	if (pipe->cmd->next)
-		args = pipe->cmd->next;
-	else
-	{
-		ft_printf_fd(1, "\n");
-		return (0);
-	}
 	if (minishell->builtin.echo.for_prompt == true)
 		return (0);
-	while (args && (minishell->exec.index_pipe == 0
-		|| i < minishell->exec.index_pipe))
+	if (pipe->cmd->next)
 	{
-		len = ft_strlen(args->value);
-		if (args->type > REDIRECTION)
-			break;
-		else
-			ft_printf_fd(1, "%s", args->value);
-		args = args->next;
-		i++;
+		args = pipe->cmd->next;
+		if (!echo_args_whitespaces(args))
+			echo_args(minishell, args);
 	}
 	ft_printf_fd(1, "\n");
 	return (0);

@@ -55,3 +55,5 @@ echo -n coucou
 /home/pswirgie/documents/Minishell
 ~/documents/Minishell
 
+< infile << a cat < infile2 << b -e | > outfile4 wc -l
+-> probleme dup2

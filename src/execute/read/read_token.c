@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 17:50:52 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/14 11:40:41 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 	i = minishell->exec.index_prev_pipe;
 	token = minishell->exec.last_pipe;
 	nb_cmd_args = nb_args(token);
-	while (token && i <= minishell->exec.index_pipe)
+	while (token && (minishell->exec.index_pipe == 0 || i <= minishell->exec.index_pipe))
 	{
 		if (token->type == PIPE)
 		{
