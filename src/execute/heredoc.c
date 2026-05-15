@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/06 16:22:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 13:01:15 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,29 +59,30 @@ delimiter
 not expand
 */
 // CTRL + D = error
-int	heredoc(t_minishell *minishell, t_token *token)
+int	heredoc(t_minishell *minishell, t_token *token, int fd)
 {
 	pid_t	pid;
 	int		pipefd[2];
 
-	close_fd(minishell->here_doc->fd);
+	close_fd(&minishell->here_doc->fd);
 	minishell->here_doc->fd = -1;
 	
 	pipe(pipefd);
 	pid = fork();
 	if (pid == 0)
 	{
+		close_fd(&fd);
 		heredoc_lines(minishell, token, pipefd[1]);
-		close_fd(pipefd[0]);
-		close_fd(pipefd[1]);
+		close_fd(&pipefd[0]);
+		close_fd(&pipefd[1]);
 		free_all(minishell);
 		exit (0);
 	}
 	else
 	{
-		close_fd(minishell->here_doc->fd);
+		close_fd(&minishell->here_doc->fd);
 		minishell->here_doc->fd = pipefd[0];
-		close_fd(pipefd[1]);
+		close_fd(&pipefd[1]);
 	}
 	waitpid(pid, NULL, 0);
 	// while(wait(NULL) > 0);

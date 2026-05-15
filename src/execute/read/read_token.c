@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 17:50:52 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 13:00:28 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 	{
 		if (pipe->input == IS_HEREDOC)
 		{
-			close_fd(minishell->here_doc->fd);
+			close_fd(&minishell->here_doc->fd);
 			minishell->here_doc->fd = -1;
 		}
 		pipe->input = ERROR;
@@ -285,13 +285,13 @@ Pipe :
 -> ouput pipe : output to next pipe
 
 */
-int read_tokens(t_minishell *minishell, t_pipe *pipe)
+int read_tokens(t_minishell *minishell, t_pipe *pipe, int fd)
 {
 	t_token *token;
 	int		index_next_pipe;
 
 	token = minishell->exec.last_pipe;
-	if (find_input_output(minishell, pipe) || init_cmd(minishell, pipe))
+	if (find_input_output(minishell, pipe, fd) || init_cmd(minishell, pipe))
 	{
 		minishell->exec.index_prev_pipe = minishell->exec.index_pipe;
 		index_next_pipe = next_pipe(minishell, token);

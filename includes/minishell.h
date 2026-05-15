@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 16:24:36 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 13:00:59 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,15 +169,15 @@ void	init_pipe(t_minishell *minishell);
 /************************************************************* execute */
 int		execute(t_minishell *minishell, char **envp);
 void	get_paths_for_cmd(t_minishell *minishell);
-int		read_tokens(t_minishell *minishell, t_pipe *pipe);
+int		read_tokens(t_minishell *minishell, t_pipe *pipe, int fd);
 int		nb_args(t_token *token);
-int		find_input_output(t_minishell *minishell, t_pipe *pipe);
+int		find_input_output(t_minishell *minishell, t_pipe *pipe, int fd);
 int		path_cmd(t_minishell *minishell, t_token *token);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
 // char	*is_path(t_minishell *minishell, char **envp);
 void	is_built_in(t_pipe *the_pipe, t_token *token);
 // int		heredoc(t_minishell *minishell, t_pipe *pipe, t_token *token);
-int	heredoc(t_minishell *minishell, t_token *token);
+int	heredoc(t_minishell *minishell, t_token *token, int fd);
 int		nb_pipes(t_token *first);
 
 /************************************************************ built-in */
@@ -231,7 +231,7 @@ void	free_envp(t_minishell *minishell);
 /*************************************************************** utils */
 int		len_double(char **tab);
 int		len_cmd_no_endspace(char *str);
-void	close_fd(int fd);
+void	close_fd(int *fd);
 void	close_fds_pipe(t_pipe *pipe);
 int		is_sign(char c);
 int		strv_dup(t_minishell *minishell, char ***dst, char **src);
