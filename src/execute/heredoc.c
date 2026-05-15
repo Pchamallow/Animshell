@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/15 14:34:33 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/15 15:04:51 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,30 +68,31 @@ delimiter
 not expand
 */
 // CTRL + D = error
-int	heredoc(t_minishell *minishell, t_token *token)
+int	heredoc(t_minishell *minishell, t_token *token, int fd)
 {
 	pid_t	pid;
 	int		pipefd[2];
 	int		return_value;
 
-	close_fd(minishell->here_doc->fd);
+	close_fd(&minishell->here_doc->fd);
 	minishell->here_doc->fd = -1;
 	
 	pipe(pipefd);
 	pid = fork();
 	if (pid == 0)
 	{
+		close_fd(&fd);
 		return_value = heredoc_lines(minishell, token, pipefd[1]);
-		close_fd(pipefd[0]);
-		close_fd(pipefd[1]);
+		close_fd(&pipefd[0]);
+		close_fd(&pipefd[1]);
 		free_all(minishell);
 		exit (return_value);
 	}
 	else
 	{
-		close_fd(minishell->here_doc->fd);
+		close_fd(&minishell->here_doc->fd);
 		minishell->here_doc->fd = pipefd[0];
-		close_fd(pipefd[1]);
+		close_fd(&pipefd[1]);
 	}
 	waitpid(pid, &return_value, 0);
 	if (WIFEXITED(return_value))
@@ -99,3 +100,4 @@ int	heredoc(t_minishell *minishell, t_token *token)
 	// while(wait(NULL) > 0);
 	return (0);
 }
+

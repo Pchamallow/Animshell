@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/07 11:28:57 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 10:28:40 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,13 @@ void	close_fds_pipe(t_pipe *pipe)
 		// printf("---------- already closed infile\n");
 }
 
-void	close_fd(int fd)
+void	close_fd(int *fd)
 {
-	if (fd && fd >= 0)
-		close(fd);
+	if (*fd && *fd >= 0)
+	{
+		close(*fd);
+		*fd = -1;
+	}
 }
 
 int	len_double(char **tab)
