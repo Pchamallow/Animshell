@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/15 13:10:44 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 15:04:51 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,3 +88,4 @@ int	heredoc(t_minishell *minishell, t_token *token, int fd)
 	// while(wait(NULL) > 0);
 	return (0);
 }
+
