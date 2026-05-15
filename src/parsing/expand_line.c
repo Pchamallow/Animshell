@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/13 12:36:59 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/13 17:53:33 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ char	*expand_line(char *line, char **envp, t_minishell *minishell)
 		free(line);
 		return (NULL);
 	}
-	ft_printf_fd(1, "---------------EXPAND--------------\n");
+	// ft_printf_fd(1, "---------------EXPAND--------------\n");
 	expand.newline = ft_calloc(expand.count + 1, sizeof(char));
 	if (!expand.newline)
 		error_malloc(line, "malloc error in minishell expand line");
@@ -128,7 +128,7 @@ char	*expand_line(char *line, char **envp, t_minishell *minishell)
 	if (find_env_var(expand.newline,
 			ft_strlen(expand.newline), &expand.quote) != -1)
 		expand.newline = expand_line(expand.newline, envp, minishell);
-	ft_printf_fd(1, "EXPAND LINE:\n**%s**\n", expand.newline);
-	ft_printf_fd(1, "----------------------------------\n");
+	// ft_printf_fd(1, "EXPAND LINE:\n**%s**\n", expand.newline);
+	// ft_printf_fd(1, "----------------------------------\n");
 	return (expand.newline);
 }

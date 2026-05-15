@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 14:26:02 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 17:00:09 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/13 17:52:29 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,5 @@ void	is_exit(t_minishell *minishell, t_pipe *pipe)
 	}
 	if (!minishell->exec.error)
 		minishell->exec.error = 1;
-	printf("error = %d\n", minishell->exec.error);//test
+	// printf("error = %d\n", minishell->exec.error);//test
 }

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 17:03:54 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 12:59:55 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ so we close pipefd[1] == writing
 */
 void	exec_cmds_pipe(t_minishell *minishell)
 {
+	char *str[] = {"ERROR", "TERMINAL", "IS_FILE", "IS_HEREDOC", "IS_PIPE"};
 	t_pipe *current;
 	pid_t	pid;
 	int		pipefd[2];
@@ -43,14 +44,14 @@ void	exec_cmds_pipe(t_minishell *minishell)
 	ignore_signal();
 	current = minishell->exec.pipe_lst;
 	init_array_built_in(array_built_in);
-	input_fd = 0;
+	input_fd = -1;
 	at_least_one_pipe = 0;
 	
 	while (current)
 	{
 		minishell->exec.error = 0;
 		
-		if (read_tokens(minishell, current) != -1)
+		if (read_tokens(minishell, current, input_fd) != -1)
 		{
 			if (current->cmd)
 				init_args_execve(minishell, current);
@@ -96,9 +97,13 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		if (pid == 0)
 		{
 			reset_signal_to_default();
-			printf("current->value = %s\n", current->cmd->value);
-			printf("current->input = %d\n", current->input);
-			printf("current->output = %d\n", current->output);
+			printf("CHILD ----------------------------------\n");
+			if (current->cmd)
+				printf("current->value = %s\n", current->cmd->value);
+			printf("current->input = %s\n", str[current->input]);
+			printf("current->output = %s\n", str[current->output]);
+			printf("input_fd = %d\n", input_fd);
+			printf("pipefd[1] open = %d\n", pipefd[1]);
 
 			/* INPUT               */
 			if (current->input == IS_FILE && current->output == IS_FILE)
@@ -120,37 +125,45 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			{
 				if (dup2(input_fd, STDIN_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
-				close_fd(input_fd);
+				close_fd(&input_fd);
 			}
-
+			
 			else if (current->input == IS_HEREDOC)
 			{
 				if (dup2(minishell->here_doc->fd, STDIN_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
-				close_fd(minishell->here_doc->fd);
+				close_fd(&minishell->here_doc->fd);
 			}
-
+			
+			close_fd(&input_fd);
+			
+			printf("input_fd closed = %d\n", input_fd);
+			
 			/* OUTPUT                          */
 			if (current->output == IS_FILE && already_output == 0)
 			{
 				if (dup2(current->outfile->fd, STDOUT_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
-				close_fd(current->outfile->fd);
+				close_fd(&current->outfile->fd);
 			}
 			else if (current->output == IS_PIPE
 				&& already_output == 0)
 			{
 				if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 					strerror_free_structure(minishell, "dup2", 2);
+				close_fd(&pipefd[1]);
 			}
-			if (is_next_pipe
-				|| (current->input == ERROR && current->output == ERROR
-				&& is_next_pipe))
+			printf("pipefd[0] open = %d\n", pipefd[0]);
+			printf("pipefd[1] open = %d\n", pipefd[1]);
+			if (current->next || at_least_one_pipe)
 			{
-				close_fd(pipefd[0]);
-				close_fd(pipefd[1]);
-			}		
-
+				close_fd(&pipefd[0]);
+				close_fd(&pipefd[1]);
+				printf("pipefd[0] closed = %d\n", pipefd[0]);
+				printf("pipefd[1] closed = %d\n", pipefd[1]);
+			}
+			printf("pipefd[1] = %d\n", pipefd[1]);
+			
 			close_fds_pipe(current);
 
 			if (current->is_cmd && !current->error
@@ -166,18 +179,28 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				array_built_in[current->builtin_kind](minishell, current);
 			
 			free_all(minishell);
-			printf("error child = %d\n", minishell->exec.error);//test
 			exit(minishell->exec.error);
 			
 		}
-		if (is_next_pipe)
+		printf("PARENT -----------------------------------\n");
+		printf("input_fd = %d\n", input_fd);
+		
+		close_fd(&input_fd);
+		
+		printf("input_fd closed = %d\n", input_fd);
+		
+		printf("pipefd[0] open = %d\n", pipefd[0]);
+		printf("pipefd[1] open = %d\n", pipefd[1]);
+		printf("at_least_one_pipe %d, %p\n", at_least_one_pipe, current->next);
+		if (current->next || at_least_one_pipe)
 		{
-			close_fd(input_fd);
+			close_fd(&input_fd);
 			input_fd = pipefd[0];
-			close_fd(pipefd[1]);
+			pipefd[0] = -1;
+			close_fd(&pipefd[1]);
+			printf("pipefd[1] closed ? = %d\n", pipefd[1]);
+			printf("input_fd = pipefd[0] = %d\n", input_fd);
 		}
-		else if (at_least_one_pipe)
-			close_fd(pipefd[0]);
 		
 		if (minishell->prompt)
 		{
@@ -187,14 +210,12 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		
 		if (minishell->here_doc->fd != -1)
 		{
-			close_fd(minishell->here_doc->fd);
+			close_fd(&minishell->here_doc->fd);
 			minishell->here_doc->fd = -1;
 		}
-		
 		close_fds_pipe(current);
 		current = current->next;
 	}
-
 	get_exit_status(minishell);
 	ft_printf_fd(2, "--------------------------------------------\n");
 }
