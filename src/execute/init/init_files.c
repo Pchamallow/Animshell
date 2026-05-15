@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 16:11:32 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 14:27:52 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,9 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 			if (pipe->input != ERROR)
 				pipe->input = IS_HEREDOC;
 		}
+		//test ctrl C dans heredoc:
+		if (minishell->exec.error == 130)
+			break ;
 		
 		token = token->next;
 		i++;

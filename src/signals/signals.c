@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 14:37:53 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/14 23:01:02 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/15 12:58:10 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	signal_handler(int signal)
 		rl_replace_line("",0);
 		rl_on_new_line();
 		rl_redisplay();
-		write(1, "\nminipouet$ ", 12);
+		write(1, "\nminishell$ ", 12);
 	}
 }
 
@@ -31,11 +31,8 @@ void	signal_handler_heredoc(int signal)
 	g_sig_value = signal;
 	if (signal == SIGINT)
 	{
-		write(1, "^C\n", 3);
-		rl_replace_line("",0);
-		rl_on_new_line();
-		rl_redisplay();
-		exit(0);
+		write(1, "\n", 1);
+		close(STDIN_FILENO);
 	}
 }
 
@@ -46,18 +43,20 @@ void	check_signal_value(t_minishell *minishell)
 	g_sig_value = 0;
 }
 
-void	check_signal_value_heredoc(t_minishell *minishell)
+int	check_signal_heredoc(char *str, int signal)
 {
 	if (g_sig_value == SIGINT)
 	{
-		minishell->exec.error = 130;
-		/*write(1, "^C\n\n\n", 3);*/
-		/*rl_replace_line("",0);*/
-		/*rl_on_new_line();*/
-		/*rl_redisplay();*/
+		g_sig_value = 0;
+		return (130);
 	}
-	
-	g_sig_value = 0;
+	else
+	{
+		ft_printf_fd(2, "minishell: warning: ");
+		ft_printf_fd(2, "here-document delimited by end-of-file ");
+		ft_printf_fd(2, "(wanted '%s')\n", str);
+		return (signal);
+	}
 }
 
 void	set_signal_interactive(void)
@@ -88,6 +87,7 @@ void	set_signal_heredoc(void)
 	ft_bzero(&sa_sigquit, sizeof(struct sigaction));
 	//fonction a executer en cas de reception d'un signal:
 	sa_sigint.sa_handler = &signal_handler_heredoc;
+	/*sa_sigint.sa_handler = &signal_handler;*/
 	sa_sigquit.sa_handler = SIG_IGN;
 	//flags (utile ?) :
 	sa_sigint.sa_flags = SA_RESTART;

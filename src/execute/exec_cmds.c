@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 22:43:51 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/15 14:30:12 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		}
 		else
 			current->error = 1;
-
+		//test ctrl C dans heredoc:
+		if (minishell->exec.error == 130)
+			break ;
 		if (current->next)
 		{
 			pipe(pipefd);

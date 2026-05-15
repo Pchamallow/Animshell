@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/14 22:58:42 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/15 14:34:33 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,21 @@ while line != delimiter
 - is a pipe = new line and print content to pipe
 - no pipe = new line
 */
-void	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
+int	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 {
 	char	*line;
+	int		signal;
 
+	signal = 0;
 	set_signal_heredoc();
 	while (1)
 	{
 		line = readline("> ");
-		//ctrl D:
 		if (!line)
 		{
-			ft_printf_fd(2, "minishell: warning: ");
-			ft_printf_fd(2, "here-document delimited by end-of-file ");
-			ft_printf_fd(2, "(wanted '%s')\n", token->value);
-			return ;
+			signal = check_signal_heredoc(token->value, signal);
+			break;
 		}
-		//ctrl C
-		if (g_sig_value == SIGINT)
-			return ;
 		if (!ft_strcmp(line, token->value))
 			break;
 		// si quotes pas de expand !!!!!
@@ -46,6 +42,7 @@ void	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 		ft_printf_fd(fd, "%s\n", line);
 		free(line);
 	}
+	return (signal);
 }
 
 /*
@@ -75,6 +72,7 @@ int	heredoc(t_minishell *minishell, t_token *token)
 {
 	pid_t	pid;
 	int		pipefd[2];
+	int		return_value;
 
 	close_fd(minishell->here_doc->fd);
 	minishell->here_doc->fd = -1;
@@ -83,11 +81,11 @@ int	heredoc(t_minishell *minishell, t_token *token)
 	pid = fork();
 	if (pid == 0)
 	{
-		heredoc_lines(minishell, token, pipefd[1]);
+		return_value = heredoc_lines(minishell, token, pipefd[1]);
 		close_fd(pipefd[0]);
 		close_fd(pipefd[1]);
 		free_all(minishell);
-		exit (0);
+		exit (return_value);
 	}
 	else
 	{
@@ -95,8 +93,9 @@ int	heredoc(t_minishell *minishell, t_token *token)
 		minishell->here_doc->fd = pipefd[0];
 		close_fd(pipefd[1]);
 	}
-	waitpid(pid, NULL, 0);
-	check_signal_value_heredoc(minishell);//ou check_signal_value tout court ?
+	waitpid(pid, &return_value, 0);
+	if (WIFEXITED(return_value))
+		minishell->exec.error = WEXITSTATUS(return_value);
 	// while(wait(NULL) > 0);
 	return (0);
 }

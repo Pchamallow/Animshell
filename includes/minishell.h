@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/14 22:49:18 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/15 12:52:14 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -309,7 +309,7 @@ void	set_signal_heredoc(void);
 void	reset_signal_to_default(void);
 void	ignore_signal(void);
 void	check_signal_value(t_minishell *minishell);
-void	check_signal_value_heredoc(t_minishell *minishell);
+int		check_signal_heredoc(char *str, int signal);
 void	get_exit_status(t_minishell *minishell);
 /********************************************* tests print a supprimer */
 void	print_tokens_types(t_token *token);// pour tester
