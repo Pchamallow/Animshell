@@ -120,6 +120,9 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe, int fd)
 			if (pipe->input != ERROR)
 				pipe->input = IS_HEREDOC;
 		}
+		//test ctrl C dans heredoc:
+		if (minishell->exec.error == 130)
+			break ;
 		
 		token = token->next;
 		i++;

@@ -58,7 +58,9 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		}
 		else
 			current->error = 1;
-
+		//test ctrl C dans heredoc:
+		if (minishell->exec.error == 130)
+			break ;
 		if (current->next)
 		{
 			pipe(pipefd);

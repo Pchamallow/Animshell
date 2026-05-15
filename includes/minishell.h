@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/15 13:00:59 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 12:52:14 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 # define ERROR_MSG(msg) BLUE msg RESET //
 
 /***********************************************************************/
+extern volatile sig_atomic_t	g_sig_value;
+
 typedef enum e_token_type
 {
 	WORD,
@@ -303,9 +305,11 @@ void	ft_token_delone(t_token *lst, void (*del)(void *));
 void	ft_token_lstclear(t_token **head);
 /********************************************************** signals */
 void	set_signal_interactive(void);
+void	set_signal_heredoc(void);
 void	reset_signal_to_default(void);
 void	ignore_signal(void);
 void	check_signal_value(t_minishell *minishell);
+int		check_signal_heredoc(char *str, int signal);
 void	get_exit_status(t_minishell *minishell);
 /********************************************* tests print a supprimer */
 void	print_tokens_types(t_token *token);// pour tester

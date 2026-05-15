@@ -17,13 +17,21 @@ while line != delimiter
 - is a pipe = new line and print content to pipe
 - no pipe = new line
 */
-void	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
+int	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 {
 	char	*line;
+	int		signal;
 
+	signal = 0;
+	set_signal_heredoc();
 	while (1)
 	{
 		line = readline("> ");
+		if (!line)
+		{
+			signal = check_signal_heredoc(token->value, signal);
+			break;
+		}
 		if (!ft_strcmp(line, token->value))
 			break;
 		// si quotes pas de expand !!!!!
@@ -34,6 +42,7 @@ void	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 		ft_printf_fd(fd, "%s\n", line);
 		free(line);
 	}
+	return (signal);
 }
 
 /*
@@ -63,6 +72,7 @@ int	heredoc(t_minishell *minishell, t_token *token, int fd)
 {
 	pid_t	pid;
 	int		pipefd[2];
+	int		return_value;
 
 	close_fd(&minishell->here_doc->fd);
 	minishell->here_doc->fd = -1;
@@ -72,11 +82,11 @@ int	heredoc(t_minishell *minishell, t_token *token, int fd)
 	if (pid == 0)
 	{
 		close_fd(&fd);
-		heredoc_lines(minishell, token, pipefd[1]);
+		return_value = heredoc_lines(minishell, token, pipefd[1]);
 		close_fd(&pipefd[0]);
 		close_fd(&pipefd[1]);
 		free_all(minishell);
-		exit (0);
+		exit (return_value);
 	}
 	else
 	{
@@ -84,7 +94,9 @@ int	heredoc(t_minishell *minishell, t_token *token, int fd)
 		minishell->here_doc->fd = pipefd[0];
 		close_fd(&pipefd[1]);
 	}
-	waitpid(pid, NULL, 0);
+	waitpid(pid, &return_value, 0);
+	if (WIFEXITED(return_value))
+		minishell->exec.error = WEXITSTATUS(return_value);
 	// while(wait(NULL) > 0);
 	return (0);
 }
