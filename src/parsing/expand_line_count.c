@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 22:10:40 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/12 22:55:55 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/15 16:53:31 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,12 @@ int	add_var_value_len(char **envp, char *line, int count, t_quote_type quote)
 	if (j != -1 && envp[j] != NULL)
 	{
 		count += (ft_strlen(envp[j]) - (wd_len + 1));
+		/*if (quote == NO)*/
 		if (quote_found(envp[j]) && quote == NO)
 			count += (2 * count_words(envp[j]));
 	}
 	count -= (wd_len + 1);
+	/*printf("count = %d\n", count);*/
 	return (count);
 }
 

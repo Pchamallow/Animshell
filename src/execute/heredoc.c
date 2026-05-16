@@ -26,6 +26,7 @@ int	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 	set_signal_heredoc();
 	while (1)
 	{
+		/*printf("quotes = %d\n", token->quote);*/
 		line = readline("> ");
 		if (!line)
 		{
@@ -34,11 +35,15 @@ int	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 		}
 		if (!ft_strcmp(line, token->value))
 			break;
+		}
 		// si quotes pas de expand !!!!!
-		if (ft_strchr(line, '"') == NULL
-			&& ft_strchr(line, '\'') == NULL
-			&& token->quote == NO)
+		/*if (ft_strchr(line, '"') == NULL*/
+			/*&& ft_strchr(line, '\'') == NULL*/
+			/*&& token->quote == NO)*/
+		if (token->quote != SINGLE)
 			line = expand_line(line, minishell->exec.envp, minishell);
+		if (!ft_strcmp(line, token->value))
+			break;
 		ft_printf_fd(fd, "%s\n", line);
 		free(line);
 	}
@@ -99,3 +104,4 @@ int	heredoc(t_minishell *minishell, t_token *token, int fd)
 		minishell->exec.error = WEXITSTATUS(return_value);
 	return (0);
 }
+

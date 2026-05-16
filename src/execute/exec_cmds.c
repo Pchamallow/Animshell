@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/15 15:37:39 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 18:53:57 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,13 @@ so we close pipefd[1] == writing
 */
 void	exec_cmds_pipe(t_minishell *minishell)
 {
+	/*char *str[] = {"ERROR", "TERMINAL", "IS_FILE", "IS_HEREDOC", "IS_PIPE"};*/
 	t_pipe *current;
 	pid_t	pid;
 	int		pipefd[2];
 	int		already_output;
 	int		input_fd;
-	int		is_next_pipe;
+	/*int		is_next_pipe;*/
 	int		at_least_one_pipe;
 	int		(*array_built_in[8])(t_minishell *, t_pipe *);
 	
@@ -62,11 +63,11 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		if (current->next)
 		{
 			pipe(pipefd);
-			is_next_pipe = 1;
+			/*is_next_pipe = 1;*/
 			at_least_one_pipe = 1;
 		}
 		else 
-			is_next_pipe = 0;
+			/*is_next_pipe = 0;*/
 
 		if (current->builtin_kind == IS_ECHO)
 			echo_for_prompt(minishell, current);
@@ -183,7 +184,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		current = current->next;
 	}
 	get_exit_status(minishell);
-	ft_printf_fd(2, "--------------------------------------------\n");
+	/*ft_printf_fd(2, "--------------------------------------------\n");*/
 }
 /*
 Print for tests

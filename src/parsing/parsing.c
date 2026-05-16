@@ -60,7 +60,7 @@ int	parse_tokens(char *line, t_token **token_list, t_minishell *minishell)
 			token = case_pipe(token, &cmd_found, &error, token_list);
 	}
 	// ft_printf_fd(1, "token list after parsing:\n");//pour test
-	print_tokens_types(*token_list);//pour test
+// 	print_tokens_types(*token_list);//pour test
 	if (error)
 	{
 		free_line_and_token_list(line, token_list);
