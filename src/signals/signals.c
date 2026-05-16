@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 14:37:53 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/13 17:07:32 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 12:58:10 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,37 @@ void	signal_handler(int signal)
 	}
 }
 
+void	signal_handler_heredoc(int signal)
+{
+	g_sig_value = signal;
+	if (signal == SIGINT)
+	{
+		write(1, "\n", 1);
+		close(STDIN_FILENO);
+	}
+}
+
 void	check_signal_value(t_minishell *minishell)
 {
 	if (g_sig_value == SIGINT)
 		minishell->exec.error = 130;
 	g_sig_value = 0;
+}
+
+int	check_signal_heredoc(char *str, int signal)
+{
+	if (g_sig_value == SIGINT)
+	{
+		g_sig_value = 0;
+		return (130);
+	}
+	else
+	{
+		ft_printf_fd(2, "minishell: warning: ");
+		ft_printf_fd(2, "here-document delimited by end-of-file ");
+		ft_printf_fd(2, "(wanted '%s')\n", str);
+		return (signal);
+	}
 }
 
 void	set_signal_interactive(void)
@@ -43,6 +69,25 @@ void	set_signal_interactive(void)
 	ft_bzero(&sa_sigquit, sizeof(struct sigaction));
 	//fonction a executer en cas de reception d'un signal:
 	sa_sigint.sa_handler = &signal_handler;
+	sa_sigquit.sa_handler = SIG_IGN;
+	//flags (utile ?) :
+	sa_sigint.sa_flags = SA_RESTART;
+	//sigaction avec les signaux a intercepter:
+	sigaction(SIGINT, &sa_sigint, NULL);
+	sigaction(SIGQUIT, &sa_sigquit, NULL);
+}
+
+void	set_signal_heredoc(void)
+{
+	struct sigaction	sa_sigint;
+	struct sigaction	sa_sigquit;
+
+	//on initialise toute la struct à 0:
+	ft_bzero(&sa_sigint, sizeof(struct sigaction));
+	ft_bzero(&sa_sigquit, sizeof(struct sigaction));
+	//fonction a executer en cas de reception d'un signal:
+	sa_sigint.sa_handler = &signal_handler_heredoc;
+	/*sa_sigint.sa_handler = &signal_handler;*/
 	sa_sigquit.sa_handler = SIG_IGN;
 	//flags (utile ?) :
 	sa_sigint.sa_flags = SA_RESTART;

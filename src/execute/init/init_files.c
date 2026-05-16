@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/14 11:40:05 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 13:01:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ read_files
 - if we have a pipe, input = pipe, else if we have infile 
 input = file
 */
-int	find_input_output(t_minishell *minishell, t_pipe *pipe)
+int	find_input_output(t_minishell *minishell, t_pipe *pipe, int fd)
 {
 	t_token *token;
 	int		i;
@@ -81,7 +81,7 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 	if (i > 0)
 		pipe->input = IS_PIPE;
 	token = minishell->exec.last_pipe;
-	while (token && (minishell->exec.index_pipe == 0 || i <= minishell->exec.index_pipe))
+	while (token && i <= minishell->exec.index_pipe)
 	{
 		if (token->type == IS_INPUT && token->next != NULL)
 			token->next->file_input = 1;
@@ -93,7 +93,7 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 			&& (init_infile(minishell, pipe, token) == 0))
 		{
 			if (pipe->input == IS_FILE)
-				close_fd(pipe->infile->fd);
+				close_fd(&pipe->infile->fd);
 			pipe->infile = token;
 			pipe->input = IS_FILE;
 		}
@@ -107,25 +107,28 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe)
 			&& pipe->output != ERROR)
 		{
 			if (pipe->output == IS_FILE)
-				close_fd(pipe->outfile->fd);
+				close_fd(&pipe->outfile->fd);
 			pipe->outfile = token;
 			pipe->output = IS_FILE;
 		}
 		else if (token->type == IS_DELIMITER)
 		{
 			if (pipe->input == IS_FILE)
-				close_fd(pipe->infile->fd);
-			heredoc(minishell, token);
+				close_fd(&pipe->infile->fd);
+			heredoc(minishell, token, fd);
 			heredoc_pipe_to_free = 1;
 			if (pipe->input != ERROR)
 				pipe->input = IS_HEREDOC;
 		}
+		//test ctrl C dans heredoc:
+		if (minishell->exec.error == 130)
+			break ;
 		
 		token = token->next;
 		i++;
 	}
 	if (heredoc_pipe_to_free && pipe->input != IS_HEREDOC)
-		close_fd(minishell->here_doc->fd);
+		close_fd(&minishell->here_doc->fd);
 	if (pipe->input == ERROR || pipe->output == ERROR)
 		return (1);
 	return (0);

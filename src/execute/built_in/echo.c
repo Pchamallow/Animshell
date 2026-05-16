@@ -6,31 +6,33 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/14 13:01:07 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 17:36:39 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	echo_skip_options(char *str)
+/*
+** options	=	-n	-nnnnnnnnn 
+** not		=	-	n
+*/
+int	echo_is_option(char *str)
 {
-	int	i;
-	int	option;
+	bool	option;
+	int		i;
 
 	i = 0;
-	option = 0;
-	if (!ft_strcmp(str, "-n"))
-		return (1);
-	if (str[i] && str[i] == '-')
+	option = false;
+	if (str[i] == '-')
 	{
 		i++;
 		while (str[i] && str[i] == 'n')
 		{
-			option++;
+			option = true;
 			i++;
 		}
 	}
-	if (option)
+	if (!str[i] && option == true)
 		return (1);
 	return (0);
 }
@@ -52,11 +54,11 @@ void	echo_content(t_minishell *minishell, t_token *args)
 	int		i;
 	int		is_content;
 
-	i = minishell->exec.index_prev_pipe;
+	i = 0;
 	is_content = 0;
 	result = ft_strdup("");
 	while ((args->type == ONE_SPACE
-		|| echo_skip_options(args->value)) && args && args->next)
+		|| echo_is_option(args->value)) && args && args->next)
 	{
 		args = args->next;
 		i++;
@@ -131,52 +133,27 @@ void	print_no_quotes(char *str)
 	}
 }
 
-void	echo_args(t_minishell *minishell, t_token *args)
+int	ft_iswhitespaces(int c)
 {
-	int	i;
-
-	i = minishell->exec.index_prev_pipe;
-	while (args)
-	{
-		if (args->type == PIPE)
-			break ;
-		else if (args->type > REDIRECTION)
-			ft_printf_fd(1, " ");
-		else if (args->type < REDIRECTION
-			&& !args->file_input && !args->file_output)
-			ft_printf_fd(1, "%s", args->value);
-		args = args->next;
-		i++;
-	}
-}
-
-int	ft_iswhitespaces(char c)
-{
-	if ((c >= 8 && c <= 13) || c == 32)
+	if ((c >= 7 && c <= 13) || c == 32)
 		return (1);
 	return (0);
 }
 
-int	echo_args_whitespaces(t_token *args)
+int	echo_args_iswhitespaces(t_token *args)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	j = 0;
-	// if (!args)
-	// 	return (0);
 	while (args)
 	{
-		j = 0;
-		while (args->value[j])
+		while(args->value[i])
 		{
-			if (!ft_iswhitespaces(args->value[j]))
+			if (!ft_iswhitespaces(args->value[i]))
 				return (0);
-			j++;
+			i++;
 		}
 		args = args->next;
-		i++;
 	}
 	return (1);
 }
@@ -194,17 +171,42 @@ conditions
 // *********************
 int echo(t_minishell *minishell, t_pipe *pipe)
 {
-	t_token	*args;
+	t_token *args;
+	bool	is_arg;
 
 	args = NULL;
+	is_arg = false;
 	if (minishell->builtin.echo.for_prompt == true)
 		return (0);
-	if (pipe->cmd->next)
+	if (pipe->cmd->next && pipe->cmd->next->type != PIPE)
 	{
 		args = pipe->cmd->next;
-		if (!echo_args_whitespaces(args))
-			echo_args(minishell, args);
+		if (echo_args_iswhitespaces(args))
+		{
+			ft_printf_fd(1, "\n");
+			return (0);
+		}
+		while (args) // ajouter de skip les spaces
+		{
+			if (args->type == PIPE)
+				return (0);
+			if (args->type == IS_ARG)
+			{
+				if (is_arg == true)
+					ft_printf_fd(1, " ");
+				ft_printf_fd(1, "%s", args->value);
+				is_arg = true;
+			}
+			args = args->next;
+		}
 	}
 	ft_printf_fd(1, "\n");
 	return (0);
 }
+
+
+// skip les infiles
+// si pas utiliser skip les outfiles 
+// faire 1 espace
+
+

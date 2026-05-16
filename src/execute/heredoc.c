@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/06 16:22:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 15:27:00 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,21 @@ while line != delimiter
 - is a pipe = new line and print content to pipe
 - no pipe = new line
 */
-void	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
+int	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 {
 	char	*line;
+	int		signal;
 
+	signal = 0;
+	set_signal_heredoc();
 	while (1)
 	{
 		line = readline("> ");
+		if (!line)
+		{
+			signal = check_signal_heredoc(token->value, signal);
+			break;
+		}
 		if (!ft_strcmp(line, token->value))
 			break;
 		// si quotes pas de expand !!!!!
@@ -34,6 +42,7 @@ void	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 		ft_printf_fd(fd, "%s\n", line);
 		free(line);
 	}
+	return (signal);
 }
 
 /*
@@ -59,31 +68,34 @@ delimiter
 not expand
 */
 // CTRL + D = error
-int	heredoc(t_minishell *minishell, t_token *token)
+int	heredoc(t_minishell *minishell, t_token *token, int fd)
 {
 	pid_t	pid;
 	int		pipefd[2];
+	int		return_value;
 
-	close_fd(minishell->here_doc->fd);
+	close_fd(&minishell->here_doc->fd);
 	minishell->here_doc->fd = -1;
 	
 	pipe(pipefd);
 	pid = fork();
 	if (pid == 0)
 	{
-		heredoc_lines(minishell, token, pipefd[1]);
-		close_fd(pipefd[0]);
-		close_fd(pipefd[1]);
+		close_fd(&fd);
+		return_value = heredoc_lines(minishell, token, pipefd[1]);
+		close_fd(&pipefd[0]);
+		close_fd(&pipefd[1]);
 		free_all(minishell);
-		exit (0);
+		exit (return_value);
 	}
 	else
 	{
-		close_fd(minishell->here_doc->fd);
+		close_fd(&minishell->here_doc->fd);
 		minishell->here_doc->fd = pipefd[0];
-		close_fd(pipefd[1]);
+		close_fd(&pipefd[1]);
 	}
-	waitpid(pid, NULL, 0);
-	// while(wait(NULL) > 0);
+	waitpid(pid, &return_value, 0);
+	if (WIFEXITED(return_value))
+		minishell->exec.error = WEXITSTATUS(return_value);
 	return (0);
 }
