@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/08 22:07:46 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/04/28 23:22:06 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 09:42:45 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	join_next_token(t_token *token, int *error)
 	{
 		*error = 99;
 		ft_printf_fd(2, "minishell: malloc error when joining tokens\n");
-		return;
+		return ;
 	}
 	free(token->value);
 	token->value = new_value;

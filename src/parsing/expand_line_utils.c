@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 22:15:28 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/15 16:10:51 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 09:41:02 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int	get_var_name_len(char *line)
 	wd_len = 0;
 	i = 0;
 	len = ft_strlen(line);
-	while (i + wd_len < len && ft_isalnum(line[i + wd_len])
+	while (i + wd_len < len
+		&& (ft_isalnum(line[i + wd_len]) || line[i + wd_len] == '_')
 		&& line[i + wd_len] != '$')
 		wd_len++;
 	return (wd_len);
@@ -77,10 +78,6 @@ char	chose_quote(const char *str)
 {
 	int	i;
 
-	//cherche si quote dans mot
-	//si oui :
-	//quote = l'autre quote
-	//return quote
 	i = 0;
 	while (str[i] && !is_whitespace(str[i]))
 	{
