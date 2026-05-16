@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 21:18:24 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 17:23:56 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 21:54:33 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,53 @@ void	delete_next(t_token *token)
 	token->next = token->next->next;
 	ft_token_delone(tmp, free);
 	return ;
+}
+
+/*	***********************************************		*/
+/*join_next_token:										*/
+/* - joins the value of the next token					*/
+/*   to the current token value,						*/
+/* - then deletes the next token.						*/
+/* - After that, if next->token->type is WORD,			*/
+/*   the function calls itself to join the next token	*/
+/*	***********************************************		*/
+void	join_next_token(t_token *token, char *line, t_minishell *minishell)
+{
+	char	*new_value;
+
+	new_value = ft_strjoin(token->value, token->next->value);
+	if (!new_value)
+		error_malloc(line, NULL, minishell, "join_next_token");
+	free(token->value);
+	token->value = new_value;
+	delete_next(token);
+	if (token->next && token->next->type == WORD)
+		join_next_token(token, line, minishell);
+}
+
+/*	****************************************		*/
+/* case_pipe:										*/
+/*	- sets @cmd_found to false						*/
+/*	- deletes the following space if there is one	*/
+/*	- checks for syntax errors:						*/
+/*			if PIPE is the first token				*/
+/*			if PIPE is the last token				*/
+/*			or if the next token is a PIPE			*/
+/*				-> returns an error					*/
+/*	****************************************		*/
+t_token	*case_pipe(t_token *token, bool *cmd_found, int *error, t_token **head)
+{
+	*cmd_found = false;
+	if (token->next && token->next->type == ONE_SPACE)
+		delete_next(token);
+	if (token == *head || !token->next || token->next->type == PIPE)
+	{
+		ft_printf_fd(2, "minishell: syntax error after %s\n", token->value);
+		*error = 3;
+		return (token);
+	}
+	token = token->next;
+	return (token);
 }
 
 /*	**********************************************		*/

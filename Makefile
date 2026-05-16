@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/13 11:52:56 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/05/16 19:05:05 by stkloutz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,8 +69,10 @@ SRCS		:= 											\
 			src/parsing/expand_line.c					\
 			src/parsing/expand_line_count.c				\
 			src/parsing/expand_line_utils.c				\
+			src/parsing/expand_line_strlcat_add_quotes.c\
 			src/parsing/ft_token_list.c					\
 			src/parsing/handle_token_types.c			\
+			src/parsing/handle_quote_type.c				\
 			src/parsing/separate_into_tokens.c			\
 			src/parsing/parsing_utils.c					\
 			src/parsing/parsing_errors_free.c			\

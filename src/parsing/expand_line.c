@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 16:25:20 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 18:59:43 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,11 @@ int	replace_var_name(char *line, t_expand *expand,
 	if (j != -1 && minishell->exec.envp[j] != NULL)
 	{
 		if (quote_found(minishell->exec.envp[j]) && expand->quote == NO)
-		/*if (expand->quote == NO)*/
 		{
 			ft_strlcat_add_quotes(expand->newline,
 				minishell->exec.envp[j] + wd_len + 1, expand->count + 1);
 		}
-		else
+		else if (ft_strchr(minishell->exec.envp[j], '='))
 		{
 			ft_strlcat_minishell(expand->newline,
 				minishell->exec.envp[j] + wd_len + 1, expand->count + 1);
@@ -77,8 +76,8 @@ int	replace_var_name(char *line, t_expand *expand,
 
 void	update_line(char *line, t_minishell *minishell, t_expand *expand)
 {
-	int				i;
-	int				len;
+	int	i;
+	int	len;
 
 	i = 0;
 	while (i < (int)ft_strlen(line))
