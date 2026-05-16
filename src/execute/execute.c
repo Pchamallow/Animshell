@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 16:24:02 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/15 23:39:31 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int execute(t_minishell *minishell, char **envp)
 				free(minishell->builtin.pwd.result);
 			rl_clear_history();
 			printf("exit\n");
-			exit (0);
+			exit (minishell->exec.error);
 		}
 		
 		check_signal_value(minishell);
