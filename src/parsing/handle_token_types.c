@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:05:44 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 15:07:33 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 17:17:07 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ void	handle_pipe(char *line, t_token **token_list, int *index,
 	*index = i;
 }
 
-void	handle_redirection(char *line, t_token **token_list,
-		int *index, char angle_bracket, t_minishell *minishell)
+void	handle_redirection(char *line, int *index, char angle_bracket,
+		t_minishell *minishell)
 {
 	int	i;
 	int	start;
@@ -98,7 +98,8 @@ void	handle_redirection(char *line, t_token **token_list,
 		len++;
 		i++;
 	}
-	ft_token_add_back(token_list, ft_token_new(ft_substr(line, start, len),
+	ft_token_add_back(minishell->exec.first_token,
+				ft_token_new(ft_substr(line, start, len),
 				REDIRECTION), line, minishell);
 	i++;
 	*index = i;

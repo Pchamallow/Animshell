@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:14:01 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 14:47:08 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 16:29:39 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ t_token	*ft_token_new(char *str, t_token_type token_type)
 	token = malloc(sizeof (t_token));
 	if (!token)
 	{
-		ft_printf_fd(2, "Error malloc when creating token\n");
 		free(str);
 		return (NULL);
 	}
@@ -53,7 +52,7 @@ void	ft_token_add_back(t_token **head, t_token *newer, char *line,
 	/*{*/
 		/*if (head)*/
 			/*ft_token_lstclear(head);*/
-		error_malloc(line, NULL, minishell, "while creating token list");
+		error_malloc(line, NULL, minishell, "token list creation");
 		/*free(line);*/
 		/*exit(2);*/
 	/*}*/

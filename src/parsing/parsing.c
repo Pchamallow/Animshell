@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 21:18:24 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 14:04:40 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 17:23:56 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,25 +51,20 @@ int	parse_tokens(char *line, t_token **token_list, t_minishell *minishell)
 	while (!error && token)
 	{
 		if (!error && token && token->type == REDIRECTION)
-			token = case_redirection(token, &error);
+			token = case_redirection(token, &error, line, minishell);
 		if (!error && token && token->type == WORD && !cmd_found)
-			token = case_command(token, &cmd_found, &error);
+			token = case_command(token, &cmd_found, line, minishell);
 		if (!error && token && token->type == WORD && cmd_found)
-			token = case_arg(token, &error);
+			token = case_arg(token, line, minishell);
 		if (!error && token && token->type == PIPE)
 			token = case_pipe(token, &cmd_found, &error, token_list);
 	}
-	 ft_printf_fd(1, "token list after parsing:\n");//pour test
-	 print_tokens_types(*token_list);//pour test
+	/*ft_printf_fd(1, "token list after parsing:\n");//pour test*/
+	/*print_tokens_types(*token_list);//pour test*/
 	if (error)
 	{
 		free_line_and_token_list(line, token_list);
 		minishell->exec.error = 2;
-	}
-	if (error == 99)//erreur malloc ft_str_join
-	{
-		rl_clear_history();
-		exit(EXIT_FAILURE);
 	}
 	return (error);
 }

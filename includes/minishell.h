@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/16 15:13:58 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 17:19:14 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,8 +278,8 @@ char	*expand_line(char *line, char **envp, t_minishell *minishell);
 int		handle_quotes(char *line, t_token **token_list, int *index,
 			t_minishell *minishell);
 void	handle_pipe(char *line, t_token **token_list, int *index, t_minishell *minishell);
-void	handle_redirection(char *line, t_token **token_list,
-			int *index, char angle_bracket, t_minishell *minishell);
+void	handle_redirection(char *line, int *index, char angle_bracket,
+			t_minishell *minishell);
 void	handle_words_no_quotes(char *line, t_token **token_list, int *index, t_minishell *minishell);
 void	handle_spaces(char *line, t_token **token_list, int *index, t_minishell *minishell);
 bool	is_whitespace(char c);
@@ -287,10 +287,13 @@ bool	is_separator(char c);
 int		separate_into_tokens(char *line, t_token **token_list,
 			t_minishell *minishell);
 void	delete_next(t_token *token);
-t_token	*case_heredoc(t_token *token, int *error);
-t_token	*case_redirection(t_token *token, int *error);
-t_token	*case_command(t_token *token, bool *cmd_found, int *error);
-t_token	*case_arg(t_token *token, int *error);
+t_token	*case_heredoc(t_token *token, int *error, char *line,
+			t_minishell *minishell);
+t_token	*case_redirection(t_token *token, int *error, char *line,
+			t_minishell *minishell);
+t_token	*case_command(t_token *token, bool *cmd_found, char *line,
+			t_minishell *minishell);
+t_token	*case_arg(t_token *token, char *line, t_minishell *minishell);
 t_token	*case_pipe(t_token *token, bool *cmd_found, int *error, t_token **head);
 int		parse_tokens(char *line, t_token **token_list, t_minishell *minishell);
 /*******************************************************errors parsing */

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 15:16:01 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 16:25:20 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,9 @@ int	replace_exit_status(char *line, t_expand *expand, t_minishell *minishell)
 {
 	char	*exit_str;
 
-	/*(void)exit_status;*/
-	/*exit_str = ft_itoa(minishell->exec.error);*/
-	exit_str = NULL;
+	exit_str = ft_itoa(minishell->exec.error);
 	if (!exit_str)
-	{
-		error_malloc(line, expand->newline, minishell, "expand line");
-	}
+		error_malloc(line, expand->newline, minishell, "expand: exit status");
 	ft_strlcat_minishell(expand->newline, exit_str, expand->count + 1);
 	free(exit_str);
 	return (2);
