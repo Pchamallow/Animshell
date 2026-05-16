@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/15 15:45:37 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 15:11:35 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	separate_into_tokens(char *line, t_token **token_list,
 	{
 		if (line)
 			free(line);
-		return (1);//dans ce cas, le code de retour ne change pas
+		return (1);
 	}
 	i = 0;
 	while (is_whitespace(line[i]))
@@ -91,19 +91,19 @@ int	separate_into_tokens(char *line, t_token **token_list,
 		if (line[i] == '\"' || line[i] == '\'')
 		{
 			if (handle_quotes(line, token_list, &i, minishell) != 0)
-				return (1);//mettre le code retour a 2
+				return (1);
 		}
 		else if (line[i] == '|')
-			handle_pipe(line, token_list, &i);
+			handle_pipe(line, token_list, &i, minishell);
 		else if (line[i] == '>' || line[i] == '<')
-			handle_redirection(line, token_list, &i, line[i]);
+			handle_redirection(line, token_list, &i, line[i], minishell);
 		else if (line[i] && !is_separator(line[i]))
-			handle_words_no_quotes(line, token_list, &i);
-		handle_spaces(line, token_list, &i);
+			handle_words_no_quotes(line, token_list, &i, minishell);
+		handle_spaces(line, token_list, &i, minishell);
 	}
 	//tests : *******
-	/*print_tokens_types(*token_list);*/
-	// print_tokens(*token_list);
+	print_tokens_types(*token_list);
+	print_tokens(*token_list);
 	// **************
 	return (0);
 }

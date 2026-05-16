@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/15 16:52:43 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 15:16:01 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,17 @@ size_t	ft_strlcat_minishell(char *dst, const char *src, size_t size)
 	return (i + j);
 }
 
-int	replace_exit_status(char *line, t_expand *expand, int exit_status)
+int	replace_exit_status(char *line, t_expand *expand, t_minishell *minishell)
 {
 	char	*exit_str;
 
-	exit_str = ft_itoa(exit_status);
+	/*(void)exit_status;*/
+	/*exit_str = ft_itoa(minishell->exec.error);*/
+	exit_str = NULL;
 	if (!exit_str)
-		error_malloc(line, "malloc error in minishell expand line");
+	{
+		error_malloc(line, expand->newline, minishell, "expand line");
+	}
 	ft_strlcat_minishell(expand->newline, exit_str, expand->count + 1);
 	free(exit_str);
 	return (2);
@@ -90,7 +94,7 @@ void	update_line(char *line, t_minishell *minishell, t_expand *expand)
 			i += ft_strlen(line + i);
 		}
 		else if (len == 0 && line[i + 1] == '?')
-			i += replace_exit_status(line, expand, minishell->exec.error);
+			i += replace_exit_status(line, expand, minishell);
 		else if (len == 0 && line[i + 1] != '?')
 			i += replace_var_name(line, expand, minishell, i);
 		else
@@ -121,7 +125,7 @@ char	*expand_line(char *line, char **envp, t_minishell *minishell)
 	/*ft_printf_fd(1, "---------------EXPAND--------------\n");*/
 	expand.newline = ft_calloc(expand.count + 1, sizeof(char));
 	if (!expand.newline)
-		error_malloc(line, "malloc error in minishell expand line");
+		error_malloc(line, NULL, minishell, "expand line");
 	expand.quote = NO;
 	update_line(line, minishell, &expand);
 	free(line);

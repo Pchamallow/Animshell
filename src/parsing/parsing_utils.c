@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/08 22:07:46 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 09:42:45 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 14:04:02 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*	***********************************************		*/
 /*join_next_token:										*/
 /* - joins the value of the next token					*/
-/* - to the current token value,						*/
+/*   to the current token value,						*/
 /* - then deletes the next token.						*/
 /* - After that, if next->token->type is WORD,			*/
 /*   the function calls itself to join the next token	*/
@@ -162,21 +162,21 @@ t_token	*case_command(t_token *token, bool *cmd_found, int *error)
 /*	*************************************************************	*/
 t_token	*case_arg(t_token *token, int *error)
 {
-	t_token	*check_next;
+	/*t_token	*check_next;*/
 
 	token->type = IS_ARG;
 	if (token->next && token->next->type == WORD)
 		join_next_token(token, error);
 	if (*error)
 		return (token);
-	check_next = token->next;
-	if (check_next && check_next->type == ONE_SPACE
-		&& check_next->next && check_next->next->type == WORD)
-	{
-		token = check_next->next;
-		return (token);
-	}
-	if (check_next && check_next->type == ONE_SPACE)
+	/*check_next = token->next;*/
+	/*if (check_next && check_next->type == ONE_SPACE*/
+		/*&& check_next->next && check_next->next->type == WORD)*/
+	/*{*/
+		/*token = check_next->next;*/
+		/*return (token);*/
+	/*}*/
+	if (token->next && token->next->type == ONE_SPACE)
 		delete_next(token);
 	token = token->next;
 	return (token);

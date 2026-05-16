@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/15 12:52:14 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 15:13:58 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,11 +277,11 @@ char	*expand_line(char *line, char **envp, t_minishell *minishell);
 /***************************************************************** parsing */
 int		handle_quotes(char *line, t_token **token_list, int *index,
 			t_minishell *minishell);
-void	handle_pipe(char *line, t_token **token_list, int *index);
+void	handle_pipe(char *line, t_token **token_list, int *index, t_minishell *minishell);
 void	handle_redirection(char *line, t_token **token_list,
-			int *index, char angle_bracket);
-void	handle_words_no_quotes(char *line, t_token **token_list, int *index);
-void	handle_spaces(char *line, t_token **token_list, int *index);
+			int *index, char angle_bracket, t_minishell *minishell);
+void	handle_words_no_quotes(char *line, t_token **token_list, int *index, t_minishell *minishell);
+void	handle_spaces(char *line, t_token **token_list, int *index, t_minishell *minishell);
 bool	is_whitespace(char c);
 bool	is_separator(char c);
 int		separate_into_tokens(char *line, t_token **token_list,
@@ -295,12 +295,13 @@ t_token	*case_pipe(t_token *token, bool *cmd_found, int *error, t_token **head);
 int		parse_tokens(char *line, t_token **token_list, t_minishell *minishell);
 /*******************************************************errors parsing */
 void	free_line_and_token_list(char *line, t_token **token_list);
-void	error_malloc(char *line, char *err_msg);
+void	error_malloc(char *line, char *newline, t_minishell *minishell,
+			char *err_msg);
 void	error_quote(char *line, t_token **token_list, t_minishell *minishell);
 /********************************************************** token_list */
 t_token	*ft_token_new(char *str, t_token_type token_type);
 t_token	*ft_token_last(t_token *lst);
-void	ft_token_add_back(t_token **head, t_token *newer, char *line);
+void	ft_token_add_back(t_token **head, t_token *newer, char *line, t_minishell *minishell);
 void	ft_token_delone(t_token *lst, void (*del)(void *));
 void	ft_token_lstclear(t_token **head);
 /********************************************************** signals */
