@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 15:18:41 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/16 15:12:41 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,12 +154,25 @@ void	modify_pwd_in_envp(t_minishell *minishell)
 	}
 }
 
-// void	return_oldpwd(t_minishell *minishell)
-// {
-	
-// 	chdir(minishell->builtin.cd.result);
-	
-// }
+
+void	error_getcwd(t_minishell *minishell, t_pipe *pipe)
+{
+	char	*pwd;
+
+	if (!pipe->cmd->cmd_args || !pipe->cmd->cmd_args[0]
+		|| !((ft_strncmp(pipe->cmd->cmd_args[0], "./", 2) == 0
+		|| ft_strncmp(pipe->cmd->cmd_args[0], "../", 3) == 0)))
+		return ;
+	minishell->builtin.cd.error = 1;
+	//securite
+	pwd = ft_strjoin(minishell->builtin.pwd.result, "/");
+	if (minishell->builtin.pwd.result)
+		free(minishell->builtin.pwd.result);
+	minishell->builtin.pwd.result = ft_strjoin(pwd, pipe->cmd->cmd_args[0]);
+	// securite
+	ft_printf_fd(2, "minishell: cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
+	free(pwd);
+}
 
 /*
 ** CD *********************************************
@@ -188,6 +201,8 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 {
 	int error;
 
+	if (minishell->builtin.cd.error)
+		error_getcwd(minishell, pipe);
 	if (minishell->builtin.cd.result)
 	{
 		free(minishell->builtin.cd.result);

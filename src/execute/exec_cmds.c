@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/15 18:53:57 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 15:15:21 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
 {
 	array_built_in[IS_ECHO] = echo;
-	array_built_in[PWD] = pwd;
+	// array_built_in[PWD] = pwd;
 	array_built_in[EXPORT] = export_print;
 	array_built_in[UNSET]= unset;
 	array_built_in[ENV] = env;
@@ -31,13 +31,11 @@ so we close pipefd[1] == writing
 */
 void	exec_cmds_pipe(t_minishell *minishell)
 {
-	/*char *str[] = {"ERROR", "TERMINAL", "IS_FILE", "IS_HEREDOC", "IS_PIPE"};*/
 	t_pipe *current;
 	pid_t	pid;
 	int		pipefd[2];
 	int		already_output;
 	int		input_fd;
-	/*int		is_next_pipe;*/
 	int		at_least_one_pipe;
 	int		(*array_built_in[8])(t_minishell *, t_pipe *);
 	
@@ -63,11 +61,8 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		if (current->next)
 		{
 			pipe(pipefd);
-			/*is_next_pipe = 1;*/
 			at_least_one_pipe = 1;
 		}
-		else 
-			/*is_next_pipe = 0;*/
 
 		if (current->builtin_kind == IS_ECHO)
 			echo_for_prompt(minishell, current);
@@ -77,9 +72,12 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			export(minishell, current);
 		if (current->builtin_kind == UNSET && !at_least_one_pipe)
 			unset(minishell, current);
-		
+		if (current->builtin_kind == PWD)
+			pwd(minishell, current);
+
+
 		is_exit(minishell, current);
-		
+
 		pid = fork();
 		already_output = 0;
 
@@ -151,7 +149,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				perror("execve");
 			}
 			else if (current->builtin_kind == IS_ECHO
-				|| current->builtin_kind == PWD
+				// || current->builtin_kind == PWD
 				|| current->builtin_kind == ENV
 				|| current->builtin_kind == EXPORT)
 				array_built_in[current->builtin_kind](minishell, current);
@@ -186,6 +184,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 	get_exit_status(minishell);
 	/*ft_printf_fd(2, "--------------------------------------------\n");*/
 }
+
 /*
 Print for tests
 	char *str[] = {"ERROR", "TERMINAL", "IS_FILE", "IS_HEREDOC", "IS_PIPE"};
@@ -204,4 +203,4 @@ Print for tests
 		printf("at_least_one_pipe %d, %p\n", at_least_one_pipe, current->next);
 		printf("pipefd[0] closed = %d\n", pipefd[0]);
 		printf("pipefd[1] closed = %d\n", pipefd[1]);
-		*/
+*/

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/15 12:52:14 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 14:27:34 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ typedef struct s_builtin_content
 {
 	char		*result;
 	bool		for_prompt;
+	int			error;
 	// t_path_kind	path;
 }				t_builtin_content;
 

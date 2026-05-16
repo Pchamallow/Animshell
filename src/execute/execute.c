@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/15 23:39:31 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 14:28:18 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ int execute(t_minishell *minishell, char **envp)
 	minishell->exec.envp = NULL;
 	minishell->exec.paths_for_search_cmd = NULL;
 	minishell->builtin.pwd.result = NULL;
+	minishell->builtin.cd.error = 0;
 	strv_dup(minishell, &minishell->exec.envp, envp);
 	init_pwd_envp(minishell);
 	

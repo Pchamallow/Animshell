@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/15 15:27:00 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/16 13:50:42 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,10 @@ int	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 		if (!line)
 		{
 			signal = check_signal_heredoc(token->value, signal);
-			break;
+			break ;
 		}
 		if (!ft_strcmp(line, token->value))
-			break;
-		}
+			break ;
 		// si quotes pas de expand !!!!!
 		/*if (ft_strchr(line, '"') == NULL*/
 			/*&& ft_strchr(line, '\'') == NULL*/
@@ -43,7 +42,7 @@ int	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 		if (token->quote != SINGLE)
 			line = expand_line(line, minishell->exec.envp, minishell);
 		if (!ft_strcmp(line, token->value))
-			break;
+			break ;
 		ft_printf_fd(fd, "%s\n", line);
 		free(line);
 	}
