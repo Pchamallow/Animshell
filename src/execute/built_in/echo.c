@@ -13,25 +13,29 @@
 #include "minishell.h"
 
 /*
-dst = src only ?
-examples :
--------nnnnnn = true
------nnnannnnn = false
+** options	=	-n	-nnnnnnnnn 
+** not		=	-	n
 */
-bool	only_str(char *dst, char *src)
+int	echo_is_option(char *str)
 {
-	int	i;
+	bool	option;
+	int		i;
 
 	i = 0;
-	while (dst[i])
+	option = false;
+	if (str[i] == '-')
 	{
-		if (dst[i] != src[0] && dst[i] != src[1])
-			return (false);
 		i++;
+		while (str[i] && str[i] == 'n')
+		{
+			option = true;
+			i++;
+		}
 	}
-	return (true);
+	if (!str[i] && option == true)
+		return (1);
+	return (0);
 }
-
 
 /*
 Content print by echo before the prompt
@@ -54,7 +58,7 @@ void	echo_content(t_minishell *minishell, t_token *args)
 	is_content = 0;
 	result = ft_strdup("");
 	while ((args->type == ONE_SPACE
-		|| only_str(args->value, "-n")) && args && args->next)
+		|| echo_is_option(args->value)) && args && args->next)
 	{
 		args = args->next;
 		i++;
@@ -129,6 +133,31 @@ void	print_no_quotes(char *str)
 	}
 }
 
+int	ft_iswhitespaces(int c)
+{
+	if ((c >= 7 && c <= 13) || c == 32)
+		return (1);
+	return (0);
+}
+
+int	echo_args_iswhitespaces(t_token *args)
+{
+	int	i;
+
+	i = 0;
+	while (args)
+	{
+		while(args->value[i])
+		{
+			if (!ft_iswhitespaces(args->value[i]))
+				return (0);
+			i++;
+		}
+		args = args->next;
+	}
+	return (1);
+}
+
 // ECHO ****************
 /*- print a given string
 conditions
@@ -143,31 +172,41 @@ conditions
 int echo(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *args;
-	int		i;
-	/*int		len;*/
+	bool	is_arg;
 
-	i = 0;
 	args = NULL;
-	if (pipe->cmd->next)
-		args = pipe->cmd->next;
-	else
-	{
-		ft_printf_fd(1, "\n");
-		return (0);
-	}
+	is_arg = false;
 	if (minishell->builtin.echo.for_prompt == true)
 		return (0);
-	while (args && (minishell->exec.index_pipe == 0
-		|| i < minishell->exec.index_pipe))
+	if (pipe->cmd->next && pipe->cmd->next->type != PIPE)
 	{
-		/*len = ft_strlen(args->value);*/
-		if (args->type > REDIRECTION)
-			break;
-		else
-			ft_printf_fd(1, "%s", args->value);
-		args = args->next;
-		i++;
+		args = pipe->cmd->next;
+		if (echo_args_iswhitespaces(args))
+		{
+			ft_printf_fd(1, "\n");
+			return (0);
+		}
+		while (args) // ajouter de skip les spaces
+		{
+			if (args->type == PIPE)
+				return (0);
+			if (args->type == IS_ARG)
+			{
+				if (is_arg == true)
+					ft_printf_fd(1, " ");
+				ft_printf_fd(1, "%s", args->value);
+				is_arg = true;
+			}
+			args = args->next;
+		}
 	}
 	ft_printf_fd(1, "\n");
 	return (0);
 }
+
+
+// skip les infiles
+// si pas utiliser skip les outfiles 
+// faire 1 espace
+
+
