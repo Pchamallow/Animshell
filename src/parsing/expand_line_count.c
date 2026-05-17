@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 22:10:40 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/15 16:53:31 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/17 10:06:07 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 /*
 ** find_env_var
-** looks for ENV VAR in @line
-** - if a ENV VAR is found,
+** looks for $ENV_VAR or $? in @line
+** - if found,
 ** it returns @i the index of @line
-** - if no ENV VAR is found
+** - else
 ** it returns -1
 */
 int	find_env_var(char *line, int len, t_quote_type *quote)
@@ -28,8 +28,9 @@ int	find_env_var(char *line, int len, t_quote_type *quote)
 	while (i < len - 1)
 	{
 		toggle_quote(line[i], quote);
-		if (*quote != SINGLE && line[i] == '$' && line[i + 1] != '$'
-			&& !is_separator(line[i + 1]))
+		if (*quote != SINGLE && line[i] == '$' && line[i + 1]
+				&& (line[i + 1] == '?'
+				 	|| ft_isalpha(line[i + 1]) || line[i + 1] == '_'))
 			return (i);
 		i++;
 	}
@@ -74,11 +75,14 @@ int	count_words(char *str)
 
 /*
 ** add_var_value
-** returns the number of chars 
-** contained in one specific ENV VAR value.
+** - adds the number of chars 
+**		contained in one specific ENV VAR value.
+** - substracts the number of chars
+**		contained in the ENV VAR name
+**		+ 1 corresponding to the '$'
 ** If the ENV VAR contains quotes inside,
-** it adds 2 quotes per word
-** in order to keep the inside quotes intact
+** - it adds 2 quotes per word
+** 		in order to keep the inside quotes intact
 */
 int	add_var_value_len(char **envp, char *line, int count, t_quote_type quote)
 {
@@ -89,13 +93,12 @@ int	add_var_value_len(char **envp, char *line, int count, t_quote_type quote)
 	j = get_var(line, envp, wd_len);
 	if (j != -1 && envp[j] != NULL)
 	{
-		count += (ft_strlen(envp[j]) - (wd_len + 1));
-		/*if (quote == NO)*/
+		if (ft_strchr(envp[j], '='))
+			count += (ft_strlen(envp[j]) - (wd_len + 1));
 		if (quote_found(envp[j]) && quote == NO)
 			count += (2 * count_words(envp[j]));
 	}
 	count -= (wd_len + 1);
-	/*printf("count = %d\n", count);*/
 	return (count);
 }
 
