@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/17 14:40:41 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 16:27:05 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int	separate_into_tokens(char *line, t_token **token_list,
 			return (1);
 	}
 	//tests : *******
-	print_tokens_types(*token_list);
+	// print_tokens_types(*token_list);
 	/*print_tokens(*token_list);*/
 	// **************
 	return (0);

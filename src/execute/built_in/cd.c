@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 15:26:40 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 15:31:23 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,14 +163,15 @@ void	error_getcwd(t_minishell *minishell, t_pipe *pipe)
 	len = ft_strlen(minishell->builtin.pwd.result);
 	if (minishell->builtin.pwd.result[len - 1] != '/')
 		pwd = ft_strjoin(minishell->builtin.pwd.result, "/");
-		//securite
 	else 
 		pwd = ft_strdup(minishell->builtin.pwd.result);
-	//securite
+	if (!pwd)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	if (minishell->builtin.pwd.result)
 		free(minishell->builtin.pwd.result);
 	minishell->builtin.pwd.result = ft_strjoin(pwd, pipe->cmd->cmd_args[0]);
-	// securite
+	if (!minishell->builtin.pwd.result)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	ft_printf_fd(2, "minishell: cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
 	free(pwd);
 }

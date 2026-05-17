@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 14:47:19 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 16:25:23 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,22 @@ static int	is_valid_path(t_minishell *minishell, t_token *token)
 	return (0);
 }
 
+static int	is_directory(char *str)
+{
+	char	*dir;
+	DIR		*is_dir;
+
+	dir = str;
+	is_dir = opendir(dir);
+	if (is_dir)
+	{
+		closedir(is_dir);
+		error_cmd_args(str, NULL, "Is a directory");
+		return (1);
+	}
+	return (0);
+}
+
 /*
 Command not found = -1;
 To search path = 0;
@@ -60,6 +76,8 @@ static int	path_type(t_exec *exec, char *token)
 {
 	if (token[0] == '/')
 	{
+		if (is_directory(token))
+			return (-1);
 		if (access(token, X_OK) == 0)
 			return (1);
 		else
@@ -74,6 +92,12 @@ static int	path_type(t_exec *exec, char *token)
 	return (0);
 }
 
+/*
+-1 = / path + no such file or directory
+0 = cmd, path to find
+1 = / path + cmd valid
+2 = ./ path
+*/
 int	path_cmd(t_minishell *minishell, t_token *token)
 {
 	int		i;
@@ -96,6 +120,20 @@ int	path_cmd(t_minishell *minishell, t_token *token)
 	else if (i == -1)
 		return (1);
 	else if (i == 2)
-		path_explicit(minishell, token);
+	{
+		if (is_directory(token->value))
+			return (1);
+		if (access(token->value, X_OK) == 0)
+		{
+			path_explicit(minishell, token);
+			return (0);
+		}
+		else
+		{
+			error_cmd_args(token->value, NULL, "No such file or directory");
+			minishell->exec.error = 127;
+			return (1);
+		}
+	}
 	return (0);
 }
