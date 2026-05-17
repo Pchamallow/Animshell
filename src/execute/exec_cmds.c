@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/16 15:15:21 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 13:16:24 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,9 @@ void	exec_cmds_pipe(t_minishell *minishell)
 	get_exit_status(minishell);
 	/*ft_printf_fd(2, "--------------------------------------------\n");*/
 }
+
+
+
 
 /*
 Print for tests
