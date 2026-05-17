@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/29 14:37:53 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/15 12:58:10 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/17 18:00:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,18 +116,22 @@ void	ignore_signal(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void	get_exit_status(t_minishell *minishell)
+void	get_exit_status(t_minishell *minishell, pid_t last_pid)
 {
 	int	child_exit_status;
 	int	exit_signal;
+	pid_t	wpid;
 
-	while(wait(&child_exit_status) > 0)
+	while((wpid = wait(&child_exit_status)) > 0)
 	{
-		// if (WIFEXITED(child_exit_status))
-		// {
-		// 	minishell->exec.error = WEXITSTATUS(child_exit_status);
-		// 	printf("error get exit status = %d\n", minishell->exec.error);//test
-		// }
+		if (wpid == last_pid)
+		{
+			if (WIFEXITED(child_exit_status))
+			{
+				minishell->exec.error = WEXITSTATUS(child_exit_status);
+				printf("error get exit status = %lld\n", minishell->exec.error);//test
+			}
+		}
 		if (WIFSIGNALED(child_exit_status))
 		{
 			exit_signal = WTERMSIG(child_exit_status);

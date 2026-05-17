@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 16:50:13 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 17:29:46 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	is_valid_path(t_minishell *minishell, t_token *token)
 	int		len;
 
 	i = 0;
-	if (!minishell->exec.paths_for_search_cmd || !ft_strcmp(token->value, "\0"))
+	if (!minishell->exec.paths_for_search_cmd || !has_alpha(token->value))
 		return (-1);
 	len = len_double(minishell->exec.paths_for_search_cmd);
 	while (minishell->exec.paths_for_search_cmd[i] && i <= len)

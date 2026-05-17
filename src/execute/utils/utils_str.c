@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:28:00 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 13:02:32 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 17:29:02 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,7 @@ int	has_alpha(char *str)
 {
 	int	alpha;
 	int	end;
-	// int	i;
 
-	// i = 0;
 	alpha = 0;
 	end = ft_strlen(str) - 1;
 	if (end <= 0)
