@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 14:10:58 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 16:02:19 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include <stdbool.h>
 # include <sys/wait.h>
 #include <limits.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 /***********************************************************************/
 extern volatile sig_atomic_t	g_sig_value;
