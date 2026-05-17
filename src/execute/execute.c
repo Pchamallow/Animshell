@@ -75,17 +75,20 @@ int execute(t_minishell *minishell, char **envp)
 	//variables pour boucle while :
 	char	*line;
 	// bool	is_free;
-	t_token	*first_token;
+	/*t_token	*first_token;*/
 
-	first_token = NULL;
-	minishell->exec.error = 0;
-	minishell->prompt = NULL;
-	minishell->builtin.echo.result = NULL;
-	minishell->builtin.echo.for_prompt = false;
-	minishell->exec.envp = NULL;
-	minishell->exec.paths_for_search_cmd = NULL;
-	minishell->builtin.pwd.result = NULL;
-	minishell->builtin.cd.error = 0;
+	ft_bzero(minishell, sizeof(t_minishell));
+	ft_bzero(&minishell->exec, sizeof(t_exec));
+// 	first_token = NULL;
+// 	minishell->exec.error = 0;
+// 	minishell->prompt = NULL;
+// 	minishell->builtin.echo.result = NULL;
+// 	minishell->builtin.echo.for_prompt = false;
+// 	minishell->exec.envp = NULL;
+// 	minishell->exec.paths_for_search_cmd = NULL;
+// 	minishell->builtin.pwd.result = NULL;
+// 	minishell->builtin.cd.error = 0;
+	minishell->exec.first_token = &minishell->token;
 	strv_dup(minishell, &minishell->exec.envp, envp);
 	init_pwd_envp(minishell);
 	
@@ -115,8 +118,8 @@ int execute(t_minishell *minishell, char **envp)
 		
 		// PARSING ICI :************************
 		line = expand_line(line, minishell->exec.envp, minishell);
-		if (separate_into_tokens(line, &first_token, minishell) != 0
-				|| parse_tokens(line, &first_token, minishell) != 0)
+		if (separate_into_tokens(line, minishell->exec.first_token, minishell) != 0
+				|| parse_tokens(line, minishell->exec.first_token, minishell) != 0)
 			continue ;
 		// *************************************
 		
@@ -127,13 +130,13 @@ int execute(t_minishell *minishell, char **envp)
 		// (void)minishell;
 		
 		/* PARSING **********************************/
-		if (first_token)
-		{
-			minishell->token = first_token;
-			minishell->exec.first_token = &first_token;
-		}
-		else
-			minishell->token = NULL;
+		/*if (first_token)*/
+		/*{*/
+			/*minishell->token = first_token;*/
+			/*minishell->exec.first_token = &first_token;*/
+		/*}*/
+		/*else*/
+			/*minishell->token = NULL;*/
 		
 		init_exec(minishell);
 		

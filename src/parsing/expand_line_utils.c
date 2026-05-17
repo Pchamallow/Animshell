@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 22:15:28 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 09:41:02 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 18:00:58 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,49 +74,49 @@ bool	quote_found(char *str)
 	return (false);
 }
 
-char	chose_quote(const char *str)
-{
-	int	i;
+/*char	chose_quote(const char *str)*/
+/*{*/
+	/*int	i;*/
 
-	i = 0;
-	while (str[i] && !is_whitespace(str[i]))
-	{
-		if (str[i] == '\'')
-			return ('\"');
-		if (str[i] == '\"')
-			return ('\'');
-		i++;
-	}
-	return ('\"');
-}
+	/*i = 0;*/
+	/*while (str[i] && !is_whitespace(str[i]))*/
+	/*{*/
+		/*if (str[i] == '\'')*/
+			/*return ('\"');*/
+		/*if (str[i] == '\"')*/
+			/*return ('\'');*/
+		/*i++;*/
+	/*}*/
+	/*return ('\"');*/
+/*}*/
 
-void	ft_strlcat_add_quotes(char *dst, const char *src, size_t size)
-{
-	size_t	i;
-	size_t	j;
-	char	quote;
+/*void	copy_src_to_dst(char *dst, const char *src, size_t *i, size_t *j)*/
+/*{*/
+		/*dst[*i + *j] = src[*j];*/
+		/*(*j)++;*/
+/*}*/
 
-	i = 0;
-	if (dst)
-		i = ft_strlen(dst);
-	j = 0;
-	while ((i + j) < size && src[j])
-	{
-		quote = chose_quote(src + j);
-		dst[i + j] = quote;
-		i++;
-		while ((i + j) < size && src[j] && !is_whitespace(src[j]))
-		{
-			dst[i + j] = src[j];
-			j++;
-		}
-		dst[i + j] = quote;
-		i++;
-		while ((i + j) < size && src[j] && is_whitespace(src[j]))
-		{
-			dst[i + j] = src[j];
-			j++;
-		}
-	}
-	dst[i + j] = '\0';
-}
+/*void	ft_strlcat_add_quotes(char *dst, const char *src, size_t size)*/
+/*{*/
+	/*size_t	i;*/
+	/*size_t	j;*/
+	/*char	quote;*/
+
+	/*i = 0;*/
+	/*if (dst)*/
+		/*i = ft_strlen(dst);*/
+	/*j = 0;*/
+	/*while ((i + j) < size && src[j])*/
+	/*{*/
+		/*quote = chose_quote(src + j);*/
+		/*dst[i + j] = quote;*/
+		/*i++;*/
+		/*while ((i + j) < size && src[j] && !is_whitespace(src[j]))*/
+			/*copy_src_to_dst(dst, src, &i, &j);*/
+		/*dst[i + j] = quote;*/
+		/*i++;*/
+		/*while ((i + j) < size && src[j] && is_whitespace(src[j]))*/
+			/*copy_src_to_dst(dst, src, &i, &j);*/
+	/*}*/
+	/*dst[i + j] = '\0';*/
+/*}*/
