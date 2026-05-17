@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/16 15:50:09 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/16 14:28:18 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,17 +77,17 @@ int execute(t_minishell *minishell, char **envp)
 	// bool	is_free;
 	/*t_token	*first_token;*/
 
-	/*first_token = NULL;*/
 	ft_bzero(minishell, sizeof(t_minishell));
 	ft_bzero(&minishell->exec, sizeof(t_exec));
-	/*minishell->token = NULL;*/
-	/*minishell->exec.error = 0;*/
-	/*minishell->prompt = NULL;*/
-	/*minishell->builtin.echo.result = NULL;*/
-	/*minishell->builtin.echo.for_prompt = false;*/
-	/*minishell->exec.envp = NULL;*/
-	/*minishell->exec.paths_for_search_cmd = NULL;*/
-	/*minishell->builtin.pwd.result = NULL;*/
+// 	first_token = NULL;
+// 	minishell->exec.error = 0;
+// 	minishell->prompt = NULL;
+// 	minishell->builtin.echo.result = NULL;
+// 	minishell->builtin.echo.for_prompt = false;
+// 	minishell->exec.envp = NULL;
+// 	minishell->exec.paths_for_search_cmd = NULL;
+// 	minishell->builtin.pwd.result = NULL;
+// 	minishell->builtin.cd.error = 0;
 	minishell->exec.first_token = &minishell->token;
 	strv_dup(minishell, &minishell->exec.envp, envp);
 	init_pwd_envp(minishell);
