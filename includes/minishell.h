@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 16:02:19 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 16:40:00 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,8 +184,8 @@ int		nb_pipes(t_token *first);
 
 /************************************************************ built-in */
 int		cd(t_minishell *minishell, t_pipe *pipe);
-int		echo(t_minishell *minishell, t_pipe *pipe);
-void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe);
+void	echo(t_minishell *minishell, t_pipe *pipe);
+int		echo_print(t_minishell *minishell, t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
 void	is_exit(t_minishell *minishell, t_pipe *pipe);
 int		export_print(t_minishell *minishell, t_pipe *pipe);

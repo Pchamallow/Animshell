@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 16:29:17 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 17:03:08 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ void	echo_content(t_minishell *minishell, t_token *args)
 	char	*result;
 	char	*tmp;
 	int		i;
-	int		is_content;
+	bool	is_arg;
 
 	i = 0;
-	is_content = 0;
+	is_arg = false;
 	result = ft_strdup("");
 	while ((args->type == ONE_SPACE
 		|| echo_is_option(args->value)) && args && args->next)
@@ -63,13 +63,16 @@ void	echo_content(t_minishell *minishell, t_token *args)
 		args = args->next;
 		i++;
 	}
-	while (args && (minishell->exec.index_pipe == 0 || i < minishell->exec.index_pipe))
+	while (args)
 	{
-		if (args->type == IS_INPUT || args->type == IS_OUTPUT)
-			break;
-		else 
+		if (args->type == PIPE) // a tester
+			break ;
+		else if (args->type == IS_ARG)
 		{
-			tmp = ft_strdup(result);
+			if (is_arg == true)
+				tmp = ft_strjoin(result, " ");
+			else
+				tmp = ft_strdup(result);
 			if (!tmp)
 				print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 			free(result);
@@ -77,12 +80,12 @@ void	echo_content(t_minishell *minishell, t_token *args)
 			if (!result)
 				print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 			free(tmp);
-			is_content = 1;
+			is_arg = true;
 		}
 		args = args->next;
 		i++;
 	}
-	if (is_content)
+	if (is_arg == true)
 	{
 		minishell->builtin.echo.result = ft_calloc(ft_strlen(result) + 2, sizeof(char));
 		if (!minishell->builtin.echo.result)
@@ -102,7 +105,7 @@ we print on top of the prompt
 ----- + nnnnnn = print on new line
 if we print before prompt, we skip every -n
 */
-void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe)
+void	echo(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *args;
 
@@ -113,7 +116,7 @@ void	echo_for_prompt(t_minishell *minishell, t_pipe *pipe)
 		{
 			if (count_chr(&args->value[1], 'n', true) >= 1)
 			{
-				if (args->next)
+				if (echo_is_option(args->value) && args->next)
 					echo_content(minishell, args->next);
 			}
 		}
@@ -133,31 +136,6 @@ void	print_no_quotes(char *str)
 	}
 }
 
-int	ft_iswhitespaces(int c)
-{
-	if ((c >= 7 && c <= 13) || c == 32)
-		return (1);
-	return (0);
-}
-
-int	echo_args_iswhitespaces(t_token *args)
-{
-	int	i;
-
-	i = 0;
-	while (args)
-	{
-		while(args->value[i])
-		{
-			if (!ft_iswhitespaces(args->value[i]))
-				return (0);
-			i++;
-		}
-		args = args->next;
-	}
-	return (1);
-}
-
 // ECHO ****************
 /*- print a given string
 conditions
@@ -169,7 +147,7 @@ conditions
 - - if $?word or word$? 
 - - no print with $ ?*/
 // *********************
-int echo(t_minishell *minishell, t_pipe *pipe)
+int echo_print(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token *args;
 	bool	is_arg;
@@ -202,10 +180,3 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 	ft_printf_fd(1, "\n");
 	return (0);
 }
-
-
-// skip les infiles
-// si pas utiliser skip les outfiles 
-// faire 1 espace
-
-
