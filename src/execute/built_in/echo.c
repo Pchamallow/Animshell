@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 13:31:38 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 16:29:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,11 +181,6 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 	if (pipe->cmd->next && pipe->cmd->next->type != PIPE)
 	{
 		args = pipe->cmd->next;
-		if (echo_args_iswhitespaces(args))
-		{
-			ft_printf_fd(1, "\n");
-			return (0);
-		}
 		while (args)
 		{
 			if (args->type == PIPE)
