@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 17:03:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 17:09:15 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	echo_content(t_minishell *minishell, t_token *args)
 	}
 	while (args)
 	{
-		if (args->type == PIPE) // a tester
+		if (args->type == PIPE)
 			break ;
 		else if (args->type == IS_ARG)
 		{
