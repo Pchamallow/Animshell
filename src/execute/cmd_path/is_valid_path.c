@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 17:29:46 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 23:11:46 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	is_valid_path(t_minishell *minishell, t_token *token)
 	return (0);
 }
 
-static int	is_directory(char *str)
+static int	is_directory(t_minishell *minishell, char *str)
 {
 	char	*dir;
 	DIR		*is_dir;
@@ -61,6 +61,7 @@ static int	is_directory(char *str)
 	{
 		closedir(is_dir);
 		error_cmd_args(str, NULL, "Is a directory");
+		minishell->exec.error = 126;
 		return (1);
 	}
 	return (0);
@@ -72,11 +73,11 @@ To search path = 0;
 Absolute path = 1;
 Explicit path = 2;
 */
-static int	path_type(t_exec *exec, char *token)
+static int	path_type(t_minishell *minishell, t_exec *exec, char *token)
 {
 	if (token[0] == '/')
 	{
-		if (is_directory(token))
+		if (is_directory(minishell, token))
 			return (-1);
 		if (access(token, X_OK) == 0)
 			return (1);
@@ -103,7 +104,7 @@ int	path_cmd(t_minishell *minishell, t_token *token)
 	int		i;
 	int		len;
 
-	i = path_type(&minishell->exec, token->value);
+	i = path_type(minishell, &minishell->exec, token->value);
 	if (i == 1)
 	{
 		len = len_cmd_no_endspace(token->value) + 1;
@@ -121,7 +122,7 @@ int	path_cmd(t_minishell *minishell, t_token *token)
 		return (1);
 	else if (i == 2)
 	{
-		if (is_directory(token->value))
+		if (is_directory(minishell, token->value))
 			return (1);
 		if (access(token->value, X_OK) == 0)
 		{

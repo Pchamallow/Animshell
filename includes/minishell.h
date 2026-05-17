@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 17:59:15 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 19:39:31 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ typedef struct s_exec
 	char		**paths_for_search_cmd;
 	char		**envp;
 	long long	error;
+	long long	error_old;
 	int			input; // -1 file invalide, 0 pas de input, 1 = file, 2 = pipe
 	int			output; // 0 pas de output(donc terminal), 1 = file, 2 = pipe
 	int			index_pipe;
@@ -306,6 +307,7 @@ void	free_line_and_token_list(char *line, t_token **token_list);
 void	error_malloc(char *line, char *newline, t_minishell *minishell,
 			char *err_msg);
 void	error_quote(char *line, t_token **token_list, t_minishell *minishell);
+void	print_error_unexpected_token(t_token *token);
 /********************************************************** token_list */
 t_token	*ft_token_new(char *str, t_token_type token_type);
 t_token	*ft_token_last(t_token *lst);

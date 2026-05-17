@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 19:11:35 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 16:19:15 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/17 19:39:10 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,12 @@ void	error_quote(char *line, t_token **token_list, t_minishell *minishell)
 	ft_printf_fd(2, "\n");
 	free_line_and_token_list(line, token_list);
 	minishell->exec.error = 2;
+}
+
+void	print_error_unexpected_token(t_token *token)
+{
+	ft_printf_fd(2, "minishell: ");
+	ft_printf_fd(2, "syntax error near unexpected token ");
+	ft_printf_fd(2, "\'%s\'", token->value);
+	ft_printf_fd(2, "\n");
 }

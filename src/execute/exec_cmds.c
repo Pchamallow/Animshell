@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 18:11:42 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 19:06:10 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 	pipe_actual = 0;
 	while (current)
 	{
+		minishell->exec.error_old = minishell->exec.error;
 		minishell->exec.error = 0;
 		
 		if (read_tokens(minishell, current, input_fd) != -1)

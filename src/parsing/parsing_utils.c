@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/08 22:07:46 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 22:25:36 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/17 19:41:39 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_token	*case_heredoc(t_token *token, int *error, char *line,
 	if (!token->next || token->next->type != WORD)
 	{
 		*error = 2;
-		ft_printf_fd(2, "minishell: syntax error after %s\n", token->value);
+		print_error_unexpected_token(token);
 		return (token);
 	}
 	token = token->next;
@@ -85,7 +85,7 @@ t_token	*case_redirection(t_token *token, int *error, char *line,
 		delete_next(token);
 	if (!token->next || token->next->type != WORD)
 	{
-		ft_printf_fd(2, "minishell: syntax error after %s\n", token->value);
+		print_error_unexpected_token(token);
 		*error = 1;
 		return (token);
 	}
