@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 15:33:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 14:47:19 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static int	path_type(t_exec *exec, char *token)
 			return (1);
 		else
 		{
-			ft_printf_fd(2, "no such file or directory: %s\n", token);
+			error_cmd_args(token, NULL, "No such file or directory");
 			exec->error = 127;
 			return (-1);
 		}

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/16 14:28:18 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 14:29:44 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,23 +72,11 @@ int execute(t_minishell *minishell, char **envp)
 	/*signal(SIGINT, handle_sigint);*/
 	
 	/*  BOUCLE WHILE  **********************************/
-	//variables pour boucle while :
 	char	*line;
-	// bool	is_free;
-	/*t_token	*first_token;*/
 
 	ft_bzero(minishell, sizeof(t_minishell));
 	ft_bzero(&minishell->exec, sizeof(t_exec));
-// 	first_token = NULL;
-// 	minishell->exec.error = 0;
-// 	minishell->prompt = NULL;
-// 	minishell->builtin.echo.result = NULL;
-// 	minishell->builtin.echo.for_prompt = false;
-// 	minishell->exec.envp = NULL;
-// 	minishell->exec.paths_for_search_cmd = NULL;
-// 	minishell->builtin.pwd.result = NULL;
-// 	minishell->builtin.cd.error = 0;
-	minishell->exec.first_token = &minishell->token;
+	minishell->exec.first_token = &minishell->token; // a garder
 	strv_dup(minishell, &minishell->exec.envp, envp);
 	init_pwd_envp(minishell);
 	
@@ -124,29 +112,15 @@ int execute(t_minishell *minishell, char **envp)
 		// *************************************
 		
 		free(line);
-		
-		
-		// (void)envp;
-		// (void)minishell;
-		
-		/* PARSING **********************************/
-		/*if (first_token)*/
-		/*{*/
-			/*minishell->token = first_token;*/
-			/*minishell->exec.first_token = &first_token;*/
-		/*}*/
-		/*else*/
-			/*minishell->token = NULL;*/
-		
-		init_exec(minishell);
+	
+		init_exec(minishell); 
+		// voir si on peut optimiser avec bzero
 		
 		if (minishell->token)
 		{
 			init_pipe(minishell);
-			// is_exit(minishell);
 			exec_cmds_pipe(minishell);
 		}
-		/************************************************/
 		if (minishell->prompt)
 		{
 			free(minishell->prompt);

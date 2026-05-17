@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 13:16:24 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 13:34:14 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	init_array_built_in(int(**array_built_in)(t_minishell *, t_pipe *))
 {
 	array_built_in[IS_ECHO] = echo;
-	// array_built_in[PWD] = pwd;
+	array_built_in[PWD] = pwd_print;
 	array_built_in[EXPORT] = export_print;
 	array_built_in[UNSET]= unset;
 	array_built_in[ENV] = env;
@@ -73,8 +73,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		if (current->builtin_kind == UNSET && !at_least_one_pipe)
 			unset(minishell, current);
 		if (current->builtin_kind == PWD)
-			pwd(minishell, current);
-
+			pwd_update(minishell);
 
 		is_exit(minishell, current);
 
@@ -149,7 +148,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				perror("execve");
 			}
 			else if (current->builtin_kind == IS_ECHO
-				// || current->builtin_kind == PWD
+				|| current->builtin_kind == PWD
 				|| current->builtin_kind == ENV
 				|| current->builtin_kind == EXPORT)
 				array_built_in[current->builtin_kind](minishell, current);

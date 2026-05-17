@@ -6,13 +6,13 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 14:26:02 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 17:52:29 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 14:28:45 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	error_overflow(long nb)
+static long long	error_overflow(long nb)
 {
 	if (nb > 255)
 		nb = nb % 256;
@@ -50,11 +50,45 @@ int	is_num_single_sign(char *str)
 	return (sign);
 }
 
+int	ft_atoll_exit(const char *str, long long *out)
+{
+	long long	result;
+	int			sign;
+	int			digit;
+	int			i;
+
+	result = 0;
+	digit = 0;
+	sign = 1;
+	i = 0;
+	// sign
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	while (isdigit((unsigned char)*str))
+	{
+		digit = str[i] - '0';
+		if (result > (LLONG_MAX - digit) / 10)
+		{
+			*out = 2;	
+			return (0);
+		}
+		result = result * 10 + digit;
+		i++;
+	}
+	*out = result * sign;
+	return (1);
+}
+
 int	exit_single_arg(t_minishell *minishell, char *nb)
 {
 	if (is_num_single_sign(nb) != 0)
 	{
-		minishell->exec.error = error_overflow(ft_atol(nb));
+		ft_atoll_exit(nb, &minishell->exec.error);
+		minishell->exec.error = error_overflow(minishell->exec.error );
 		return (0);
 	}
 	else
@@ -67,7 +101,7 @@ int	exit_multiple_args(t_minishell *minishell, char *nb)
 	{
 		error_cmd_args("exit", nb, "too many arguments");
 		minishell->exec.error = 1;
-		return (0);// exit false
+		return (0);
 	}
 	else
 		return (1);
@@ -105,7 +139,10 @@ void	is_exit(t_minishell *minishell, t_pipe *pipe)
 	if (!minishell->exec.nb_pipes)
 		ft_printf_fd(1, "exit\n");
 	if (pipe->cmd->next)
-		exit_gestion_args(minishell, pipe->cmd->next->value);
+	{
+		if (exit_gestion_args(minishell, pipe->cmd->next->value))
+			return ;
+	}
 	if (!minishell->exec.nb_pipes)
 	{
 		free_all(minishell);

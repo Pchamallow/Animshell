@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 14:47:49 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 12:52:04 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 13:45:06 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,11 @@ void	init_exec(t_minishell *minishell)
 		minishell->exec.index_pipe = first_pipe;
 	else
 		minishell->exec.index_pipe = lst_size(minishell->token);
-	// printf("index first pipe = %d\n", first_pipe);
-	// printf("nouvel index de la pipe = %d\n", minishell->exec.index_pipe);
 	
 	minishell->exec.input = 0;
 	minishell->exec.output = 0;
 	minishell->exec.index_prev_pipe = 0;
 	minishell->exec.last_pipe = minishell->token;
-	// minishell->exec.paths_for_search_cmd = NULL;
-	// minishell->exec.envp = NULL;
 	minishell->exec.pipe_lst = NULL;
 	tmp = minishell->token;
 	while (tmp != NULL)
