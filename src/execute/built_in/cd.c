@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 13:39:48 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 15:26:40 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,24 +154,39 @@ void	modify_pwd_in_envp(t_minishell *minishell)
 	}
 }
 
-
 void	error_getcwd(t_minishell *minishell, t_pipe *pipe)
 {
 	char	*pwd;
+	int		len;
 
-	if (!pipe->cmd->cmd_args || !pipe->cmd->cmd_args[0]
-		|| !((ft_strncmp(pipe->cmd->cmd_args[0], "./", 2) == 0
-		|| ft_strncmp(pipe->cmd->cmd_args[0], "../", 3) == 0)))
-		return ;
 	minishell->builtin.cd.error = 1;
+	len = ft_strlen(minishell->builtin.pwd.result);
+	if (minishell->builtin.pwd.result[len - 1] != '/')
+		pwd = ft_strjoin(minishell->builtin.pwd.result, "/");
+		//securite
+	else 
+		pwd = ft_strdup(minishell->builtin.pwd.result);
 	//securite
-	pwd = ft_strjoin(minishell->builtin.pwd.result, "/");
 	if (minishell->builtin.pwd.result)
 		free(minishell->builtin.pwd.result);
 	minishell->builtin.pwd.result = ft_strjoin(pwd, pipe->cmd->cmd_args[0]);
 	// securite
 	ft_printf_fd(2, "minishell: cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
 	free(pwd);
+}
+
+int	is_pwd_invalid()
+{
+	char	*is_pwd;
+
+	is_pwd = getcwd(NULL, 0);
+	if (!is_pwd)
+	{
+		free(is_pwd);
+		return (1);
+	}
+	free(is_pwd);
+	return (0);
 }
 
 /*
@@ -201,8 +216,6 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 {
 	int error;
 
-	if (minishell->builtin.cd.error)
-		error_getcwd(minishell, pipe);
 	if (minishell->builtin.cd.result)
 	{
 		free(minishell->builtin.cd.result);
@@ -227,5 +240,7 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 		replace_oldpwd(minishell, pipe);
 		modify_pwd_in_envp(minishell);
 	}
+	if (is_pwd_invalid())
+		error_getcwd(minishell, pipe);
 	return (0);
 }
