@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 14:26:02 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 14:28:45 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 22:44:29 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	ft_atoll_exit(const char *str, long long *out)
 			sign = -1;
 		i++;
 	}
-	while (isdigit((unsigned char)*str))
+	while (str[i] && ft_isdigit((unsigned char)str[i]) == 0)
 	{
 		digit = str[i] - '0';
 		if (result > (LLONG_MAX - digit) / 10)
@@ -146,6 +146,8 @@ void	is_exit(t_minishell *minishell, t_pipe *pipe)
 	if (!minishell->exec.nb_pipes)
 	{
 		free_all(minishell);
+		if (!pipe->cmd->next)
+			exit(minishell->exec.error_old);
 		exit(minishell->exec.error);
 	}
 	if (!minishell->exec.error)

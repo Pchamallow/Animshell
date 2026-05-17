@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 15:56:40 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 21:34:34 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,6 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 			else if (invalid_cmd == 1)
 			{
 				token->type = WORD;
-				minishell->exec.error = 127;
 				pipe->input = ERROR;
 				pipe->output = ERROR;
 			}

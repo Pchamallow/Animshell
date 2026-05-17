@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 21:18:24 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 13:56:06 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 19:40:34 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_token	*case_pipe(t_token *token, bool *cmd_found, int *error, t_token **head)
 		delete_next(token);
 	if (token == *head || !token->next || token->next->type == PIPE)
 	{
-		ft_printf_fd(2, "minishell: syntax error after %s\n", token->value);
+		print_error_unexpected_token(token);
 		*error = 3;
 		return (token);
 	}
