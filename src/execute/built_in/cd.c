@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/16 15:12:41 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 13:39:48 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ int cd_get_args(t_minishell *minishell, t_pipe *pipe)
 	{
 		if (!ft_strcmp(pipe->cmd->cmd_args[0], "-"))
 		{
-			pwd(minishell, pipe);
+			pwd_update(minishell);
 			return (1);
 		}
 		minishell->builtin.cd.result = ft_strdup(pipe->cmd->cmd_args[0]);

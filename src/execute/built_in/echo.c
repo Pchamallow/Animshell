@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 19:55:53 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/17 13:31:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,10 +186,14 @@ int echo(t_minishell *minishell, t_pipe *pipe)
 			ft_printf_fd(1, "\n");
 			return (0);
 		}
-		while (args) // ajouter de skip les spaces
+		while (args)
 		{
 			if (args->type == PIPE)
+			{
+				if (is_arg == true)
+					ft_printf_fd(1, "\n");
 				return (0);
+			}
 			if (args->type == IS_ARG)
 			{
 				if (is_arg == true)

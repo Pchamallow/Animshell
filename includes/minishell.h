@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/16 14:27:34 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/17 14:10:58 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@
 # include <signal.h>
 # include <stdbool.h>
 # include <sys/wait.h>
-
-# define BLUE	"\033[34m"// a delete pour les commentaires
-# define RESET	"\033[0m"// a delete. pour les commentaires
-# define ERROR_MSG(msg) BLUE msg RESET //
+#include <limits.h>
 
 /***********************************************************************/
 extern volatile sig_atomic_t	g_sig_value;
@@ -140,7 +137,7 @@ typedef struct s_exec
 	char		*file_output;
 	char		**paths_for_search_cmd;
 	char		**envp;
-	int			error;
+	long long	error;
 	int			input; // -1 file invalide, 0 pas de input, 1 = file, 2 = pipe
 	int			output; // 0 pas de output(donc terminal), 1 = file, 2 = pipe
 	int			index_pipe;
@@ -202,7 +199,8 @@ char	**envp_copy(char **envp, int len);
 char	**update_envp(t_minishell *minishell, t_token *arg, int count);
 bool	is_same_name(char *env_var, t_token *arg);
 int		unset(t_minishell *minishell, t_pipe *pipe);
-int		pwd(t_minishell *minishell, t_pipe *pipe);
+int		pwd_print(t_minishell *minishell, t_pipe *pipe);
+void	pwd_update(t_minishell *minishell);
 void	init_pwd_envp(t_minishell *minishell);
 void	init_pwd(t_minishell *minishell);
 /***************************************************** tabs for execve */
