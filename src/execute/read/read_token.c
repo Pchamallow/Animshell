@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/18 08:55:19 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/18 10:32:30 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,10 @@ int nb_args(t_token *token)
 	while (tmp != NULL && tmp->type != PIPE)
 	{
 		if (tmp->type == IS_ARG)
-			args++;
+		{
+			if (tmp->value && tmp->value[0] != '\0')
+				args++;
+		}
 		tmp = tmp->next;
 	}
 	return (args);
@@ -271,7 +274,7 @@ void read_args(t_minishell *minishell, t_token *token, t_pipe *pipe)
 		{
 			// printf("args = %s\n", token->value);
 			is_single_double_quoted(minishell, token);
-			if (pipe->is_cmd == 1)
+			if (pipe->is_cmd == 1 && token->value && token->value[0] != '\0')
 				add_args(minishell, pipe, token);
 		}
 		token = token->next;
