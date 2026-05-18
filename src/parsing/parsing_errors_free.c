@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 19:11:35 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/17 19:39:10 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/18 22:27:56 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,9 @@ void	error_malloc(char *line, char *newline,
 		t_minishell *minishell, char *err_msg)
 {
 	ft_printf_fd(2, "minishell: malloc error in ");
-	ft_printf_fd(2, "%s", err_msg);
-	ft_printf_fd(2, "\n");
+	ft_printf_fd(2, "%s\n", err_msg);
 	free(line);
 	free(newline);
-	/*--------------------------------------------------------*/
-	/*Voir si on peut remplacer tout ça par free_all(minishell):*/
-	/*(pour l'instant : pb avec free_heredoc)*/
 	if (minishell->builtin.echo.result)
 		free(minishell->builtin.echo.result);
 	if (minishell->builtin.pwd.result)
@@ -48,7 +44,6 @@ void	error_malloc(char *line, char *newline,
 		free(minishell->prompt);
 		minishell->prompt = NULL;
 	}
-	/*--------------------------------------------------------*/
 	rl_clear_history();
 	exit(EXIT_FAILURE);
 }

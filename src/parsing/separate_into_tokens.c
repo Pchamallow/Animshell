@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/18 10:36:48 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/18 22:25:52 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,37 +24,6 @@ bool	is_separator(char c)
 	if (ft_strchr(" \t|<>\"\'", c) == NULL)
 		return (false);
 	return (true);
-}
-
-void	print_tokens_types(t_token *token)// pour tester
-{
-	char	*str[] = {"word", "is_cmd", "is_built_in", "is_arg", "is_filename",
-		"is_delimiter", "space", "pipe", "redirection", "is input",
-		"is_output", "is_append", "heredoc"};
-	/*char *quote[] = {"no", "single", "double"};*/
-	while (token)
-	{
-		/*ft_printf_fd(1, "%s	type=%s quote=%s\n", token->value,*/
-				/*str[token->type], quote[token->quote]);*/
-		ft_printf_fd(1, "%s		type=%s\n", token->value,
-			str[token->type]);
-		token = token->next;
-	}
-}
-
-void	print_tokens(t_token *token)// pour tester
-{
-	int	something_to_write;
-
-	something_to_write = 0;
-	while (token)
-	{
-		ft_printf_fd(1, "%s", token->value);
-		something_to_write = 1;
-		token = token->next;
-	}
-	if (something_to_write)
-		ft_printf_fd(1, "\n");
 }
 
 static int	set_token_type(char *line, t_token **token_list,
@@ -109,9 +78,5 @@ int	separate_into_tokens(char *line, t_token **token_list,
 		if (set_token_type(line, token_list, minishell, &i) != 0)
 			return (1);
 	}
-	//tests : *******
-	// print_tokens_types(*token_list);
-	/*print_tokens(*token_list);*/
-	// **************
 	return (0);
 }
