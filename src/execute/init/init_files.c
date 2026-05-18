@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/15 13:01:04 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/18 09:35:07 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	init_infile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	{
 		pipe->input = ERROR;
 		minishell->exec.error = 2;
-		strerror_file(token->value); //NOTE -  print ici ou stocker pour print aprs echo [par exemple] ? 
+		strerror_file(token->value);
 	}
 	if (access(token->value, R_OK) != 0)
 	// F_OK pour qu il existe, a verifier
@@ -63,7 +63,7 @@ static int	init_outfile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 }
 
 /*
-read_files
+find_input_output
 
 - if a token in an input, next token is a file input
 - if a token in an output, next token is a file ouput
@@ -73,34 +73,38 @@ input = file
 int	find_input_output(t_minishell *minishell, t_pipe *pipe, int fd)
 {
 	t_token *token;
-	int		i;
 	int		heredoc_pipe_to_free;
 
-	i = minishell->exec.index_prev_pipe;
 	heredoc_pipe_to_free = 0;
-	if (i > 0)
+	if (minishell->exec.index_prev_pipe > 0)
 		pipe->input = IS_PIPE;
 	token = minishell->exec.last_pipe;
-	while (token && i <= minishell->exec.index_pipe)
+	// printf("new\n");
+	while (token)
 	{
-		if (token->type == IS_INPUT && token->next != NULL)
+		// printf("token = %s\n", token->value);
+		if (token->type == PIPE)
+		{
+			if (pipe->output == TERMINAL)
+				pipe->output = IS_PIPE;
+			break ;
+		}
+		else if (token->type == IS_INPUT && token->next != NULL)
 			token->next->file_input = 1;
 		else if (token->type == IS_OUTPUT && token->next != NULL)
 			token->next->file_output = 1;
 		else if (token->type == IS_APPEND && token->next != NULL)
 			token->next->file_output = 2;
 		else if (token->file_input
-			&& (init_infile(minishell, pipe, token) == 0))
+			&& (init_infile(minishell, pipe, token) == 0)
+			&& pipe->input != IS_HEREDOC
+			&& pipe->input != ERROR)
 		{
 			if (pipe->input == IS_FILE)
 				close_fd(&pipe->infile->fd);
 			pipe->infile = token;
 			pipe->input = IS_FILE;
 		}
-		else if (i > minishell->exec.index_prev_pipe
-			&& pipe->output != IS_FILE
-			&& pipe->output != ERROR && token->type == PIPE)
-			pipe->output = IS_PIPE;
 		
 		else if (token->file_output
 			&& init_outfile(minishell, pipe, token) == 0
@@ -123,9 +127,7 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe, int fd)
 		//test ctrl C dans heredoc:
 		if (minishell->exec.error == 130)
 			break ;
-		
 		token = token->next;
-		i++;
 	}
 	if (heredoc_pipe_to_free && pipe->input != IS_HEREDOC)
 		close_fd(&minishell->here_doc->fd);

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 18:59:43 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/18 10:09:51 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ int	replace_var_name(char *line, t_expand *expand,
 			ft_strlcat_add_quotes(expand->newline,
 				minishell->exec.envp[j] + wd_len + 1, expand->count + 1);
 		}
-		else if (ft_strchr(minishell->exec.envp[j], '='))
+		// else if (ft_strchr(minishell->exec.envp[j], '='))
+		else if (index_lastchar(minishell->exec.envp[j], '=') == wd_len)
 		{
 			ft_strlcat_minishell(expand->newline,
 				minishell->exec.envp[j] + wd_len + 1, expand->count + 1);

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 19:06:10 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/18 09:19:45 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,12 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		if (pid == 0)
 		{
 			reset_signal_to_default();
-
+			
+			// char *str[] = {"ERROR", "TERMINAL", "IS_FILE", "IS_HEREDOC", "IS_PIPE"};
+			// if (current->cmd)
+			// 	printf("current->value = %s\n", current->cmd->value);
+			// printf("current->input = %s\n", str[current->input]);
+			// printf("current->output = %s\n", str[current->output]);
 
 			/* INPUT               */
 			if (current->input == IS_FILE && current->output == IS_FILE)
