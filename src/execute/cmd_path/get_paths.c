@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 14:55:34 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 15:32:02 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/18 11:34:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	get_paths_for_cmd(t_minishell *minishell)
 	{
 		if (ft_strnstr(minishell->exec.envp[i], "PATH=", 5) != NULL)
 		{
+			// printf("path cmd == %s\n", minishell->exec.envp[i]);
 			minishell->exec.paths_for_search_cmd = ft_split(minishell->exec.envp[i] + 5, ':');
 			if (!minishell->exec.paths_for_search_cmd)
 				print_error_free(minishell, "Error\nMalloc failed.\n", 1);;
