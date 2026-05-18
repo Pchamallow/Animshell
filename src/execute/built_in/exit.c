@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 14:26:02 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 22:44:29 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/18 12:01:28 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,20 +133,23 @@ int	exit_gestion_args(t_minishell *minishell, char *nb)
 
 void	is_exit(t_minishell *minishell, t_pipe *pipe)
 {
+	int	arg;
+
+	arg = 0;
 	if (pipe->builtin_kind != EXIT)
 		return ;
-
 	if (!minishell->exec.nb_pipes)
 		ft_printf_fd(1, "exit\n");
 	if (pipe->cmd->next)
 	{
+		arg++;
 		if (exit_gestion_args(minishell, pipe->cmd->next->value))
 			return ;
 	}
 	if (!minishell->exec.nb_pipes)
 	{
 		free_all(minishell);
-		if (!pipe->cmd->next)
+		if (!minishell->exec.nb_pipes && !arg) // si j ai pas de pipe je prend l ancien error 0 - si j ai une pipe je prend le exec.error
 			exit(minishell->exec.error_old);
 		exit(minishell->exec.error);
 	}
