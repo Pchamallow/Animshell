@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 14:26:02 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/18 12:01:28 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 11:48:36 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int	is_num_single_sign(char *str)
 	i = 0;
 	doubles = 0;
 	sign = 1;
+	while (str[i] && (str[i] == ' ' || (str[i] >= 7 && str[i] <= 13)))
+		i++;
 	if (str[0] == '-' && (str[1] >= '0' && str[1] <= '9'))
 		sign = -1;
 	while (str[i]
@@ -50,37 +52,53 @@ int	is_num_single_sign(char *str)
 	return (sign);
 }
 
-int	ft_atoll_exit(const char *str, long long *out)
+static void	ft_atoll_exit(const char *str, long long *out)
 {
 	long long	result;
+	long long	neg_result;
 	int			sign;
 	int			digit;
 	int			i;
 
 	result = 0;
+	neg_result = 0;
 	digit = 0;
 	sign = 1;
 	i = 0;
-	// sign
+	while (str[i] && (str[i] == ' ' || (str[i] >= 7 && str[i] <= 13)))
+		i++;
 	if (str[i] == '+' || str[i] == '-')
 	{
 		if (str[i] == '-')
 			sign = -1;
 		i++;
 	}
-	while (str[i] && ft_isdigit((unsigned char)str[i]) == 0)
+	while (str[i] && ft_isdigit((unsigned char)str[i]))
 	{
 		digit = str[i] - '0';
-		if (result > (LLONG_MAX - digit) / 10)
+		if (sign == 1 && result > (LLONG_MAX / 10))
 		{
-			*out = 2;	
-			return (0);
+			error_cmd_args("exit", (char *)str, "numeric argument required");
+			// minishell->exec.error = 2;
+			*out = 2;
+			return ;
+		}
+		else if (sign == -1)
+		{
+			neg_result = result * -1;
+			if (neg_result < (LLONG_MIN / 10))
+			{
+				error_cmd_args("exit", (char *)str, "numeric argument required");
+				*out = 2;
+				// *out = 0;
+				return ;
+			}
 		}
 		result = result * 10 + digit;
 		i++;
 	}
 	*out = result * sign;
-	return (1);
+	return ;
 }
 
 int	exit_single_arg(t_minishell *minishell, char *nb)
