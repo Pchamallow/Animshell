@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 10:33:44 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 11:02:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	is_valid_path(t_minishell *minishell, t_token *token)
 	return (0);
 }
 
-static int	is_directory(t_minishell *minishell, char *str)
+int	is_directory(t_minishell *minishell, t_pipe *pipe, char *str)
 {
 	char	*dir;
 	DIR		*is_dir;
@@ -61,8 +61,10 @@ static int	is_directory(t_minishell *minishell, char *str)
 	{
 		closedir(is_dir);
 		error_cmd_args(str, NULL, "Is a directory");
-		minishell->exec.error = 126;
-		// minishell->exec.error = 1;
+		if (pipe->is_cmd)
+			minishell->exec.error = 1;
+		else
+			minishell->exec.error = 126;
 		return (1);
 	}
 	return (0);
@@ -78,7 +80,7 @@ static int	path_type(t_minishell *minishell, t_pipe *pipe, char *token)
 {
 	if (token[0] == '/')
 	{
-		if (is_directory(minishell, token))
+		if (is_directory(minishell, pipe, token))
 			return (-1);
 		if (access(token, X_OK) == 0)
 			return (1);
@@ -89,7 +91,6 @@ static int	path_type(t_minishell *minishell, t_pipe *pipe, char *token)
 				minishell->exec.error = 1;
 			else
 				minishell->exec.error = 127;
-			// exec->error = 127;
 			return (-1);
 		}
 	}
@@ -109,7 +110,7 @@ int	path_cmd(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	int		i;
 	int		len;
 
-	i = path_type(minishell, &minishell->exec, token->value);
+	i = path_type(minishell, pipe, token->value);
 	if (i == 1)
 	{
 		len = len_cmd_no_endspace(token->value) + 1;
@@ -127,7 +128,7 @@ int	path_cmd(t_minishell *minishell, t_pipe *pipe, t_token *token)
 		return (1);
 	else if (i == 2)
 	{
-		if (is_directory(minishell, token->value))
+		if (is_directory(minishell, pipe, token->value))
 			return (1);
 		if (access(token->value, X_OK) == 0)
 		{
@@ -137,7 +138,10 @@ int	path_cmd(t_minishell *minishell, t_pipe *pipe, t_token *token)
 		else
 		{
 			error_cmd_args(token->value, NULL, "No such file or directory");
-			minishell->exec.error = 127;
+			if (pipe->is_cmd)
+				minishell->exec.error = 1;
+			else
+				minishell->exec.error = 127;
 			return (1);
 		}
 	}
