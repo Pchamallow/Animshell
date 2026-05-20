@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 21:14:00 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/19 22:04:44 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/20 10:45:41 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,7 @@ void	get_exit_status(t_minishell *minishell, pid_t last_pid)
 {
 	int		child_exit_status;
 	pid_t	wpid;
-	bool	already_signaled;
 
-	already_signaled = false;
 	wpid = waitpid(-1, &child_exit_status, 0);
 	while (wpid > 0)
 	{
@@ -66,12 +64,8 @@ void	get_exit_status(t_minishell *minishell, pid_t last_pid)
 		{
 			if (WIFEXITED(child_exit_status))
 				minishell->exec.error = WEXITSTATUS(child_exit_status);
-		}
-		if (WIFSIGNALED(child_exit_status))
-		{
-			if (!already_signaled)
+			if (WIFSIGNALED(child_exit_status))
 				get_signal_status(minishell, child_exit_status);
-			already_signaled = true;
 		}
 		wpid = waitpid(-1, &child_exit_status, 0);
 	}
