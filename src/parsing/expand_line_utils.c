@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 22:15:28 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/18 10:25:01 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 21:04:00 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,25 @@ int	get_var_name_len(char *line)
 	i = 0;
 	len = ft_strlen(line);
 	while (i + wd_len < len
-		&& (ft_isalnum(line[i + wd_len]) || line[i + wd_len] == '_')
-		&& line[i + wd_len] != '$')
+		&& (ft_isalnum(line[i + wd_len]) || line[i + wd_len] == '_'))
 		wd_len++;
 	return (wd_len);
+}
+
+static bool	var_cmp(char *line, char *str, int wd_len)
+{
+	int	i;
+
+	i = 0;
+	while ((line[i] || str[i]) && i < wd_len)
+	{
+		if (line[i] != str[i])
+			return (false);
+		i++;
+	}
+	if (str[i] && str[i] != '=')
+		return (false);
+	return (true);
 }
 
 int	get_var(char *line, char **envp, int wd_len)
@@ -53,7 +68,7 @@ int	get_var(char *line, char **envp, int wd_len)
 	if (!envp)
 		return (-1);
 	j = 0;
-	while (envp[j] && ft_strncmp(line, envp[j], wd_len) != 0)
+	while (envp[j] && !var_cmp(line, envp[j], wd_len))
 		j++;
 	return (j);
 }
@@ -73,50 +88,3 @@ bool	quote_found(char *str)
 	}
 	return (false);
 }
-
-/*char	chose_quote(const char *str)*/
-/*{*/
-	/*int	i;*/
-
-	/*i = 0;*/
-	/*while (str[i] && !is_whitespace(str[i]))*/
-	/*{*/
-		/*if (str[i] == '\'')*/
-			/*return ('\"');*/
-		/*if (str[i] == '\"')*/
-			/*return ('\'');*/
-		/*i++;*/
-	/*}*/
-	/*return ('\"');*/
-/*}*/
-
-/*void	copy_src_to_dst(char *dst, const char *src, size_t *i, size_t *j)*/
-/*{*/
-		/*dst[*i + *j] = src[*j];*/
-		/*(*j)++;*/
-/*}*/
-
-/*void	ft_strlcat_add_quotes(char *dst, const char *src, size_t size)*/
-/*{*/
-	/*size_t	i;*/
-	/*size_t	j;*/
-	/*char	quote;*/
-
-	/*i = 0;*/
-	/*if (dst)*/
-		/*i = ft_strlen(dst);*/
-	/*j = 0;*/
-	/*while ((i + j) < size && src[j])*/
-	/*{*/
-		/*quote = chose_quote(src + j);*/
-		/*dst[i + j] = quote;*/
-		/*i++;*/
-		/*while ((i + j) < size && src[j] && !is_whitespace(src[j]))*/
-			/*copy_src_to_dst(dst, src, &i, &j);*/
-		/*dst[i + j] = quote;*/
-		/*i++;*/
-		/*while ((i + j) < size && src[j] && is_whitespace(src[j]))*/
-			/*copy_src_to_dst(dst, src, &i, &j);*/
-	/*}*/
-	/*dst[i + j] = '\0';*/
-/*}*/
