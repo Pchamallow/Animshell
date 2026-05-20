@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/18 09:19:45 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 14:15:29 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 {
 	t_pipe *current;
 	pid_t	pid;
-	pid_t	last_pid;
+	// pid_t	last_pid = 0;
 	int		pipefd[2];
 	int		already_output;
 	int		input_fd;
@@ -188,13 +188,16 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			minishell->here_doc->fd = -1;
 		}
 		close_fds_pipe(current);
-		if (pipe_actual == minishell->exec.nb_pipes)
-			last_pid = pid;
+		// if (pipe_actual == minishell->exec.nb_pipes)
+		// {
+		// 	last_pid = pid;
+		// 	printf("last pid = %d\n", last_pid);
+		// }
 		pipe_actual++;
 		current = current->next;
 		
 	}
-	get_exit_status(minishell, last_pid);
+	get_exit_status(minishell);
 	/*ft_printf_fd(2, "--------------------------------------------\n");*/
 }
 

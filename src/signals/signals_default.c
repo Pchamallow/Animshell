@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals_default.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 21:14:00 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/19 22:04:44 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/20 14:24:47 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void	get_signal_status(t_minishell *minishell, int child_exit_status)
 	}
 }
 
-void	get_exit_status(t_minishell *minishell, pid_t last_pid)
+void	get_exit_status(t_minishell *minishell)
 {
 	int		child_exit_status;
 	pid_t	wpid;
@@ -62,11 +62,8 @@ void	get_exit_status(t_minishell *minishell, pid_t last_pid)
 	wpid = waitpid(-1, &child_exit_status, 0);
 	while (wpid > 0)
 	{
-		if (wpid == last_pid)
-		{
-			if (WIFEXITED(child_exit_status))
-				minishell->exec.error = WEXITSTATUS(child_exit_status);
-		}
+		if (WIFEXITED(child_exit_status))
+			minishell->exec.error = WEXITSTATUS(child_exit_status);
 		if (WIFSIGNALED(child_exit_status))
 		{
 			if (!already_signaled)
