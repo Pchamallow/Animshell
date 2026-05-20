@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 16:21:46 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/20 17:25:22 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 {
 	t_pipe *current;
 	pid_t	pid;
-	// pid_t	last_pid = 0;
+	pid_t	last_pid = 0;
 	int		pipefd[2];
 	int		already_output;
 	int		input_fd;
@@ -47,7 +47,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 	input_fd = -1;
 	at_least_one_pipe = 0;
 	pipe_actual = 0;
-	/*last_pid = 0;*/
+	last_pid = 0;
 	while (current)
 	{
 		minishell->exec.error_old = minishell->exec.error;
@@ -82,6 +82,11 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		is_exit(minishell, current);
 
 		pid = fork();
+		if (pipe_actual == minishell->exec.nb_pipes)
+		{
+			last_pid = pid;
+			/*printf("last pid = %d\n", last_pid);*/
+		}
 		already_output = 0;
 
 		if (pid == 0)
@@ -198,7 +203,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		current = current->next;
 		
 	}
-	get_exit_status(minishell);
+	get_exit_status(minishell, last_pid);
 	/*ft_printf_fd(2, "--------------------------------------------\n");*/
 }
 
