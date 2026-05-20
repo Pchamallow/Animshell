@@ -61,3 +61,19 @@ void	print_pipefd(int fd1, int fd2)
 	// if (fd2)
 	// 	printf("pipefd[1] write = %d\n", fd2);
 }
+
+void	print_tokens_types(t_token *token)// pour tester
+{
+	char	*str[] = {"word", "is_cmd", "is_built_in", "is_arg", "is_filename",
+		"is_delimiter", "space", "pipe", "redirection", "is input",
+		"is_output", "is_append", "heredoc"};
+	/*char *quote[] = {"no", "single", "double"};*/
+	while (token)
+	{
+		/*ft_printf_fd(1, "%s	type=%s quote=%s\n", token->value,*/
+				/*str[token->type], quote[token->quote]);*/
+		ft_printf_fd(1, "%s		type=%s\n", token->value,
+			str[token->type]);
+		token = token->next;
+	}
+}
