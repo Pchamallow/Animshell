@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/16 19:05:05 by stkloutz         ###   ########.fr        #
+#    Updated: 2026/05/19 21:35:21 by stkloutz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,7 +77,9 @@ SRCS		:= 											\
 			src/parsing/parsing_utils.c					\
 			src/parsing/parsing_errors_free.c			\
 			src/parsing/parsing.c						\
-			src/signals/signals.c						\
+			src/signals/signals_interactive.c			\
+			src/signals/signals_heredoc.c				\
+			src/signals/signals_default.c				\
 			src/main.c									\
 
 

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 19:14:01 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/16 16:29:39 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/18 22:22:23 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,7 @@ void	ft_token_add_back(t_token **head, t_token *newer, char *line,
 	t_token	*last;
 
 	if (!head || !newer)
-	/*{*/
-		/*if (head)*/
-			/*ft_token_lstclear(head);*/
 		error_malloc(line, NULL, minishell, "token list creation");
-		/*free(line);*/
-		/*exit(2);*/
-	/*}*/
 	if (!*head)
 	{
 		*head = newer;
@@ -98,7 +92,6 @@ void	ft_token_lstclear(t_token **head)
 	current = *head;
 	while (current)
 	{
-		// printf("FREE = %s\n", current->value);
 		next = current->next;
 		ft_token_delone(current, free);
 		current = next;

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 11:21:18 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/18 10:09:51 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/18 19:45:43 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int	replace_var_name(char *line, t_expand *expand,
 			ft_strlcat_add_quotes(expand->newline,
 				minishell->exec.envp[j] + wd_len + 1, expand->count + 1);
 		}
-		// else if (ft_strchr(minishell->exec.envp[j], '='))
 		else if (index_lastchar(minishell->exec.envp[j], '=') == wd_len)
 		{
 			ft_strlcat_minishell(expand->newline,
@@ -112,13 +111,11 @@ char	*expand_line(char *line, char **envp, t_minishell *minishell)
 	if (find_env_var(line, ft_strlen(line), &expand.quote) == -1)
 		return (line);
 	expand.count = count_total_char(line, ft_strlen(line), minishell);
-	/*printf("count total = %d\n", expand.count);*/
 	if (expand.count == 0)
 	{
 		free(line);
 		return (NULL);
 	}
-	/*ft_printf_fd(1, "---------------EXPAND--------------\n");*/
 	expand.newline = ft_calloc(expand.count + 1, sizeof(char));
 	if (!expand.newline)
 		error_malloc(line, NULL, minishell, "expand line");
@@ -129,7 +126,5 @@ char	*expand_line(char *line, char **envp, t_minishell *minishell)
 	if (find_env_var(expand.newline,
 			ft_strlen(expand.newline), &expand.quote) != -1)
 		expand.newline = expand_line(expand.newline, envp, minishell);
-	/*ft_printf_fd(1, "EXPAND LINE:\n**%s**\n", expand.newline);*/
-	/*ft_printf_fd(1, "----------------------------------\n");*/
 	return (expand.newline);
 }

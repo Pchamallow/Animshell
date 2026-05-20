@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 22:10:40 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/17 10:06:07 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/18 19:47:34 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	find_env_var(char *line, int len, t_quote_type *quote)
 	{
 		toggle_quote(line[i], quote);
 		if (*quote != SINGLE && line[i] == '$' && line[i + 1]
-				&& (line[i + 1] == '?'
-				 	|| ft_isalpha(line[i + 1]) || line[i + 1] == '_'))
+			&& (line[i + 1] == '?'
+				|| ft_isalpha(line[i + 1]) || line[i + 1] == '_'))
 			return (i);
 		i++;
 	}
