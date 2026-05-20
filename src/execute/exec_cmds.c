@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 17:25:22 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/20 17:20:22 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		
 		if (read_tokens(minishell, current, input_fd) != -1)
 		{
-			if (current->cmd)
+			if (current->cmd && current->builtin_kind == NONE)
 				init_args_execve(minishell, current);
 		}
 		else
@@ -64,7 +64,8 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			break ;
 		if (current->next)
 		{
-			pipe(pipefd);
+			if (pipe(pipefd) ==  -1)
+				return ;
 			at_least_one_pipe = 1;
 		}
 

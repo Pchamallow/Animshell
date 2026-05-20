@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 14:26:02 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 11:48:36 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 16:52:00 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static void	ft_atoll_exit(const char *str, long long *out)
 	while (str[i] && ft_isdigit((unsigned char)str[i]))
 	{
 		digit = str[i] - '0';
-		if (sign == 1 && result > (LLONG_MAX / 10))
+		if (sign == 1 && result > (LLONG_MAX - digit) / 10)
 		{
 			error_cmd_args("exit", (char *)str, "numeric argument required");
 			// minishell->exec.error = 2;
@@ -86,7 +86,7 @@ static void	ft_atoll_exit(const char *str, long long *out)
 		else if (sign == -1)
 		{
 			neg_result = result * -1;
-			if (neg_result < (LLONG_MIN / 10))
+			if (neg_result < (LLONG_MIN + digit) / 10)
 			{
 				error_cmd_args("exit", (char *)str, "numeric argument required");
 				*out = 2;

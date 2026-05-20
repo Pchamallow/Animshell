@@ -7,8 +7,11 @@ display array[i]
 
 display cmd->cmd_args[1]
 
-display minishell->exec.nb_pipes
+p nb_cmd_args
 display token->value
+display pipe->cmd->next->value
+display pipe->cmd->value
+display minishell->exec.nb_pipes
 display pipe->output
 display args->value[i]
 display args->value[j]

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 17:09:15 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 17:12:26 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,8 @@ int echo_print(t_minishell *minishell, t_pipe *pipe)
 			{
 				if (is_arg == true)
 					ft_printf_fd(1, " ");
+				if (!args->value)
+					ft_printf_fd(1, "no arg value\n");
 				ft_printf_fd(1, "%s", args->value);
 				is_arg = true;
 			}
