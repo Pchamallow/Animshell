@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 13:58:02 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 16:57:52 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ static int	is_cmd(t_token *words)
 	{
 		if (token->type == IS_CMD || token->type == IS_BUILT_IN)
 			return (1);
+		else if (token->type == PIPE)
+			break ;
 		token = token->next;
 	}
 	return (0);

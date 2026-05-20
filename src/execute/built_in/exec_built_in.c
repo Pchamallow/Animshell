@@ -6,21 +6,17 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/08 19:09:27 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/25 18:23:15 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 17:01:35 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	is_built_in(t_pipe *the_pipe, t_token *token)
+void	is_built_in(t_pipe *pipe, t_token *token)
 {
-	// (void)minishell;
 	// ft_printf_fd(2, "token : %s\n", token->value);
-	t_pipe	*pipe;
 	int	len;
-	// int	result;
 
-	pipe = the_pipe;
 	len = ft_strlen(token->value);
 	if (ft_strncmp(token->value, "echo", len) == 0)
 		pipe->builtin_kind = IS_ECHO;

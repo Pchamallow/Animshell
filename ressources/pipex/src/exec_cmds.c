@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/04/21 13:40:10 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 17:25:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ void	exec_cmds(t_parse *parse, char **envp)
 	int	pid;
 	int	pipefd[2];
 
-	pipe(pipefd);
+	if (pipe(pipefd) == 1)
+		return ;
 	pid = fork();
 	if (pid == -1)
 		wrong_pid(parse, pipefd);
