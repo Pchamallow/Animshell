@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 10:32:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 11:04:24 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@ static int	init_infile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	if (token->fd < 0)
 	{
 		pipe->input = ERROR;
-		minishell->exec.error = 2;
-		strerror_file(token->value);
+		if (!is_directory(minishell, pipe, token->value))
+		{
+			minishell->exec.error = 2;
+			strerror_file(token->value);
+		}
 	}
 	if (access(token->value, R_OK) != 0)
 	// F_OK pour qu il existe, a verifier
@@ -49,9 +52,12 @@ static int	init_outfile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	if (token->fd < 0)
 	{
 		pipe->output = ERROR;
-		if (pipe->input != ERROR)
-			strerror_file(token->value);
-		minishell->exec.error = 2;
+		if (!is_directory(minishell, pipe, token->value))
+		{
+			minishell->exec.error = 2;
+			if (pipe->input != ERROR)
+				strerror_file(token->value);
+		}
 	}
 	if (access(token->value, W_OK) != 0)
 	{
