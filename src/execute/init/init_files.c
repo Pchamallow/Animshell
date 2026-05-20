@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 11:04:24 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 13:58:02 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,14 @@
 
 static int	init_infile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 {
+	if (is_directory(minishell, pipe, token->value))
+		return (-1);
 	token->fd = open(token->value, O_RDONLY);
 	if (token->fd < 0)
 	{
 		pipe->input = ERROR;
-		if (!is_directory(minishell, pipe, token->value))
-		{
-			minishell->exec.error = 2;
-			strerror_file(token->value);
-		}
+		minishell->exec.error = 2;
+		strerror_file(token->value);
 	}
 	if (access(token->value, R_OK) != 0)
 	// F_OK pour qu il existe, a verifier
@@ -45,6 +44,8 @@ write in file after previous contente
 */
 static int	init_outfile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 {
+	if (is_directory(minishell, pipe, token->value))
+		return (-1);
 	if (token->file_output == 2)
 		token->fd = open(token->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
@@ -52,12 +53,9 @@ static int	init_outfile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	if (token->fd < 0)
 	{
 		pipe->output = ERROR;
-		if (!is_directory(minishell, pipe, token->value))
-		{
-			minishell->exec.error = 2;
-			if (pipe->input != ERROR)
-				strerror_file(token->value);
-		}
+		minishell->exec.error = 2;
+		if (pipe->input != ERROR)
+			strerror_file(token->value);
 	}
 	if (access(token->value, W_OK) != 0)
 	{
@@ -116,9 +114,9 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe, int fd)
 		else if (token->type == IS_APPEND && token->next != NULL)
 			token->next->file_output = 2;
 		else if (token->file_input
-			&& (init_infile(minishell, pipe, token) == 0)
+			&& pipe->input != ERROR
 			&& pipe->input != IS_HEREDOC
-			&& pipe->input != ERROR)
+			&& (init_infile(minishell, pipe, token) == 0))
 		{
 			if (pipe->input == IS_FILE)
 				close_fd(&pipe->infile->fd);
@@ -127,8 +125,8 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe, int fd)
 		}
 		
 		else if (token->file_output
-			&& init_outfile(minishell, pipe, token) == 0
-			&& pipe->output != ERROR)
+			&& pipe->output != ERROR
+			&& init_outfile(minishell, pipe, token) == 0)
 		{
 			if (pipe->output == IS_FILE)
 				close_fd(&pipe->outfile->fd);

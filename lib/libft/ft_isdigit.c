@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 17:33:59 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/01/31 19:35:27 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 11:26:18 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 int	ft_isdigit(int c)
 {
 	if (c >= '0' && c <= '9')
-		return (0);
-	return (1);
+		return (1);
+	return (0);
 }

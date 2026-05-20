@@ -133,9 +133,24 @@ $> invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid
     minishell: invalid_xyz: command not found
   --- FIN VALGRIND ---
 
+Test 13: pipe 20x ls  [OK]
+$> ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls
+
+Test 14: pipe 50x ls  [OK]
+$> ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls | ls
+
 ════════════════════════════════════════════════════
   [2] REDIRECTIONS
 ════════════════════════════════════════════════════
+
+Test 15: redirect out  [OK]
+$> echo hello > /tmp/ra_out.txt
+
+Test 16: redirect append  [OK]
+$> echo hello >> /tmp/ra_app.txt
+
+Test 17: redirect in  [OK]
+$> cat < /tmp/ra_out.txt
 
 Test 18: redirect no file >  [FAIL]
 $> > 
@@ -203,12 +218,11 @@ $> cat < /nonexistent_file_xyz
 
 Test 23: > dossier  [FAIL]
 $> echo hi > /tmp
-  minishell [exit=2]:
+  minishell [exit=1]:
     stdout : minishell$ echo hi > /tmp�minishell$ exit�
     stderr : /tmp: Is a directory�
   bash      [exit=1]:
     stderr : /tmp: Is a directory�
-  !! exit code différent : minishell=2  bash=1
   !! stdout différent
   --- VALGRIND OUTPUT COMPLET ---
     minishell: /tmp: Is a directory
@@ -250,6 +264,9 @@ $> echo hi >> /root/noperm_xyz.txt
     minishell: /root/noperm_xyz.txt: Permission denied
   --- FIN VALGRIND ---
 
+Test 27: multiple > same cmd  [OK]
+$> echo hi > /tmp/ra_m1.txt > /tmp/ra_m2.txt
+
 Test 28: > /dev/full  [FAIL]
 $> echo hi > /dev/full
   minishell [exit=0]:
@@ -259,6 +276,9 @@ $> echo hi > /dev/full
   !! exit code différent : minishell=0  bash=1
   !! stdout différent
   !! stderr différent
+
+Test 29: pipe then redir  [OK]
+$> echo hi | cat > /tmp/ra_pr.txt
 
 Test 30: >>> triple out  [FAIL]
 $> echo hi >>> /tmp/ra_trip.txt
@@ -485,6 +505,24 @@ $> echo hi > > > /tmp/ra_sp.txt
   [3] HEREDOC
 ════════════════════════════════════════════════════
 
+Test 47: heredoc basic  [OK]
+$> cat <<EOF
+
+Test 48: heredoc empty  [OK]
+$> cat <<EOF
+
+Test 49: heredoc no term  [OK]
+$> cat <<EOF
+
+Test 50: heredoc with var  [OK]
+$> cat <<EOF
+
+Test 51: heredoc quoted delim  [OK]
+$> cat <<"EOF"
+
+Test 52: heredoc pipe after  [OK]
+$> cat <<EOF | cat
+
 ════════════════════════════════════════════════════
   [4] QUOTES
 ════════════════════════════════════════════════════
@@ -675,6 +713,9 @@ $> echo $1
   bash      [exit=0]:
   !! stdout différent
 
+Test 75: very long expansion  [OK]
+$> echo $HOME$HOME$HOME$HOME$HOME$HOME$HOME$HOME
+
 ════════════════════════════════════════════════════
   [6] BUILTINS — echo
 ════════════════════════════════════════════════════
@@ -795,9 +836,24 @@ $> unset HOME
   bash      [exit=0]:
   !! stdout différent
 
+Test 90: cd /tmp clean  [OK]
+$> cd /tmp
+
+Test 91: cd nonexist leak  [OK]
+$> cd /nonexistent_xyz
+
 ════════════════════════════════════════════════════
   [8] BUILTINS — export
 ════════════════════════════════════════════════════
+
+Test 92: export simple  [OK]
+$> export _VG_A=hello
+
+Test 93: export empty val  [OK]
+$> export _VG_A=
+
+Test 94: export no val  [OK]
+$> export _VG_A
 
 Test 95: export invalid chiffre  [FAIL]
 $> export 1BAD=val
@@ -850,6 +906,18 @@ $> export bad@name=val
   --- VALGRIND OUTPUT COMPLET ---
     minishell: export: 'bad@name=val': not a valid identifier
   --- FIN VALGRIND ---
+
+Test 99: export quoted val  [OK]
+$> export _VG_A="hello world"
+
+Test 100: export single quotes val  [OK]
+$> export _VG_A='hello'
+
+Test 101: export empty dbl  [OK]
+$> export _VG_A=""
+
+Test 102: export empty sgl  [OK]
+$> export _VG_A=''
 
 Test 103: export dbl wraps singles vides  [FAIL]
 $> export _A="''"
@@ -990,6 +1058,12 @@ $> unset bad-name
   bash      [exit=0]:
   !! stdout différent
 
+Test 121: unset HOME  [OK]
+$> unset HOME
+
+Test 122: unset existing  [OK]
+$> unset PATH
+
 ════════════════════════════════════════════════════
   [10] BUILTINS — exit
 ════════════════════════════════════════════════════
@@ -1031,9 +1105,33 @@ $> exit 1 2 3
     minishell: exit: 1: too many arguments
   --- FIN VALGRIND ---
 
+Test 126: exit 0  [OK]
+$> exit 0
+
+Test 127: exit 1  [OK]
+$> exit 1
+
+Test 128: exit 42  [OK]
+$> exit 42
+
+Test 129: exit 126  [OK]
+$> exit 126
+
+Test 130: exit 127  [OK]
+$> exit 127
+
+Test 131: exit sans arg  [OK]
+$> exit
+
 ════════════════════════════════════════════════════
   [11] BUILTINS — env / pwd
 ════════════════════════════════════════════════════
+
+Test 132: env  [OK]
+$> env
+
+Test 133: pwd  [OK]
+$> pwd
 
 Test 134: pwd with args  [FAIL]
 $> pwd /tmp
@@ -1115,9 +1213,66 @@ $> /tmp/ra_noperm.sh
   [13] SANS PATH / ENV VIDE
 ════════════════════════════════════════════════════
 
+Test 140: echo sans PATH  [OK]
+$> echo hello
+
+Test 141: cmd not found sans PATH  [OK]
+$> ls
+
+Test 142: pipe absolu sans PATH  [OK]
+$> /bin/echo hi | /bin/cat
+
+Test 143: pipe cmd not found sans PATH  [OK]
+$> ls | cat
+
+Test 144: export sans PATH  [OK]
+$> export _VG_B=hello
+
+Test 145: env vide echo  [OK]
+$> echo hello
+
+Test 146: env vide cmd not found  [OK]
+$> ls
+
+Test 147: env vide pipe absolu  [OK]
+$> /bin/echo hi | /bin/cat
+
+Test 148: env vide redir  [OK]
+$> /bin/echo hi > /tmp/ra_ev.txt
+
+Test 149: env vide heredoc  [OK]
+$> /bin/cat <<EOF
+
+Test 150: env vide exit  [OK]
+$> exit 0
+
 ════════════════════════════════════════════════════
   [14] EDGE CASES
 ════════════════════════════════════════════════════
+
+Test 151: empty input  [OK]
+$> 
+
+Test 152: only spaces  [OK]
+$>    
+
+Test 153: tilde  [OK]
+$> echo ~
+
+Test 154: slash cmd  [OK]
+$> /bin/echo hello
+
+Test 155: very long cmd  [OK]
+$> echo aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+Test 156: many args  [OK]
+$> echo arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg arg
+
+Test 157: null cmd quotes  [OK]
+$> ""
+
+Test 158: dollar question pipe  [OK]
+$> false | echo $?
 
 ════════════════════════════════════════════════════
   [15] TESTS REPOS ETUDIANTS — CRASH / SEGFAULT
@@ -1376,6 +1531,27 @@ $> <<| echo wtf
     minishell: syntax error near unexpected token '<<'
   --- FIN VALGRIND ---
 
+Test 179: commande tout-quotes  [OK]
+$> p""'''w''''''''''''''''''''''''''d
+
+Test 180: echo vide + ok  [OK]
+$> ''echo ok
+
+Test 181: echo dbl vide + ok  [OK]
+$> ""echo ok
+
+Test 182: cmd entre doubles  [OK]
+$> "echo" 42
+
+Test 183: cmd entre singles  [OK]
+$> 'echo' 42
+
+Test 184: ls entre singles/doubles  [OK]
+$> ''''''"ls"''''''
+
+Test 185: echo flag quote  [OK]
+$> echo -n"-n" bonjour
+
 Test 186: exit très grand positif  [FAIL]
 $> exit 9223372036854775807
   minishell [exit=255]:
@@ -1385,27 +1561,28 @@ $> exit 9223372036854775807
 
 Test 187: exit overflow positif  [FAIL]
 $> exit 9223372036854775808
-  minishell [exit=2]:
+  minishell [exit=0]:
     stdout : minishell$ exit 9223372036854775808�exit�
   bash      [exit=2]:
     stderr : exit: 9223372036854775808: numeric argument required�
+  !! exit code différent : minishell=0  bash=2
   !! stdout différent
   !! stderr différent
 
 Test 188: exit très grand négatif  [FAIL]
 $> exit -9223372036854775808
-  minishell [exit=2]:
+  minishell [exit=0]:
     stdout : minishell$ exit -9223372036854775808�exit�
   bash      [exit=0]:
-  !! exit code différent : minishell=2  bash=0
   !! stdout différent
 
 Test 189: exit overflow négatif  [FAIL]
 $> exit -9223372036854775809
-  minishell [exit=2]:
+  minishell [exit=255]:
     stdout : minishell$ exit -9223372036854775809�exit�
   bash      [exit=2]:
     stderr : exit: -9223372036854775809: numeric argument required�
+  !! exit code différent : minishell=255  bash=2
   !! stdout différent
   !! stderr différent
 
@@ -1413,19 +1590,25 @@ Test 190: exit infini positif  [FAIL]
 $> exit 9999999999999999999999999999999999
   minishell [exit=2]:
     stdout : minishell$ exit 9999999999999999999999999999999999�exit�
+    stderr : exit: 9999999999999999999999999999999999: numeric argument required�
   bash      [exit=2]:
     stderr : exit: 9999999999999999999999999999999999: numeric argument required�
   !! stdout différent
-  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: 9999999999999999999999999999999999: numeric argument required
+  --- FIN VALGRIND ---
 
 Test 191: exit infini négatif  [FAIL]
 $> exit -9999999999999999999999999999999999
   minishell [exit=2]:
     stdout : minishell$ exit -9999999999999999999999999999999999�exit�
+    stderr : exit: -9999999999999999999999999999999999: numeric argument required�
   bash      [exit=2]:
     stderr : exit: -9999999999999999999999999999999999: numeric argument required�
   !! stdout différent
-  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: -9999999999999999999999999999999999: numeric argument required
+  --- FIN VALGRIND ---
 
 Test 192: exit +42  [FAIL]
 $> exit +42
@@ -1503,16 +1686,10 @@ $> exit 123"123"
 
 Test 201: exit ' 5'  [FAIL]
 $> exit ' 5'
-  minishell [exit=2]:
+  minishell [exit=5]:
     stdout : minishell$ exit ' 5'�exit�
-    stderr : exit:  5: numeric argument required�
   bash      [exit=5]:
-  !! exit code différent : minishell=2  bash=5
   !! stdout différent
-  !! stderr différent
-  --- VALGRIND OUTPUT COMPLET ---
-    minishell: exit:  5: numeric argument required
-  --- FIN VALGRIND ---
 
 Test 202: exit '5 '  [FAIL]
 $> exit '5 '
@@ -1900,13 +2077,15 @@ $> echo $/ $/
 
 Test 238: $? seul  [FAIL]
 $> $?
-  minishell [exit=0]:
+  minishell [exit=127]:
     stdout : minishell$ $?�minishell$ exit�
+    stderr : 0: command not found�
   bash      [exit=127]:
     stderr : 0: command not found�
-  !! exit code différent : minishell=0  bash=127
   !! stdout différent
-  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: 0: command not found
+  --- FIN VALGRIND ---
 
 Test 239: echo $USER42  [FAIL]
 $> echo $USER42
@@ -2118,6 +2297,15 @@ $> cat | cat | ls
     stdout : includes�la�lib�
   !! stdout différent
 
+Test 264: heredoc delim var  [OK]
+$> cat << $USER
+
+Test 265: heredoc delim quotes mix  [OK]
+$> cat << "$US"E"R"
+
+Test 266: heredoc pipe gauche  [OK]
+$> ls | cat << stop | grep "asd"
+
 Test 267: heredoc + redirect combo  [FAIL]
 $> cat << here -e
   minishell [exit=0]:
@@ -2138,17 +2326,17 @@ $> << echo oi
   --- VALGRIND OUTPUT COMPLET ---
     minishell: warning: here-document delimited by end-of-file (wanted 'echo')
     minishell: oi: command not found
-    ==265402== FILE DESCRIPTORS: 4 open (3 std) at exit.
-    ==265402== Open file descriptor 3:
-    ==265402==    at 0x49E10FD: pipe (pipe.c:29)
-    ==265402==    by 0x40843B: heredoc (heredoc.c:88)
-    ==265402==    by 0x404C02: find_input_output (init_files.c:122)
-    ==265402==    by 0x405CBE: read_tokens (read_token.c:301)
-    ==265402==    by 0x4079A4: exec_cmds_pipe (exec_cmds.c:55)
-    ==265402==    by 0x4081DB: execute (execute.c:122)
-    ==265402==    by 0x40AF7C: main (main.c:69)
-    ==265402== 
-    ==265402== 
+    ==441452== FILE DESCRIPTORS: 4 open (3 std) at exit.
+    ==441452== Open file descriptor 3:
+    ==441452==    at 0x49E10FD: pipe (pipe.c:29)
+    ==441452==    by 0x4086DB: heredoc (heredoc.c:88)
+    ==441452==    by 0x404D84: find_input_output (init_files.c:142)
+    ==441452==    by 0x405F5E: read_tokens (read_token.c:301)
+    ==441452==    by 0x407C44: exec_cmds_pipe (exec_cmds.c:55)
+    ==441452==    by 0x40847B: execute (execute.c:122)
+    ==441452==    by 0x40B21C: main (main.c:69)
+    ==441452== 
+    ==441452== 
   --- FIN VALGRIND ---
 
 Test 269: | seul  [FAIL]
@@ -2673,8 +2861,23 @@ $> mkdir /tmp/ms_fs_g
     stdout : /home/pswirgie�
   !! stdout différent
 
+Test 315: vg: mkdir+cd+rm+pwd  [OK]
+$> mkdir /tmp/ms_fs_vg1
+
+Test 316: vg: mkdir a/b+cd b+rm a  [OK]
+$> mkdir -p /tmp/ms_fs_vg2/b
+
+Test 317: vg: cd+rm+echo ok  [OK]
+$> mkdir /tmp/ms_fs_vg3
+
+Test 318: vg: cd+rm+pipe  [OK]
+$> mkdir /tmp/ms_fs_vg4
+
+Test 319: vg: fichier+rm+cat  [OK]
+$> echo hi > /tmp/ms_fs_vg5
+
 ════════════════════════════════════════════════════
-  RECAP GLOBAL  (2026-05-20 10:06:22)
+  RECAP GLOBAL  (2026-05-20 13:47:23)
 ════════════════════════════════════════════════════
   TOTAL TESTS : 319
   PASS        : 67
