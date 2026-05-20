@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 14:24:56 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 15:55:54 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ int		main(int argc, char **argv, char **envp);
 void	init_exec(t_minishell *minishell);
 void	init_pipe(t_minishell *minishell);
 /************************************************************* execute */
-int		execute(t_minishell *minishell, char **envp);
+int		execute(t_minishell *minishell);
 void	get_paths_for_cmd(t_minishell *minishell);
 int		read_tokens(t_minishell *minishell, t_pipe *pipe, int fd);
 int		nb_args(t_token *token);
