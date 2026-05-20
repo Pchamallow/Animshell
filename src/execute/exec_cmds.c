@@ -47,6 +47,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 	input_fd = -1;
 	at_least_one_pipe = 0;
 	pipe_actual = 0;
+	last_pid = 0;
 	while (current)
 	{
 		minishell->exec.error_old = minishell->exec.error;
