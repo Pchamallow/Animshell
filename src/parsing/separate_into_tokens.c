@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/18 22:25:52 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/20 10:10:31 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	separate_into_tokens(char *line, t_token **token_list,
 {
 	int	i;
 
-	if (!line || line[0] == '0')
+	if (!line || line[0] == '\0')
 	{
 		if (line)
 			free(line);

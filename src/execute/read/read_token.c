@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/18 10:32:30 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 10:32:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 		}
 		else if (token->type == IS_CMD)
 		{
-			invalid_cmd = path_cmd(minishell, token);
+			invalid_cmd = path_cmd(minishell, pipe, token);
 			if (!invalid_cmd)
 			{
 				pipe->cmd = token;

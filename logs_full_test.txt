@@ -1,0 +1,2684 @@
+
+════════════════════════════════════════════════════
+  [1] PIPES
+════════════════════════════════════════════════════
+
+Test 1: simple pipe  [FAIL]
+$> echo hello | cat
+  minishell [exit=0]:
+    stdout : minishell$ echo hello | cat�hello�minishell$ exit�
+  bash      [exit=0]:
+    stdout : hello�
+  !! stdout différent
+
+Test 2: triple pipe  [FAIL]
+$> echo a | cat | cat
+  minishell [exit=0]:
+    stdout : minishell$ echo a | cat | cat�a�minishell$ exit�
+  bash      [exit=0]:
+    stdout : a�
+  !! stdout différent
+
+Test 3: pipe chain 6  [FAIL]
+$> ls | cat | cat | cat | cat | cat
+  minishell [exit=0]:
+    stdout : minishell$ ls | cat | cat | cat | cat | cat�includes�lib�
+  bash      [exit=0]:
+    stdout : includes�lib�logs_full_test.txt�
+  !! stdout différent
+
+Test 4: pipe invalid cmds  [FAIL]
+$> ls | ldkdkd | ls | lk
+  minishell [exit=127]:
+    stdout : minishell$ ls | ldkdkd | ls | lk�minishell$ exit�
+    stderr : ldkdkd: command not found�lk: command not found�
+  bash      [exit=127]:
+    stderr : ldkdkd: command not found�lk: command not found�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: ldkdkd: command not found
+    minishell: lk: command not found
+  --- FIN VALGRIND ---
+
+Test 5: pipe no left  [FAIL]
+$> | ls
+  minishell [exit=2]:
+    stdout : minishell$ | ls�minishell$ exit�
+    stderr : syntax error near unexpected token '|'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`| ls'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '|'
+  --- FIN VALGRIND ---
+
+Test 6: pipe no right  [FAIL]
+$> ls |
+  minishell [exit=2]:
+    stdout : minishell$ ls |�minishell$ exit�
+    stderr : syntax error near unexpected token '|'�
+  bash      [exit=2]:
+    stderr : syntax error: unexpected end of file�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '|'
+  --- FIN VALGRIND ---
+
+Test 7: pipe empty string  [FAIL]
+$> echo '' | cat
+  minishell [exit=0]:
+    stdout : minishell$ echo '' | cat��minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 8: pipe newline  [FAIL]
+$> printf "a\nb\nc" | wc -l
+  minishell [exit=0]:
+    stdout : minishell$ printf "a\nb\nc" | wc -l�2�minishell$ exit�
+  bash      [exit=0]:
+    stdout : 2�
+  !! stdout différent
+
+Test 9: pipe to grep  [FAIL]
+$> echo hello | grep hello
+  minishell [exit=0]:
+    stdout : minishell$ echo hello | grep hello�hello�minishell$ exit�
+  bash      [exit=0]:
+    stdout : hello�
+  !! stdout différent
+
+Test 10: pipe many invalid  [FAIL]
+$> lkjh | lkjh | lkjh | lkjh | lkjh
+  minishell [exit=127]:
+    stdout : minishell$ lkjh | lkjh | lkjh | lkjh | lkjh�minishell$ exit�
+    stderr : lkjh: command not found�lkjh: command not found�lkjh: command not found�
+  bash      [exit=127]:
+    stderr : lkjh: command not found�lkjh: command not found�lkjh: command not found�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: lkjh: command not found
+    minishell: lkjh: command not found
+    minishell: lkjh: command not found
+    minishell: lkjh: command not found
+    minishell: lkjh: command not found
+  --- FIN VALGRIND ---
+
+Test 11: pipe exit code  [FAIL]
+$> false | true
+  minishell [exit=0]:
+    stdout : minishell$ false | true�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 12: pipe all invalid 10x  [FAIL]
+$> invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz
+  minishell [exit=127]:
+    stdout : minishell$ invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz | invalid_xyz�minishell$ exit�
+    stderr : invalid_xyz: command not found�invalid_xyz: command not found�invalid_xyz: command not found�
+  bash      [exit=127]:
+    stderr : invalid_xyz: command not found�invalid_xyz: command not found�invalid_xyz: command not found�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: invalid_xyz: command not found
+    minishell: invalid_xyz: command not found
+    minishell: invalid_xyz: command not found
+    minishell: invalid_xyz: command not found
+    minishell: invalid_xyz: command not found
+    minishell: invalid_xyz: command not found
+    minishell: invalid_xyz: command not found
+    minishell: invalid_xyz: command not found
+    minishell: invalid_xyz: command not found
+    minishell: invalid_xyz: command not found
+  --- FIN VALGRIND ---
+
+════════════════════════════════════════════════════
+  [2] REDIRECTIONS
+════════════════════════════════════════════════════
+
+Test 18: redirect no file >  [FAIL]
+$> > 
+  minishell [exit=2]:
+    stdout : minishell$ > �minishell$ exit�
+    stderr : syntax error near unexpected token '>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `newline'�`> '�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>'
+  --- FIN VALGRIND ---
+
+Test 19: redirect no file <  [FAIL]
+$> < 
+  minishell [exit=2]:
+    stdout : minishell$ < �minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `newline'�`< '�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 20: redirect no file >>  [FAIL]
+$> >> 
+  minishell [exit=2]:
+    stdout : minishell$ >> �minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `newline'�`>> '�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 21: redirect no file <<  [FAIL]
+$> cat <<
+  minishell [exit=2]:
+    stdout : minishell$ cat <<�minishell$ exit�
+    stderr : syntax error near unexpected token '<<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `newline'�`cat <<'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<<'
+  --- FIN VALGRIND ---
+
+Test 22: redirect nonexist <  [FAIL]
+$> cat < /nonexistent_file_xyz
+  minishell [exit=1]:
+    stdout : minishell$ cat < /nonexistent_file_xyz�minishell$ exit�
+    stderr : /nonexistent_file_xyz: No such file or directory�
+  bash      [exit=1]:
+    stderr : /nonexistent_file_xyz: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: /nonexistent_file_xyz: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 23: > dossier  [FAIL]
+$> echo hi > /tmp
+  minishell [exit=2]:
+    stdout : minishell$ echo hi > /tmp�minishell$ exit�
+    stderr : /tmp: Is a directory�
+  bash      [exit=1]:
+    stderr : /tmp: Is a directory�
+  !! exit code différent : minishell=2  bash=1
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: /tmp: Is a directory
+  --- FIN VALGRIND ---
+
+Test 24: < dossier  [FAIL]
+$> cat < /tmp
+  minishell [exit=1]:
+    stdout : minishell$ cat < /tmp�minishell$ exit�
+    stderr : cat: -: Is a directory�
+  bash      [exit=1]:
+    stderr : cat: -: Is a directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    cat: -: Is a directory
+  --- FIN VALGRIND ---
+
+Test 25: > sans permission  [FAIL]
+$> echo hi > /root/noperm_xyz.txt
+  minishell [exit=1]:
+    stdout : minishell$ echo hi > /root/noperm_xyz.txt�minishell$ exit�
+    stderr : /root/noperm_xyz.txt: Permission denied�
+  bash      [exit=1]:
+    stderr : /root/noperm_xyz.txt: Permission denied�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: /root/noperm_xyz.txt: Permission denied
+  --- FIN VALGRIND ---
+
+Test 26: >> sans permission  [FAIL]
+$> echo hi >> /root/noperm_xyz.txt
+  minishell [exit=1]:
+    stdout : minishell$ echo hi >> /root/noperm_xyz.txt�minishell$ exit�
+    stderr : /root/noperm_xyz.txt: Permission denied�
+  bash      [exit=1]:
+    stderr : /root/noperm_xyz.txt: Permission denied�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: /root/noperm_xyz.txt: Permission denied
+  --- FIN VALGRIND ---
+
+Test 28: > /dev/full  [FAIL]
+$> echo hi > /dev/full
+  minishell [exit=0]:
+    stdout : minishell$ echo hi > /dev/full�minishell$ exit�
+  bash      [exit=1]:
+    stderr : echo: write error: No space left on device�
+  !! exit code différent : minishell=0  bash=1
+  !! stdout différent
+  !! stderr différent
+
+Test 30: >>> triple out  [FAIL]
+$> echo hi >>> /tmp/ra_trip.txt
+  minishell [exit=2]:
+    stdout : minishell$ echo hi >>> /tmp/ra_trip.txt�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo hi >>> /tmp/ra_trip.txt'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 31: >>>> quadruple out  [FAIL]
+$> echo hi >>>> /tmp/ra_quad.txt
+  minishell [exit=2]:
+    stdout : minishell$ echo hi >>>> /tmp/ra_quad.txt�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>>'�`echo hi >>>> /tmp/ra_quad.txt'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 32: >>>>>>>>>> 10x out  [FAIL]
+$> echo hi >>>>>>>>>> /tmp/ra_10.txt
+  minishell [exit=2]:
+    stdout : minishell$ echo hi >>>>>>>>>> /tmp/ra_10.txt�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>>'�`echo hi >>>>>>>>>> /tmp/ra_10.txt'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 33: >>>>>>>>>>>>>>>> 16x out  [FAIL]
+$> echo hi >>>>>>>>>>>>>>>> /tmp/ra_16.txt
+  minishell [exit=2]:
+    stdout : minishell$ echo hi >>>>>>>>>>>>>>>> /tmp/ra_16.txt�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>>'�`echo hi >>>>>>>>>>>>>>>> /tmp/ra_16.txt'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 34: >>> sans fichier  [FAIL]
+$> >>>
+  minishell [exit=2]:
+    stdout : minishell$ >>>�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`>>>'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 35: >>>> sans fichier  [FAIL]
+$> >>>>
+  minishell [exit=2]:
+    stdout : minishell$ >>>>�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>>'�`>>>>'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 36: pipe puis >>>  [FAIL]
+$> echo hi | cat >>> /tmp/ra_ptrip.txt
+  minishell [exit=2]:
+    stdout : minishell$ echo hi | cat >>> /tmp/ra_ptrip.txt�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo hi | cat >>> /tmp/ra_ptrip.txt'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 37: >>> puis pipe  [FAIL]
+$> echo hi >>> /tmp/ra_trip2.txt | cat
+  minishell [exit=2]:
+    stdout : minishell$ echo hi >>> /tmp/ra_trip2.txt | cat�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo hi >>> /tmp/ra_trip2.txt | cat'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 38: ls | >>> /tmp  [FAIL]
+$> ls | >>> /tmp/ra_pleft.txt
+  minishell [exit=2]:
+    stdout : minishell$ ls | >>> /tmp/ra_pleft.txt�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`ls | >>> /tmp/ra_pleft.txt'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 39: >>> | cat  [FAIL]
+$> >>> /tmp/ra_pr3.txt | cat
+  minishell [exit=2]:
+    stdout : minishell$ >>> /tmp/ra_pr3.txt | cat�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`>>> /tmp/ra_pr3.txt | cat'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 40: multi >>> dans cmd  [FAIL]
+$> echo hi >>> /tmp/a.txt >>> /tmp/b.txt
+  minishell [exit=2]:
+    stdout : minishell$ echo hi >>> /tmp/a.txt >>> /tmp/b.txt�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo hi >>> /tmp/a.txt >>> /tmp/b.txt'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 41: >>> nonexist dir  [FAIL]
+$> echo hi >>> /nonexist_dir_xyz/file.txt
+  minishell [exit=2]:
+    stdout : minishell$ echo hi >>> /nonexist_dir_xyz/file.txt�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo hi >>> /nonexist_dir_xyz/file.txt'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 42: pipe | >>> vide  [FAIL]
+$> echo x | >>>
+  minishell [exit=2]:
+    stdout : minishell$ echo x | >>>�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo x | >>>'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 43: >>> puis > combiné  [FAIL]
+$> echo hi >>> /tmp/a.txt > /tmp/b.txt
+  minishell [exit=2]:
+    stdout : minishell$ echo hi >>> /tmp/a.txt > /tmp/b.txt�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo hi >>> /tmp/a.txt > /tmp/b.txt'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 44: >>> dans pipe long  [FAIL]
+$> echo hi | cat | cat >>> /tmp/ra_long.txt | cat
+  minishell [exit=2]:
+    stdout : minishell$ echo hi | cat | cat >>> /tmp/ra_long.txt | cat�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo hi | cat | cat >>> /tmp/ra_long.txt | cat'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 45: < < < espace séparé  [FAIL]
+$> cat < < < hello
+  minishell [exit=2]:
+    stdout : minishell$ cat < < < hello�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `<'�`cat < < < hello'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 46: > > > espace séparé  [FAIL]
+$> echo hi > > > /tmp/ra_sp.txt
+  minishell [exit=2]:
+    stdout : minishell$ echo hi > > > /tmp/ra_sp.txt�minishell$ exit�
+    stderr : syntax error near unexpected token '>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo hi > > > /tmp/ra_sp.txt'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>'
+  --- FIN VALGRIND ---
+
+════════════════════════════════════════════════════
+  [3] HEREDOC
+════════════════════════════════════════════════════
+
+════════════════════════════════════════════════════
+  [4] QUOTES
+════════════════════════════════════════════════════
+
+Test 53: double quotes basic  [FAIL]
+$> echo "hello world"
+  minishell [exit=0]:
+    stdout : minishell$ echo "hello world"�hello world�minishell$ exit�
+  bash      [exit=0]:
+    stdout : hello world�
+  !! stdout différent
+
+Test 54: single quotes basic  [FAIL]
+$> echo 'hello world'
+  minishell [exit=0]:
+    stdout : minishell$ echo 'hello world'�hello world�minishell$ exit�
+  bash      [exit=0]:
+    stdout : hello world�
+  !! stdout différent
+
+Test 55: mixed quotes  [FAIL]
+$> echo "hello" 'world'
+  minishell [exit=0]:
+    stdout : minishell$ echo "hello" 'world'�hello world�minishell$ exit�
+  bash      [exit=0]:
+    stdout : hello world�
+  !! stdout différent
+
+Test 56: unclosed double  [FAIL]
+$> echo "hello
+  minishell [exit=2]:
+    stdout : minishell$ echo "hello�minishell$ exit�
+    stderr : error unclosed quotes�
+  bash      [exit=2]:
+    stderr : unexpected EOF while looking for matching `"'�syntax error: unexpected end of file�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: error unclosed quotes
+  --- FIN VALGRIND ---
+
+Test 57: unclosed single  [FAIL]
+$> echo 'hello
+  minishell [exit=2]:
+    stdout : minishell$ echo 'hello�minishell$ exit�
+    stderr : error unclosed quotes�
+  bash      [exit=2]:
+    stderr : unexpected EOF while looking for matching `''�syntax error: unexpected end of file�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: error unclosed quotes
+  --- FIN VALGRIND ---
+
+Test 58: empty double quotes  [FAIL]
+$> echo ""
+  minishell [exit=0]:
+    stdout : minishell$ echo ""��minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 59: empty single quotes  [FAIL]
+$> echo ''
+  minishell [exit=0]:
+    stdout : minishell$ echo ''��minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 60: quote avec dollar  [FAIL]
+$> echo "$HOME"
+  minishell [exit=0]:
+    stdout : minishell$ echo "$HOME"�/home/pswirgie�minishell$ exit�
+  bash      [exit=0]:
+    stdout : /home/pswirgie�
+  !! stdout différent
+
+Test 61: single no expand  [FAIL]
+$> echo '$HOME'
+  minishell [exit=0]:
+    stdout : minishell$ echo '$HOME'�$HOME�minishell$ exit�
+  bash      [exit=0]:
+    stdout : $HOME�
+  !! stdout différent
+
+Test 62: nested single in double  [FAIL]
+$> echo "hel'lo"
+  minishell [exit=0]:
+    stdout : minishell$ echo "hel'lo"�hel'lo�minishell$ exit�
+  bash      [exit=0]:
+    stdout : hel'lo�
+  !! stdout différent
+
+Test 63: double in single  [FAIL]
+$> echo 'hel"lo'
+  minishell [exit=0]:
+    stdout : minishell$ echo 'hel"lo'�hel"lo�minishell$ exit�
+  bash      [exit=0]:
+    stdout : hel"lo�
+  !! stdout différent
+
+Test 64: quote with pipe  [FAIL]
+$> echo "a|b"
+  minishell [exit=0]:
+    stdout : minishell$ echo "a|b"�a|b�minishell$ exit�
+  bash      [exit=0]:
+    stdout : a|b�
+  !! stdout différent
+
+Test 65: quote with redirect  [FAIL]
+$> echo "a>b"
+  minishell [exit=0]:
+    stdout : minishell$ echo "a>b"�a>b�minishell$ exit�
+  bash      [exit=0]:
+    stdout : a>b�
+  !! stdout différent
+
+Test 66: alternating quotes  [FAIL]
+$> echo 'a'"b"'c'"d"
+  minishell [exit=0]:
+    stdout : minishell$ echo 'a'"b"'c'"d"�abcd�minishell$ exit�
+  bash      [exit=0]:
+    stdout : abcd�
+  !! stdout différent
+
+════════════════════════════════════════════════════
+  [5] VARIABLES / EXPANSION
+════════════════════════════════════════════════════
+
+Test 67: expand HOME  [FAIL]
+$> echo $HOME
+  minishell [exit=0]:
+    stdout : minishell$ echo $HOME�/home/pswirgie�minishell$ exit�
+  bash      [exit=0]:
+    stdout : /home/pswirgie�
+  !! stdout différent
+
+Test 68: expand PATH  [FAIL]
+$> echo $PATH
+  minishell [exit=0]:
+    stdout : minishell$ echo $PATH�/home/pswirgie/.local/bin:/home/pswirgie/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/home/pswirgie/bin:/home/pswirgie/.local/bin:/home/pswirgie/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin�minishell$ exit�
+  bash      [exit=0]:
+    stdout : /home/pswirgie/.local/bin:/home/pswirgie/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/home/pswirgie/bin:/home/pswirgie/.local/bin:/home/pswirgie/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin�
+  !! stdout différent
+
+Test 69: expand var inexistante  [FAIL]
+$> echo $NONEXISTENT_VAR_XYZ
+  minishell [exit=0]:
+    stdout : minishell$ echo $NONEXISTENT_VAR_XYZ��minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 70: expand ?  [FAIL]
+$> echo $?
+  minishell [exit=0]:
+    stdout : minishell$ echo $?�0�minishell$ exit�
+  bash      [exit=0]:
+    stdout : 0�
+  !! stdout différent
+
+Test 71: expand in quotes  [FAIL]
+$> echo "$HOME"
+  minishell [exit=0]:
+    stdout : minishell$ echo "$HOME"�/home/pswirgie�minishell$ exit�
+  bash      [exit=0]:
+    stdout : /home/pswirgie�
+  !! stdout différent
+
+Test 72: single no expand  [FAIL]
+$> echo '$HOME'
+  minishell [exit=0]:
+    stdout : minishell$ echo '$HOME'�$HOME�minishell$ exit�
+  bash      [exit=0]:
+    stdout : $HOME�
+  !! stdout différent
+
+Test 73: dollar alone  [FAIL]
+$> echo $
+  minishell [exit=0]:
+    stdout : minishell$ echo $�$�minishell$ exit�
+  bash      [exit=0]:
+    stdout : $�
+  !! stdout différent
+
+Test 74: dollar digit  [FAIL]
+$> echo $1
+  minishell [exit=0]:
+    stdout : minishell$ echo $1�$1�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+════════════════════════════════════════════════════
+  [6] BUILTINS — echo
+════════════════════════════════════════════════════
+
+Test 76: echo basic  [FAIL]
+$> echo hello
+  minishell [exit=0]:
+    stdout : minishell$ echo hello�hello�minishell$ exit�
+  bash      [exit=0]:
+    stdout : hello�
+  !! stdout différent
+
+Test 77: echo -n  [FAIL]
+$> echo -n hello
+  minishell [exit=0]:
+    stdout : minishell$ echo -n hello�hellominishell$ exit�
+  bash      [exit=0]:
+    stdout : hello�
+  !! stdout différent
+
+Test 78: echo -n -n  [FAIL]
+$> echo -n -n
+  minishell [exit=0]:
+    stdout : minishell$ echo -n -n�-nminishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 79: echo multiple args  [FAIL]
+$> echo a b c d e
+  minishell [exit=0]:
+    stdout : minishell$ echo a b c d e�a b c d e�minishell$ exit�
+  bash      [exit=0]:
+    stdout : a b c d e�
+  !! stdout différent
+
+Test 80: echo empty  [FAIL]
+$> echo
+  minishell [exit=0]:
+    stdout : minishell$ echo��minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 81: echo empty quotes  [FAIL]
+$> echo '' ""
+  minishell [exit=0]:
+    stdout : minishell$ echo '' ""� �minishell$ exit�
+  bash      [exit=0]:
+    stdout :  �
+  !! stdout différent
+
+════════════════════════════════════════════════════
+  [7] BUILTINS — cd
+════════════════════════════════════════════════════
+
+Test 82: cd no arg  [FAIL]
+$> cd
+  minishell [exit=0]:
+    stdout : minishell$ cd�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 83: cd /  [FAIL]
+$> cd /
+  minishell [exit=0]:
+    stdout : minishell$ cd /�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 84: cd nonexist  [FAIL]
+$> cd /nonexistent_xyz_abc
+  minishell [exit=1]:
+    stdout : minishell$ cd /nonexistent_xyz_abc�minishell$ exit�
+    stderr : cd: /nonexistent_xyz_abc: No such file or directory�
+  bash      [exit=1]:
+    stderr : cd: /nonexistent_xyz_abc: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: cd: /nonexistent_xyz_abc: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 85: cd dotdot  [FAIL]
+$> cd ..
+  minishell [exit=0]:
+    stdout : minishell$ cd ..�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 86: cd dot  [FAIL]
+$> cd .
+  minishell [exit=0]:
+    stdout : minishell$ cd .�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 87: cd trop d'args  [FAIL]
+$> cd /tmp /var
+  minishell [exit=1]:
+    stdout : minishell$ cd /tmp /var�minishell$ exit�
+    stderr : cd: too many arguments�
+  bash      [exit=1]:
+    stderr : cd: too many arguments�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: cd: too many arguments
+  --- FIN VALGRIND ---
+
+Test 88: cd empty string  [FAIL]
+$> cd ''
+  minishell [exit=0]:
+    stdout : minishell$ cd ''�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 89: cd sans HOME  [FAIL]
+$> unset HOME
+  minishell [exit=0]:
+    stdout : minishell$ unset HOME�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+════════════════════════════════════════════════════
+  [8] BUILTINS — export
+════════════════════════════════════════════════════
+
+Test 95: export invalid chiffre  [FAIL]
+$> export 1BAD=val
+  minishell [exit=1]:
+    stdout : minishell$ export 1BAD=val�minishell$ exit�
+    stderr : export: '1BAD=val': not a valid identifier�
+  bash      [exit=1]:
+    stderr : export: `1BAD=val': not a valid identifier�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: export: '1BAD=val': not a valid identifier
+  --- FIN VALGRIND ---
+
+Test 96: export invalid =  [FAIL]
+$> export =badval
+  minishell [exit=1]:
+    stdout : minishell$ export =badval�minishell$ exit�
+    stderr : export: '=badval': not a valid identifier�
+  bash      [exit=1]:
+    stderr : export: `=badval': not a valid identifier�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: export: '=badval': not a valid identifier
+  --- FIN VALGRIND ---
+
+Test 97: export invalid tiret  [FAIL]
+$> export bad-name=val
+  minishell [exit=1]:
+    stdout : minishell$ export bad-name=val�minishell$ exit�
+    stderr : export: 'bad-name=val': not a valid identifier�
+  bash      [exit=1]:
+    stderr : export: `bad-name=val': not a valid identifier�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: export: 'bad-name=val': not a valid identifier
+  --- FIN VALGRIND ---
+
+Test 98: export invalid @  [FAIL]
+$> export bad@name=val
+  minishell [exit=1]:
+    stdout : minishell$ export bad@name=val�minishell$ exit�
+    stderr : export: 'bad@name=val': not a valid identifier�
+  bash      [exit=1]:
+    stderr : export: `bad@name=val': not a valid identifier�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: export: 'bad@name=val': not a valid identifier
+  --- FIN VALGRIND ---
+
+Test 103: export dbl wraps singles vides  [FAIL]
+$> export _A="''"
+  minishell [exit=0]:
+    stdout : minishell$ export _A="''"�minishell$ echo $_A�''�
+  bash      [exit=0]:
+    stdout : ''�
+  !! stdout différent
+
+Test 104: export dbl wraps single mot  [FAIL]
+$> export _A="'hello'"
+  minishell [exit=0]:
+    stdout : minishell$ export _A="'hello'"�minishell$ echo $_A�'hello'�
+  bash      [exit=0]:
+    stdout : 'hello'�
+  !! stdout différent
+
+Test 105: export dbl singles vides+$USER  [FAIL]
+$> export _A="''$USER''"
+  minishell [exit=0]:
+    stdout : minishell$ export _A="''$USER''"�minishell$ echo $_A�''pswirgie''�
+  bash      [exit=0]:
+    stdout : ''pswirgie''�
+  !! stdout différent
+
+Test 106: export dbl $USER entre singles  [FAIL]
+$> export _A="'$USER'"
+  minishell [exit=0]:
+    stdout : minishell$ export _A="'$USER'"�minishell$ echo $_A�'pswirgie'�
+  bash      [exit=0]:
+    stdout : 'pswirgie'�
+  !! stdout différent
+
+Test 107: export sgl contient dbl quotes  [FAIL]
+$> export _A='""'\necho $_A
+  minishell [exit=0]:
+    stdout : minishell$ export _A='""'\necho $_A�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 108: export sgl wraps dbl mot  [FAIL]
+$> export _A='"hello"'\necho $_A
+  minishell [exit=0]:
+    stdout : minishell$ export _A='"hello"'\necho $_A�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 109: export alternance sgl dbl  [FAIL]
+$> export _A='a'"b"'c'\necho $_A
+  minishell [exit=0]:
+    stdout : minishell$ export _A='a'"b"'c'\necho $_A�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 110: export alternance dbl sgl  [FAIL]
+$> export _A="a"'b'"c"\necho $_A
+  minishell [exit=0]:
+    stdout : minishell$ export _A="a"'b'"c"\necho $_A�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 111: export singles+var milieu  [FAIL]
+$> export _A="''$USER"
+  minishell [exit=0]:
+    stdout : minishell$ export _A="''$USER"�minishell$ echo $_A�''pswirgie�
+  bash      [exit=0]:
+    stdout : ''pswirgie�
+  !! stdout différent
+
+Test 112: export var+singles fin  [FAIL]
+$> export _A="$USER''"
+  minishell [exit=0]:
+    stdout : minishell$ export _A="$USER''"�minishell$ echo $_A�pswirgie''�
+  bash      [exit=0]:
+    stdout : pswirgie''�
+  !! stdout différent
+
+Test 113: export 4 singles vides  [FAIL]
+$> export _A="''''"
+  minishell [exit=0]:
+    stdout : minishell$ export _A="''''"�minishell$ echo $_A�''''�
+  bash      [exit=0]:
+    stdout : ''''�
+  !! stdout différent
+
+Test 114: export singles intercalés  [FAIL]
+$> export _A="a'b'c'd"
+  minishell [exit=0]:
+    stdout : minishell$ export _A="a'b'c'd"�minishell$ echo $_A�a'b'c'd�
+  bash      [exit=0]:
+    stdout : a'b'c'd�
+  !! stdout différent
+
+Test 115: export overwrite avec quotes  [FAIL]
+$> export _A="'old'"
+  minishell [exit=0]:
+    stdout : minishell$ export _A="'old'"�minishell$ export _A="'new'"�minishell$ echo $_A�
+  bash      [exit=0]:
+    stdout : 'new'�
+  !! stdout différent
+
+Test 116: export puis unset  [FAIL]
+$> export _A="'val'"
+  minishell [exit=0]:
+    stdout : minishell$ export _A="'val'"�minishell$ unset _A�minishell$ echo $_A�
+  bash      [exit=0]:
+  !! stdout différent
+
+════════════════════════════════════════════════════
+  [9] BUILTINS — unset
+════════════════════════════════════════════════════
+
+Test 117: unset no args  [FAIL]
+$> unset
+  minishell [exit=0]:
+    stdout : minishell$ unset�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 118: unset nonexist  [FAIL]
+$> unset NONEXIST_VAR_ZZZ
+  minishell [exit=0]:
+    stdout : minishell$ unset NONEXIST_VAR_ZZZ�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 119: unset invalid chiffre  [FAIL]
+$> unset 1BAD
+  minishell [exit=0]:
+    stdout : minishell$ unset 1BAD�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 120: unset invalid tiret  [FAIL]
+$> unset bad-name
+  minishell [exit=0]:
+    stdout : minishell$ unset bad-name�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+════════════════════════════════════════════════════
+  [10] BUILTINS — exit
+════════════════════════════════════════════════════
+
+Test 123: exit arg non numérique  [FAIL]
+$> exit abc
+  minishell [exit=2]:
+    stdout : minishell$ exit abc�exit�
+    stderr : exit: abc: numeric argument required�
+  bash      [exit=2]:
+    stderr : exit: abc: numeric argument required�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: abc: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 124: exit arg alphanum  [FAIL]
+$> exit 1abc
+  minishell [exit=2]:
+    stdout : minishell$ exit 1abc�exit�
+    stderr : exit: 1abc: numeric argument required�
+  bash      [exit=2]:
+    stderr : exit: 1abc: numeric argument required�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: 1abc: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 125: exit trop d'args  [FAIL]
+$> exit 1 2 3
+  minishell [exit=1]:
+    stdout : minishell$ exit 1 2 3�exit�minishell$ exit�
+    stderr : exit: 1: too many arguments�
+  bash      [exit=1]:
+    stderr : exit: too many arguments�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: 1: too many arguments
+  --- FIN VALGRIND ---
+
+════════════════════════════════════════════════════
+  [11] BUILTINS — env / pwd
+════════════════════════════════════════════════════
+
+Test 134: pwd with args  [FAIL]
+$> pwd /tmp
+  minishell [exit=0]:
+    stdout : minishell$ pwd /tmp�/home/pswirgie/Documents/04_Milestone_03/Minishell�minishell$ exit�
+  bash      [exit=0]:
+    stdout : /home/pswirgie/Documents/04_Milestone_03/Minishell�
+  !! stdout différent
+
+════════════════════════════════════════════════════
+  [12] COMMANDES INTROUVABLES / PERMISSIONS
+════════════════════════════════════════════════════
+
+Test 135: cmd inexistant  [FAIL]
+$> thiscmddoesnotexist
+  minishell [exit=127]:
+    stdout : minishell$ thiscmddoesnotexist�minishell$ exit�
+    stderr : thiscmddoesnotexist: command not found�
+  bash      [exit=127]:
+    stderr : thiscmddoesnotexist: command not found�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: thiscmddoesnotexist: command not found
+  --- FIN VALGRIND ---
+
+Test 136: ./relatif inexistant  [FAIL]
+$> ./nonexistent_xyz
+  minishell [exit=127]:
+    stdout : minishell$ ./nonexistent_xyz�minishell$ exit�
+    stderr : ./nonexistent_xyz: No such file or directory�
+  bash      [exit=127]:
+    stderr : ./nonexistent_xyz: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: ./nonexistent_xyz: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 137: chemin absolu inexistant  [FAIL]
+$> /nonexistent_xyz
+  minishell [exit=127]:
+    stdout : minishell$ /nonexistent_xyz�minishell$ exit�
+    stderr : /nonexistent_xyz: No such file or directory�
+  bash      [exit=127]:
+    stderr : /nonexistent_xyz: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: /nonexistent_xyz: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 138: exec sans permission (exit 126)  [FAIL]
+$> /tmp/ra_noperm.sh
+  minishell [exit=127]:
+    stdout : minishell$ /tmp/ra_noperm.sh�minishell$ exit�
+    stderr : /tmp/ra_noperm.sh: No such file or directory�
+  bash      [exit=126]:
+    stderr : /tmp/ra_noperm.sh: Permission denied�
+  !! exit code différent : minishell=127  bash=126
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: /tmp/ra_noperm.sh: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 139: exec non exécutable 644  [FAIL]
+$> /tmp/ra_noperm.sh
+  minishell [exit=127]:
+    stdout : minishell$ /tmp/ra_noperm.sh�minishell$ exit�
+    stderr : /tmp/ra_noperm.sh: No such file or directory�
+  bash      [exit=126]:
+    stderr : /tmp/ra_noperm.sh: Permission denied�
+  !! exit code différent : minishell=127  bash=126
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: /tmp/ra_noperm.sh: No such file or directory
+  --- FIN VALGRIND ---
+
+════════════════════════════════════════════════════
+  [13] SANS PATH / ENV VIDE
+════════════════════════════════════════════════════
+
+════════════════════════════════════════════════════
+  [14] EDGE CASES
+════════════════════════════════════════════════════
+
+════════════════════════════════════════════════════
+  [15] TESTS REPOS ETUDIANTS — CRASH / SEGFAULT
+════════════════════════════════════════════════════
+
+Test 159: echo <| echo  [FAIL]
+$> echo |< echo segf
+  minishell [exit=1]:
+    stdout : minishell$ echo |< echo segf�minishell$ exit�
+    stderr : echo: No such file or directory�
+  bash      [exit=1]:
+    stderr : echo: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: echo: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 160: echo > > < echo  [FAIL]
+$> echo > > < "echo"
+  minishell [exit=2]:
+    stdout : minishell$ echo > > < "echo"�minishell$ exit�
+    stderr : syntax error near unexpected token '>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo > > < "echo"'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>'
+  --- FIN VALGRIND ---
+
+Test 161: echo > > | echo  [FAIL]
+$> echo > > | echo kekw
+  minishell [exit=2]:
+    stdout : minishell$ echo > > | echo kekw�minishell$ exit�
+    stderr : syntax error near unexpected token '>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo > > | echo kekw'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>'
+  --- FIN VALGRIND ---
+
+Test 162: echo < < > echo  [FAIL]
+$> echo < < > echo
+  minishell [exit=2]:
+    stdout : minishell$ echo < < > echo�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `<'�`echo < < > echo'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 163: echo < < < > ok  [FAIL]
+$> echo < < < > ok
+  minishell [exit=2]:
+    stdout : minishell$ echo < < < > ok�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `<'�`echo < < < > ok'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 164: echo < < | echo  [FAIL]
+$> echo < < | echo ok
+  minishell [exit=2]:
+    stdout : minishell$ echo < < | echo ok�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `<'�`echo < < | echo ok'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 165: echo < < | < ok  [FAIL]
+$> echo < < | < ok
+  minishell [exit=2]:
+    stdout : minishell$ echo < < | < ok�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `<'�`echo < < | < ok'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 166: echo < < | > echo  [FAIL]
+$> echo < < | > echo
+  minishell [exit=2]:
+    stdout : minishell$ echo < < | > echo�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `<'�`echo < < | > echo'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 167: echo >>< echo  [FAIL]
+$> echo >>< "echo"
+  minishell [exit=2]:
+    stdout : minishell$ echo >>< "echo"�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `<'�`echo >>< "echo"'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 168: echo <<| echo  [FAIL]
+$> echo <<| echo ok
+  minishell [exit=2]:
+    stdout : minishell$ echo <<| echo ok�minishell$ exit�
+    stderr : syntax error near unexpected token '<<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`echo <<| echo ok'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<<'
+  --- FIN VALGRIND ---
+
+Test 169: echo <<|< ok  [FAIL]
+$> echo <<|< ok
+  minishell [exit=2]:
+    stdout : minishell$ echo <<|< ok�minishell$ exit�
+    stderr : syntax error near unexpected token '<<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`echo <<|< ok'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<<'
+  --- FIN VALGRIND ---
+
+Test 170: echo <<|> echo  [FAIL]
+$> echo <<|> echo
+  minishell [exit=2]:
+    stdout : minishell$ echo <<|> echo�minishell$ exit�
+    stderr : syntax error near unexpected token '<<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`echo <<|> echo'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<<'
+  --- FIN VALGRIND ---
+
+Test 171: echo <<> echo  [FAIL]
+$> echo <<> echo
+  minishell [exit=2]:
+    stdout : minishell$ echo <<> echo�minishell$ exit�
+    stderr : syntax error near unexpected token '<<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo <<> echo'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<<'
+  --- FIN VALGRIND ---
+
+Test 172: echo seg < > echo  [FAIL]
+$> echo seg < > echo seg
+  minishell [exit=2]:
+    stdout : minishell$ echo seg < > echo seg�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`echo seg < > echo seg'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 173: echo seg > < echo  [FAIL]
+$> echo seg > < echo segf
+  minishell [exit=2]:
+    stdout : minishell$ echo seg > < echo segf�minishell$ exit�
+    stderr : syntax error near unexpected token '>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `<'�`echo seg > < echo segf'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>'
+  --- FIN VALGRIND ---
+
+Test 174: echo seg < < > echo  [FAIL]
+$> echo seg < < > echo segf
+  minishell [exit=2]:
+    stdout : minishell$ echo seg < < > echo segf�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `<'�`echo seg < < > echo segf'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 175: echo | > la  [FAIL]
+$> echo | > la
+  minishell [exit=0]:
+    stdout : minishell$ echo | > la�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 176: <| echo ok  [FAIL]
+$> <| echo ok
+  minishell [exit=2]:
+    stdout : minishell$ <| echo ok�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`<| echo ok'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 177: <| echo wtf  [FAIL]
+$> <| echo wtf
+  minishell [exit=2]:
+    stdout : minishell$ <| echo wtf�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`<| echo wtf'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 178: <<| echo wtf  [FAIL]
+$> <<| echo wtf
+  minishell [exit=2]:
+    stdout : minishell$ <<| echo wtf�minishell$ exit�
+    stderr : syntax error near unexpected token '<<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`<<| echo wtf'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<<'
+  --- FIN VALGRIND ---
+
+Test 186: exit très grand positif  [FAIL]
+$> exit 9223372036854775807
+  minishell [exit=255]:
+    stdout : minishell$ exit 9223372036854775807�exit�
+  bash      [exit=255]:
+  !! stdout différent
+
+Test 187: exit overflow positif  [FAIL]
+$> exit 9223372036854775808
+  minishell [exit=2]:
+    stdout : minishell$ exit 9223372036854775808�exit�
+  bash      [exit=2]:
+    stderr : exit: 9223372036854775808: numeric argument required�
+  !! stdout différent
+  !! stderr différent
+
+Test 188: exit très grand négatif  [FAIL]
+$> exit -9223372036854775808
+  minishell [exit=2]:
+    stdout : minishell$ exit -9223372036854775808�exit�
+  bash      [exit=0]:
+  !! exit code différent : minishell=2  bash=0
+  !! stdout différent
+
+Test 189: exit overflow négatif  [FAIL]
+$> exit -9223372036854775809
+  minishell [exit=2]:
+    stdout : minishell$ exit -9223372036854775809�exit�
+  bash      [exit=2]:
+    stderr : exit: -9223372036854775809: numeric argument required�
+  !! stdout différent
+  !! stderr différent
+
+Test 190: exit infini positif  [FAIL]
+$> exit 9999999999999999999999999999999999
+  minishell [exit=2]:
+    stdout : minishell$ exit 9999999999999999999999999999999999�exit�
+  bash      [exit=2]:
+    stderr : exit: 9999999999999999999999999999999999: numeric argument required�
+  !! stdout différent
+  !! stderr différent
+
+Test 191: exit infini négatif  [FAIL]
+$> exit -9999999999999999999999999999999999
+  minishell [exit=2]:
+    stdout : minishell$ exit -9999999999999999999999999999999999�exit�
+  bash      [exit=2]:
+    stderr : exit: -9999999999999999999999999999999999: numeric argument required�
+  !! stdout différent
+  !! stderr différent
+
+Test 192: exit +42  [FAIL]
+$> exit +42
+  minishell [exit=42]:
+    stdout : minishell$ exit +42�exit�
+  bash      [exit=42]:
+  !! stdout différent
+
+Test 193: exit -42  [FAIL]
+$> exit -42
+  minishell [exit=214]:
+    stdout : minishell$ exit -42�exit�
+  bash      [exit=214]:
+  !! stdout différent
+
+Test 194: exit +0  [FAIL]
+$> exit +0
+  minishell [exit=0]:
+    stdout : minishell$ exit +0�exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 195: exit -0  [FAIL]
+$> exit -0
+  minishell [exit=0]:
+    stdout : minishell$ exit -0�exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 196: exit 00000...1  [FAIL]
+$> exit 00000000000000000000000000000000001
+  minishell [exit=1]:
+    stdout : minishell$ exit 00000000000000000000000000000000001�exit�
+  bash      [exit=1]:
+  !! stdout différent
+
+Test 197: exit 00000...0  [FAIL]
+$> exit 00000000000000000000000000000000000
+  minishell [exit=0]:
+    stdout : minishell$ exit 00000000000000000000000000000000000�exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 198: exit 42 abc  [FAIL]
+$> exit 42 abc
+  minishell [exit=1]:
+    stdout : minishell$ exit 42 abc�exit�minishell$ exit�
+    stderr : exit: 42: too many arguments�
+  bash      [exit=1]:
+    stderr : exit: too many arguments�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: 42: too many arguments
+  --- FIN VALGRIND ---
+
+Test 199: exit abc 42  [FAIL]
+$> exit abc 42
+  minishell [exit=2]:
+    stdout : minishell$ exit abc 42�exit�
+    stderr : exit: abc: numeric argument required�
+  bash      [exit=2]:
+    stderr : exit: abc: numeric argument required�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: abc: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 200: exit 123"123"  [FAIL]
+$> exit 123"123"
+  minishell [exit=243]:
+    stdout : minishell$ exit 123"123"�exit�
+  bash      [exit=243]:
+  !! stdout différent
+
+Test 201: exit ' 5'  [FAIL]
+$> exit ' 5'
+  minishell [exit=2]:
+    stdout : minishell$ exit ' 5'�exit�
+    stderr : exit:  5: numeric argument required�
+  bash      [exit=5]:
+  !! exit code différent : minishell=2  bash=5
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit:  5: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 202: exit '5 '  [FAIL]
+$> exit '5 '
+  minishell [exit=2]:
+    stdout : minishell$ exit '5 '�exit�
+    stderr : exit: 5 : numeric argument required�
+  bash      [exit=5]:
+  !! exit code différent : minishell=2  bash=5
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: 5 : numeric argument required
+  --- FIN VALGRIND ---
+
+Test 203: exit '5  x'  [FAIL]
+$> exit '5     x'
+  minishell [exit=2]:
+    stdout : minishell$ exit '5     x'�exit�
+    stderr : exit: 5     x: numeric argument required�
+  bash      [exit=2]:
+    stderr : exit: 5     x: numeric argument required�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: 5     x: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 204: exit _0  [FAIL]
+$> exit _0
+  minishell [exit=2]:
+    stdout : minishell$ exit _0�exit�
+    stderr : exit: _0: numeric argument required�
+  bash      [exit=2]:
+    stderr : exit: _0: numeric argument required�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: _0: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 205: exit 0_  [FAIL]
+$> exit 0_
+  minishell [exit=2]:
+    stdout : minishell$ exit 0_�exit�
+    stderr : exit: 0_: numeric argument required�
+  bash      [exit=2]:
+    stderr : exit: 0_: numeric argument required�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: 0_: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 206: exit +  [FAIL]
+$> exit +
+  minishell [exit=2]:
+    stdout : minishell$ exit +�exit�
+    stderr : exit: +: numeric argument required�
+  bash      [exit=2]:
+    stderr : exit: +: numeric argument required�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: +: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 207: exit -  [FAIL]
+$> exit -
+  minishell [exit=2]:
+    stdout : minishell$ exit -�exit�
+    stderr : exit: -: numeric argument required�
+  bash      [exit=2]:
+    stderr : exit: -: numeric argument required�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: -: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 208: exit ++  [FAIL]
+$> exit ++
+  minishell [exit=2]:
+    stdout : minishell$ exit ++�exit�
+    stderr : exit: ++: numeric argument required�
+  bash      [exit=2]:
+    stderr : exit: ++: numeric argument required�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: ++: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 209: exit --  [FAIL]
+$> exit --
+  minishell [exit=2]:
+    stdout : minishell$ exit --�exit�
+    stderr : exit: --: numeric argument required�
+  bash      [exit=0]:
+  !! exit code différent : minishell=2  bash=0
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: --: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 210: exit +++  [FAIL]
+$> exit +++
+  minishell [exit=2]:
+    stdout : minishell$ exit +++�exit�
+    stderr : exit: +++: numeric argument required�
+  bash      [exit=2]:
+    stderr : exit: +++: numeric argument required�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: +++: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 211: exit ---  [FAIL]
+$> exit ---
+  minishell [exit=2]:
+    stdout : minishell$ exit ---�exit�
+    stderr : exit: ---: numeric argument required�
+  bash      [exit=2]:
+    stderr : exit: ---: numeric argument required�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: exit: ---: numeric argument required
+  --- FIN VALGRIND ---
+
+Test 212: exit 5 < infile  [FAIL]
+$> exit 5 < /dev/null
+  minishell [exit=5]:
+    stdout : minishell$ exit 5 < /dev/null�exit�
+  bash      [exit=5]:
+  !! stdout différent
+
+Test 213: export A==a  [FAIL]
+$> export A==a
+  minishell [exit=0]:
+    stdout : minishell$ export A==a�minishell$ echo $A��
+  bash      [exit=0]:
+    stdout : =a�
+  !! stdout différent
+
+Test 214: export A===a  [FAIL]
+$> export A===a
+  minishell [exit=0]:
+    stdout : minishell$ export A===a�minishell$ echo $A��
+  bash      [exit=0]:
+    stdout : ==a�
+  !! stdout différent
+
+Test 215: export A=a=a=a  [FAIL]
+$> export A=a=a=a=a=a
+  minishell [exit=0]:
+    stdout : minishell$ export A=a=a=a=a=a�minishell$ echo $A��
+  bash      [exit=0]:
+    stdout : a=a=a=a=a�
+  !! stdout différent
+
+Test 216: export long chain  [FAIL]
+$> export A=a B=b C=c D=d E=e F=f G=g H=h I=i J=j
+  minishell [exit=0]:
+    stdout : minishell$ export A=a B=b C=c D=d E=e F=f G=g H=h I=i J=j�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 217: export T=>> puis $T  [FAIL]
+$> export T=">>"
+  minishell [exit=127]:
+    stdout : minishell$ export T=">>"�minishell$ $T lol�minishell$ exit�
+    stderr : lol: command not found�
+  bash      [exit=127]:
+    stderr : >>: command not found�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: lol: command not found
+  --- FIN VALGRIND ---
+
+Test 218: export T=| puis $T  [FAIL]
+$> export T="|"
+  minishell [exit=0]:
+    stdout : minishell$ export T="|"�minishell$ echo segfault $T grep segfault�segfault grep segfault�
+  bash      [exit=0]:
+    stdout : segfault | grep segfault�
+  !! stdout différent
+
+Test 219: export T=< puis $T  [FAIL]
+$> export T="<"
+  minishell [exit=0]:
+    stdout : minishell$ export T="<"�minishell$ echo segfault $T grep segfault�segfault grep segfault�
+  bash      [exit=0]:
+    stdout : segfault < grep segfault�
+  !! stdout différent
+
+Test 220: export T=<< puis $T  [FAIL]
+$> export T="<<"
+  minishell [exit=0]:
+    stdout : minishell$ export T="<<"�minishell$ echo segfault $T grep segfault�segfault grep segfault�
+  bash      [exit=0]:
+    stdout : segfault << grep segfault�
+  !! stdout différent
+
+Test 221: export T=| $T$T$T  [FAIL]
+$> export T="|"
+  minishell [exit=0]:
+    stdout : minishell$ export T="|"�minishell$ $T$T$T$T$T$T$T�minishell$ exit�
+  bash      [exit=127]:
+    stderr : |||||||: command not found�
+  !! exit code différent : minishell=0  bash=127
+  !! stdout différent
+  !! stderr différent
+
+Test 222: export $?  [FAIL]
+$> export $?
+  minishell [exit=1]:
+    stdout : minishell$ export $?�minishell$ exit�
+    stderr : export: '0': not a valid identifier�
+  bash      [exit=1]:
+    stderr : export: `0': not a valid identifier�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: export: '0': not a valid identifier
+  --- FIN VALGRIND ---
+
+Test 223: export ?=val  [FAIL]
+$> export ?=val
+  minishell [exit=1]:
+    stdout : minishell$ export ?=val�minishell$ exit�
+    stderr : export: '?=val': not a valid identifier�
+  bash      [exit=1]:
+    stderr : export: `?=val': not a valid identifier�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: export: '?=val': not a valid identifier
+  --- FIN VALGRIND ---
+
+Test 224: export ''=''  [FAIL]
+$> export ''=''
+  minishell [exit=1]:
+    stdout : minishell$ export ''=''�minishell$ exit�
+    stderr : export: '=': not a valid identifier�
+  bash      [exit=1]:
+    stderr : export: `=': not a valid identifier�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: export: '=': not a valid identifier
+  --- FIN VALGRIND ---
+
+Test 225: export ""=""  [FAIL]
+$> export ""=""
+  minishell [exit=1]:
+    stdout : minishell$ export ""=""�minishell$ exit�
+    stderr : export: '=': not a valid identifier�
+  bash      [exit=1]:
+    stderr : export: `=': not a valid identifier�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: export: '=': not a valid identifier
+  --- FIN VALGRIND ---
+
+Test 226: export =  [FAIL]
+$> export =
+  minishell [exit=1]:
+    stdout : minishell$ export =�minishell$ exit�
+    stderr : export: '=': not a valid identifier�
+  bash      [exit=1]:
+    stderr : export: `=': not a valid identifier�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: export: '=': not a valid identifier
+  --- FIN VALGRIND ---
+
+Test 227: export ==============  [FAIL]
+$> export ==============
+  minishell [exit=1]:
+    stdout : minishell$ export ==============�minishell$ exit�
+    stderr : export: '==============': not a valid identifier�
+  bash      [exit=1]:
+    stderr : export: `==============': not a valid identifier�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: export: '==============': not a valid identifier
+  --- FIN VALGRIND ---
+
+Test 228: export +++++++=123  [FAIL]
+$> export +++++++=123
+  minishell [exit=1]:
+    stdout : minishell$ export +++++++=123�minishell$ exit�
+    stderr : export: '+++++++=123': not a valid identifier�
+  bash      [exit=1]:
+    stderr : export: `+++++++=123': not a valid identifier�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: export: '+++++++=123': not a valid identifier
+  --- FIN VALGRIND ---
+
+Test 229: cd --  [FAIL]
+$> cd --
+  minishell [exit=1]:
+    stdout : minishell$ cd --�minishell$ exit�
+    stderr : cd: --: No such file or directory�
+  bash      [exit=0]:
+  !! exit code différent : minishell=1  bash=0
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: cd: --: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 230: cd +  [FAIL]
+$> cd +
+  minishell [exit=1]:
+    stdout : minishell$ cd +�minishell$ exit�
+    stderr : cd: +: No such file or directory�
+  bash      [exit=1]:
+    stderr : cd: +: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: cd: +: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 231: cd ?  [FAIL]
+$> cd ?
+  minishell [exit=1]:
+    stdout : minishell$ cd ?�minishell$ exit�
+    stderr : cd: ?: No such file or directory�
+  bash      [exit=1]:
+    stderr : cd: ?: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: cd: ?: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 232: cd //////  [FAIL]
+$> cd //////
+  minishell [exit=0]:
+    stdout : minishell$ cd //////�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 233: cd ./././  [FAIL]
+$> cd ./././
+  minishell [exit=0]:
+    stdout : minishell$ cd ./././�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 234: cd trop profond  [FAIL]
+$> cd ../../../../../../../../../../../../../../..
+  minishell [exit=0]:
+    stdout : minishell$ cd ../../../../../../../../../../../../../../..�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 235: cd arg invalide  [FAIL]
+$> cd bark bark
+  minishell [exit=1]:
+    stdout : minishell$ cd bark bark�minishell$ exit�
+    stderr : cd: too many arguments�
+  bash      [exit=1]:
+    stderr : cd: too many arguments�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: cd: too many arguments
+  --- FIN VALGRIND ---
+
+Test 236: echo $U/SER  [FAIL]
+$> echo $U/SER
+  minishell [exit=0]:
+    stdout : minishell$ echo $U/SER�/SER�minishell$ exit�
+  bash      [exit=0]:
+    stdout : /SER�
+  !! stdout différent
+
+Test 237: echo $/ $/  [FAIL]
+$> echo $/ $/
+  minishell [exit=0]:
+    stdout : minishell$ echo $/ $/�$/ $/�minishell$ exit�
+  bash      [exit=0]:
+    stdout : $/ $/�
+  !! stdout différent
+
+Test 238: $? seul  [FAIL]
+$> $?
+  minishell [exit=0]:
+    stdout : minishell$ $?�minishell$ exit�
+  bash      [exit=127]:
+    stderr : 0: command not found�
+  !! exit code différent : minishell=0  bash=127
+  !! stdout différent
+  !! stderr différent
+
+Test 239: echo $USER42  [FAIL]
+$> echo $USER42
+  minishell [exit=0]:
+    stdout : minishell$ echo $USER42��minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 240: echo $USER$  [FAIL]
+$> echo $USER$
+  minishell [exit=0]:
+    stdout : minishell$ echo $USER$�pswirgie$�minishell$ exit�
+  bash      [exit=0]:
+    stdout : pswirgie$�
+  !! stdout différent
+
+Test 241: echo hello$NOT $USER  [FAIL]
+$> echo hello $NOT_A_VAR $NOT_A_VAR $USER
+  minishell [exit=0]:
+    stdout : minishell$ echo hello $NOT_A_VAR $NOT_A_VAR $USER�hello pswirgie�minishell$ exit�
+  bash      [exit=0]:
+    stdout : hello pswirgie�
+  !! stdout différent
+
+Test 242: echo -nnnnnnnnnn  [FAIL]
+$> echo -nnnnnnnnnn
+  minishell [exit=0]:
+    stdout : minishell$ echo -nnnnnnnnnn�-nnnnnnnnnn�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 243: echo -n -nnn -nnnnn  [FAIL]
+$> echo -n -nnn -nnnnn feel my pain
+  minishell [exit=0]:
+    stdout : minishell$ echo -n -nnn -nnnnn feel my pain�feel my painminishell$ exit�
+  bash      [exit=0]:
+    stdout : feel my pain�
+  !! stdout différent
+
+Test 244: echo -n -n -n-n  [FAIL]
+$> echo -n -n -n-n
+  minishell [exit=0]:
+    stdout : minishell$ echo -n -n -n-n�-n-nminishell$ exit�
+  bash      [exit=0]:
+    stdout : -n-n�
+  !! stdout différent
+
+Test 245: echo -  [FAIL]
+$> echo -
+  minishell [exit=0]:
+    stdout : minishell$ echo -�-�minishell$ exit�
+  bash      [exit=0]:
+    stdout : -�
+  !! stdout différent
+
+Test 246: echo --  [FAIL]
+$> echo --
+  minishell [exit=0]:
+    stdout : minishell$ echo --�--�minishell$ exit�
+  bash      [exit=0]:
+    stdout : --�
+  !! stdout différent
+
+Test 247: ECHO majuscule  [FAIL]
+$> ECHO hello
+  minishell [exit=127]:
+    stdout : minishell$ ECHO hello�minishell$ exit�
+    stderr : ECHO: command not found�
+  bash      [exit=127]:
+    stderr : ECHO: command not found�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: ECHO: command not found
+  --- FIN VALGRIND ---
+
+Test 248: Echo mixte  [FAIL]
+$> Echo hello
+  minishell [exit=127]:
+    stdout : minishell$ Echo hello�minishell$ exit�
+    stderr : Echo: command not found�
+  bash      [exit=127]:
+    stderr : Echo: command not found�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: Echo: command not found
+  --- FIN VALGRIND ---
+
+Test 249: ec""ho  [FAIL]
+$> ec""ho test
+  minishell [exit=0]:
+    stdout : minishell$ ec""ho test�test�minishell$ exit�
+  bash      [exit=0]:
+    stdout : test�
+  !! stdout différent
+
+Test 250: ec''ho  [FAIL]
+$> ec''ho test
+  minishell [exit=0]:
+    stdout : minishell$ ec''ho test�test�minishell$ exit�
+  bash      [exit=0]:
+    stdout : test�
+  !! stdout différent
+
+Test 251: ""echo  [FAIL]
+$> ""echo test
+  minishell [exit=0]:
+    stdout : minishell$ ""echo test�test�minishell$ exit�
+  bash      [exit=0]:
+    stdout : test�
+  !! stdout différent
+
+Test 252: ''echo  [FAIL]
+$> ''echo test
+  minishell [exit=0]:
+    stdout : minishell$ ''echo test�test�minishell$ exit�
+  bash      [exit=0]:
+    stdout : test�
+  !! stdout différent
+
+Test 253: echo"" test  [FAIL]
+$> echo"" test
+  minishell [exit=0]:
+    stdout : minishell$ echo"" test�test�minishell$ exit�
+  bash      [exit=0]:
+    stdout : test�
+  !! stdout différent
+
+Test 254: echo '' "" ''  [FAIL]
+$> echo '' "" '' test
+  minishell [exit=0]:
+    stdout : minishell$ echo '' "" '' test�   test�minishell$ exit�
+  bash      [exit=0]:
+    stdout :    test�
+  !! stdout différent
+
+Test 255: echo a '' b '' c  [FAIL]
+$> echo a '' b '' c
+  minishell [exit=0]:
+    stdout : minishell$ echo a '' b '' c�a  b  c�minishell$ exit�
+  bash      [exit=0]:
+    stdout : a  b  c�
+  !! stdout différent
+
+Test 256: echo | echo | echo | grep  [FAIL]
+$> echo 42 | echo no | echo smth | grep 42
+  minishell [exit=1]:
+    stdout : minishell$ echo 42 | echo no | echo smth | grep 42�minishell$ exit�
+  bash      [exit=1]:
+  !! stdout différent
+
+Test 257: pipe sleep 0 10x  [FAIL]
+$> sleep 0 | cat | cat | cat | cat | cat | cat | cat | cat | cat | cat | cat
+  minishell [exit=0]:
+    stdout : minishell$ sleep 0 | cat | cat | cat | cat | cat | cat | cat | cat | cat | cat | cat�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 258: pipe cmd invalide milieu  [FAIL]
+$> cat infile_none | x | grep dream | wc -l
+  minishell [exit=0]:
+    stdout : minishell$ cat infile_none | x | grep dream | wc -l�0�minishell$ exit�
+    stderr : x: command not found�cat: infile_none: No such file or directory�
+  bash      [exit=0]:
+    stdout : 0�
+    stderr : x: command not found�cat: infile_none: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: x: command not found
+    cat: infile_none: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 259: pipe exit dans pipe  [FAIL]
+$> exit 1 | exit 0
+  minishell [exit=1]:
+    stdout : minishell$ exit 1 | exit 0�minishell$ exit�
+  bash      [exit=0]:
+  !! exit code différent : minishell=1  bash=0
+  !! stdout différent
+
+Test 260: exit | ls  [FAIL]
+$> exit | ls
+  minishell [exit=0]:
+    stdout : minishell$ exit | ls�includes�la�
+  bash      [exit=0]:
+    stdout : includes�la�lib�
+  !! stdout différent
+
+Test 261: ls | exit  [FAIL]
+$> ls | exit
+  minishell [exit=1]:
+    stdout : minishell$ ls | exit�minishell$ exit�
+  bash      [exit=0]:
+  !! exit code différent : minishell=1  bash=0
+  !! stdout différent
+
+Test 262: ls | exit 42  [FAIL]
+$> ls | exit 42
+  minishell [exit=1]:
+    stdout : minishell$ ls | exit 42�minishell$ exit�
+  bash      [exit=42]:
+  !! exit code différent : minishell=1  bash=42
+  !! stdout différent
+
+Test 263: cat | cat | ls  [FAIL]
+$> cat | cat | ls
+  minishell [exit=0]:
+    stdout : minishell$ cat | cat | ls�includes�la�
+  bash      [exit=0]:
+    stdout : includes�la�lib�
+  !! stdout différent
+
+Test 267: heredoc + redirect combo  [FAIL]
+$> cat << here -e
+  minishell [exit=0]:
+    stdout : minishell$ cat << here -e�> hello�> here�
+  bash      [exit=0]:
+    stdout : hello$�
+  !! stdout différent
+
+Test 268: << echo oi  [FAIL]
+$> << echo oi
+  minishell [exit=127]:
+    stdout : minishell$ << echo oi�> minishell$ exit�
+    stderr : warning: here-document delimited by end-of-file (wanted 'echo')�oi: command not found�
+  bash      [exit=127]:
+    stderr : warning: here-document at line 1 delimited by end-of-file (wanted `echo')�oi: command not found�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: warning: here-document delimited by end-of-file (wanted 'echo')
+    minishell: oi: command not found
+    ==265402== FILE DESCRIPTORS: 4 open (3 std) at exit.
+    ==265402== Open file descriptor 3:
+    ==265402==    at 0x49E10FD: pipe (pipe.c:29)
+    ==265402==    by 0x40843B: heredoc (heredoc.c:88)
+    ==265402==    by 0x404C02: find_input_output (init_files.c:122)
+    ==265402==    by 0x405CBE: read_tokens (read_token.c:301)
+    ==265402==    by 0x4079A4: exec_cmds_pipe (exec_cmds.c:55)
+    ==265402==    by 0x4081DB: execute (execute.c:122)
+    ==265402==    by 0x40AF7C: main (main.c:69)
+    ==265402== 
+    ==265402== 
+  --- FIN VALGRIND ---
+
+Test 269: | seul  [FAIL]
+$> |
+  minishell [exit=2]:
+    stdout : minishell$ |�minishell$ exit�
+    stderr : syntax error near unexpected token '|'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`|'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '|'
+  --- FIN VALGRIND ---
+
+Test 270: pipe vide | |  [FAIL]
+$> ls | | cat
+  minishell [exit=2]:
+    stdout : minishell$ ls | | cat�minishell$ exit�
+    stderr : syntax error near unexpected token '|'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`ls | | cat'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '|'
+  --- FIN VALGRIND ---
+
+Test 271: pipe faux gauche  [FAIL]
+$> | fake_cmd
+  minishell [exit=2]:
+    stdout : minishell$ | fake_cmd�minishell$ exit�
+    stderr : syntax error near unexpected token '|'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`| fake_cmd'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '|'
+  --- FIN VALGRIND ---
+
+Test 272: pipe faux droite  [FAIL]
+$> fake_cmd |
+  minishell [exit=2]:
+    stdout : minishell$ fake_cmd |�minishell$ exit�
+    stderr : syntax error near unexpected token '|'�
+  bash      [exit=2]:
+    stderr : syntax error: unexpected end of file�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '|'
+  --- FIN VALGRIND ---
+
+Test 273: ls | < pipe  [FAIL]
+$> ls | <
+  minishell [exit=2]:
+    stdout : minishell$ ls | <�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `newline'�`ls | <'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 274: ls | << pipe  [FAIL]
+$> ls | <<
+  minishell [exit=2]:
+    stdout : minishell$ ls | <<�minishell$ exit�
+    stderr : syntax error near unexpected token '<<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `newline'�`ls | <<'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<<'
+  --- FIN VALGRIND ---
+
+Test 275: ls | > pipe  [FAIL]
+$> ls | >
+  minishell [exit=2]:
+    stdout : minishell$ ls | >�minishell$ exit�
+    stderr : syntax error near unexpected token '>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `newline'�`ls | >'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>'
+  --- FIN VALGRIND ---
+
+Test 276: ls | >> pipe  [FAIL]
+$> ls | >>
+  minishell [exit=2]:
+    stdout : minishell$ ls | >>�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `newline'�`ls | >>'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 277: ls > >   [FAIL]
+$> ls > >
+  minishell [exit=2]:
+    stdout : minishell$ ls > >�minishell$ exit�
+    stderr : syntax error near unexpected token '>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`ls > >'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>'
+  --- FIN VALGRIND ---
+
+Test 278: ls > >>   [FAIL]
+$> ls > >>
+  minishell [exit=2]:
+    stdout : minishell$ ls > >>�minishell$ exit�
+    stderr : syntax error near unexpected token '>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>>'�`ls > >>'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>'
+  --- FIN VALGRIND ---
+
+Test 279: ls > <   [FAIL]
+$> ls > <
+  minishell [exit=2]:
+    stdout : minishell$ ls > <�minishell$ exit�
+    stderr : syntax error near unexpected token '>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `<'�`ls > <'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>'
+  --- FIN VALGRIND ---
+
+Test 280: ls >> >   [FAIL]
+$> ls >> >
+  minishell [exit=2]:
+    stdout : minishell$ ls >> >�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`ls >> >'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 281: ls << <   [FAIL]
+$> ls << <
+  minishell [exit=2]:
+    stdout : minishell$ ls << <�minishell$ exit�
+    stderr : syntax error near unexpected token '<<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `<'�`ls << <'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<<'
+  --- FIN VALGRIND ---
+
+Test 282: echo hello | ;  [FAIL]
+$> echo hello | ;
+  minishell [exit=127]:
+    stdout : minishell$ echo hello | ;�minishell$ exit�
+    stderr : ;: command not found�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `;'�`echo hello | ;'�
+  !! exit code différent : minishell=127  bash=2
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: ;: command not found
+  --- FIN VALGRIND ---
+
+Test 283: > > > > >  [FAIL]
+$> > > > > >
+  minishell [exit=2]:
+    stdout : minishell$ > > > > >�minishell$ exit�
+    stderr : syntax error near unexpected token '>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`> > > > >'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>'
+  --- FIN VALGRIND ---
+
+Test 284: >> >> >> >>  [FAIL]
+$> >> >> >> >>
+  minishell [exit=2]:
+    stdout : minishell$ >> >> >> >>�minishell$ exit�
+    stderr : syntax error near unexpected token '>>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>>'�`>> >> >> >>'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>>'
+  --- FIN VALGRIND ---
+
+Test 285: < < < < < <  [FAIL]
+$> < < < < < <
+  minishell [exit=2]:
+    stdout : minishell$ < < < < < <�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `<'�`< < < < < <'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 286: EechoE  [FAIL]
+$> EechoE
+  minishell [exit=127]:
+    stdout : minishell$ EechoE�minishell$ exit�
+    stderr : EechoE: command not found�
+  bash      [exit=127]:
+    stderr : EechoE: command not found�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: EechoE: command not found
+  --- FIN VALGRIND ---
+
+Test 287: .echo.  [FAIL]
+$> .echo.
+  minishell [exit=127]:
+    stdout : minishell$ .echo.�minishell$ exit�
+    stderr : .echo.: command not found�
+  bash      [exit=127]:
+    stderr : .echo.: command not found�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: .echo.: command not found
+  --- FIN VALGRIND ---
+
+Test 288: >echo>  [FAIL]
+$> >echo>
+  minishell [exit=2]:
+    stdout : minishell$ >echo>�minishell$ exit�
+    stderr : syntax error near unexpected token '>'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `newline'�`>echo>'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '>'
+  --- FIN VALGRIND ---
+
+Test 289: <echo<  [FAIL]
+$> <echo<
+  minishell [exit=2]:
+    stdout : minishell$ <echo<�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `newline'�`<echo<'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 290: |echo|  [FAIL]
+$> |echo|
+  minishell [exit=2]:
+    stdout : minishell$ |echo|�minishell$ exit�
+    stderr : syntax error near unexpected token '|'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`|echo|'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '|'
+  --- FIN VALGRIND ---
+
+Test 291: | test  [FAIL]
+$> | test
+  minishell [exit=2]:
+    stdout : minishell$ | test�minishell$ exit�
+    stderr : syntax error near unexpected token '|'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`| test'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '|'
+  --- FIN VALGRIND ---
+
+Test 292: | | | | test  [FAIL]
+$> | | | | test
+  minishell [exit=2]:
+    stdout : minishell$ | | | | test�minishell$ exit�
+    stderr : syntax error near unexpected token '|'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `|'�`| | | | test'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '|'
+  --- FIN VALGRIND ---
+
+Test 293: <>  [FAIL]
+$> <>
+  minishell [exit=2]:
+    stdout : minishell$ <>�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `newline'�`<>'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 294: < >  [FAIL]
+$> < >
+  minishell [exit=2]:
+    stdout : minishell$ < >�minishell$ exit�
+    stderr : syntax error near unexpected token '<'�
+  bash      [exit=2]:
+    stderr : syntax error near unexpected token `>'�`< >'�
+  !! stdout différent
+  !! stderr différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: syntax error near unexpected token '<'
+  --- FIN VALGRIND ---
+
+Test 295: unset $HOME  [FAIL]
+$> unset $HOME
+  minishell [exit=0]:
+    stdout : minishell$ unset $HOME�minishell$ exit�
+  bash      [exit=0]:
+  !! stdout différent
+
+════════════════════════════════════════════════════
+  [16] FILESYSTEM — DOSSIER/FICHIER SUPPRIMÉ SOUS LES PIEDS
+════════════════════════════════════════════════════
+
+Test 296: mkdir+cd+rm+pwd  [FAIL]
+$> mkdir /tmp/ms_fs_a
+  minishell [exit=0]:
+    stdout : minishell$ mkdir /tmp/ms_fs_a�minishell$ cd /tmp/ms_fs_a�minishell$ rm -rf /tmp/ms_fs_a�
+  bash      [exit=0]:
+    stdout : /tmp/ms_fs_a�
+  !! stdout différent
+
+Test 297: mkdir+cd+rm+ls  [FAIL]
+$> mkdir /tmp/ms_fs_b
+  minishell [exit=0]:
+    stdout : minishell$ mkdir /tmp/ms_fs_b�minishell$ cd /tmp/ms_fs_b�minishell$ rm -rf /tmp/ms_fs_b�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 298: mkdir+cd+rm+cd ..  [FAIL]
+$> mkdir /tmp/ms_fs_c
+  minishell [exit=0]:
+    stdout : minishell$ mkdir /tmp/ms_fs_c�minishell$ cd /tmp/ms_fs_c�minishell$ rm -rf /tmp/ms_fs_c�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 299: mkdir+cd+rm+echo ok  [FAIL]
+$> mkdir /tmp/ms_fs_d
+  minishell [exit=0]:
+    stdout : minishell$ mkdir /tmp/ms_fs_d�minishell$ cd /tmp/ms_fs_d�minishell$ rm -rf /tmp/ms_fs_d�
+  bash      [exit=0]:
+    stdout : ok�
+  !! stdout différent
+
+Test 300: mkdir+cd+rm+echo $PWD  [FAIL]
+$> mkdir /tmp/ms_fs_e
+  minishell [exit=0]:
+    stdout : minishell$ mkdir /tmp/ms_fs_e�minishell$ cd /tmp/ms_fs_e�minishell$ rm -rf /tmp/ms_fs_e�
+  bash      [exit=0]:
+    stdout : /tmp/ms_fs_e�
+  !! stdout différent
+
+Test 301: mkdir+cd+rm+export+echo  [FAIL]
+$> mkdir /tmp/ms_fs_f
+  minishell [exit=0]:
+    stdout : minishell$ mkdir /tmp/ms_fs_f�minishell$ cd /tmp/ms_fs_f�minishell$ rm -rf /tmp/ms_fs_f�
+  bash      [exit=0]:
+    stdout : hello�
+  !! stdout différent
+
+Test 302: mkdir a/b+cd b+rm a+pwd  [FAIL]
+$> mkdir -p /tmp/ms_fs_g/b
+  minishell [exit=0]:
+    stdout : minishell$ mkdir -p /tmp/ms_fs_g/b�minishell$ cd /tmp/ms_fs_g/b�minishell$ rm -rf /tmp/ms_fs_g�
+  bash      [exit=0]:
+    stdout : /tmp/ms_fs_g/b�
+  !! stdout différent
+
+Test 303: mkdir a/b+cd b+rm a+ls  [FAIL]
+$> mkdir -p /tmp/ms_fs_h/b
+  minishell [exit=0]:
+    stdout : minishell$ mkdir -p /tmp/ms_fs_h/b�minishell$ cd /tmp/ms_fs_h/b�minishell$ rm -rf /tmp/ms_fs_h�
+  bash      [exit=0]:
+  !! stdout différent
+
+Test 304: mkdir a/b/c+cd c+rm a+cd ..  [FAIL]
+$> mkdir -p /tmp/ms_fs_a/b/c
+  minishell [exit=0]:
+    stdout : minishell$ mkdir -p /tmp/ms_fs_a/b/c�minishell$ cd /tmp/ms_fs_a/b/c�minishell$ rm -rf /tmp/ms_fs_a�
+    stderr : cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory�
+  bash      [exit=0]:
+    stderr : cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 305: mkdir a/b/c+cd c+rm a+pwd  [FAIL]
+$> mkdir -p /tmp/ms_fs_b/b/c
+  minishell [exit=0]:
+    stdout : minishell$ mkdir -p /tmp/ms_fs_b/b/c�minishell$ cd /tmp/ms_fs_b/b/c�minishell$ rm -rf /tmp/ms_fs_b�
+  bash      [exit=0]:
+    stdout : /tmp/ms_fs_b/b/c�
+  !! stdout différent
+
+Test 306: créer fichier+rm+cat  [FAIL]
+$> echo hello > /tmp/ms_fs_file1
+  minishell [exit=1]:
+    stdout : minishell$ echo hello > /tmp/ms_fs_file1�minishell$ rm /tmp/ms_fs_file1�minishell$ cat /tmp/ms_fs_file1�
+    stderr : cat: /tmp/ms_fs_file1: No such file or directory�
+  bash      [exit=1]:
+    stderr : cat: /tmp/ms_fs_file1: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    cat: /tmp/ms_fs_file1: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 307: créer+cat+rm+cat  [FAIL]
+$> echo world > /tmp/ms_fs_file2
+  minishell [exit=1]:
+    stdout : minishell$ echo world > /tmp/ms_fs_file2�minishell$ cat /tmp/ms_fs_file2�world�
+    stderr : cat: /tmp/ms_fs_file2: No such file or directory�
+  bash      [exit=1]:
+    stdout : world�
+    stderr : cat: /tmp/ms_fs_file2: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    cat: /tmp/ms_fs_file2: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 308: redir vers fichier+rm+redir  [FAIL]
+$> echo a > /tmp/ms_fs_file3
+  minishell [exit=0]:
+    stdout : minishell$ echo a > /tmp/ms_fs_file3�minishell$ rm /tmp/ms_fs_file3�minishell$ echo b > /tmp/ms_fs_file3�
+  bash      [exit=0]:
+    stdout : b�
+  !! stdout différent
+
+Test 309: heredoc+rm+cat  [FAIL]
+$> cat <<EOF > /tmp/ms_fs_file4
+  minishell [exit=1]:
+    stdout : minishell$ cat <<EOF > /tmp/ms_fs_file4�> hello�> EOF�
+    stderr : cat: /tmp/ms_fs_file4: No such file or directory�
+  bash      [exit=1]:
+    stderr : cat: /tmp/ms_fs_file4: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    cat: /tmp/ms_fs_file4: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 310: cd+rm+pipe echo|cat  [FAIL]
+$> mkdir /tmp/ms_fs_c
+  minishell [exit=0]:
+    stdout : minishell$ mkdir /tmp/ms_fs_c�minishell$ cd /tmp/ms_fs_c�minishell$ rm -rf /tmp/ms_fs_c�
+  bash      [exit=0]:
+    stdout : hi�
+  !! stdout différent
+
+Test 311: cd+rm+redir vers fichier  [FAIL]
+$> mkdir /tmp/ms_fs_d
+  minishell [exit=1]:
+    stdout : minishell$ mkdir /tmp/ms_fs_d�minishell$ cd /tmp/ms_fs_d�minishell$ rm -rf /tmp/ms_fs_d�
+    stderr : outfile: No such file or directory�
+  bash      [exit=1]:
+    stderr : outfile: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: outfile: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 312: cd+rm+pipe+redir  [FAIL]
+$> mkdir /tmp/ms_fs_e
+  minishell [exit=1]:
+    stdout : minishell$ mkdir /tmp/ms_fs_e�minishell$ cd /tmp/ms_fs_e�minishell$ rm -rf /tmp/ms_fs_e�
+    stderr : outfile2: No such file or directory�
+  bash      [exit=1]:
+    stderr : outfile2: No such file or directory�
+  !! stdout différent
+  --- VALGRIND OUTPUT COMPLET ---
+    minishell: outfile2: No such file or directory
+  --- FIN VALGRIND ---
+
+Test 313: cd+rm+cd /tmp  [FAIL]
+$> mkdir /tmp/ms_fs_f
+  minishell [exit=0]:
+    stdout : minishell$ mkdir /tmp/ms_fs_f�minishell$ cd /tmp/ms_fs_f�minishell$ rm -rf /tmp/ms_fs_f�
+  bash      [exit=0]:
+    stdout : /tmp�
+  !! stdout différent
+
+Test 314: cd+rm+cd HOME  [FAIL]
+$> mkdir /tmp/ms_fs_g
+  minishell [exit=0]:
+    stdout : minishell$ mkdir /tmp/ms_fs_g�minishell$ cd /tmp/ms_fs_g�minishell$ rm -rf /tmp/ms_fs_g�
+  bash      [exit=0]:
+    stdout : /home/pswirgie�
+  !! stdout différent
+
+════════════════════════════════════════════════════
+  RECAP GLOBAL  (2026-05-20 10:06:22)
+════════════════════════════════════════════════════
+  TOTAL TESTS : 319
+  PASS        : 67
+  FAIL        : 252
+  LEAKS       : 0
+  CRASH       : 0
+

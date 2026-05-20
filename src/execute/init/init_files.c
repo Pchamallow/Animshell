@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/18 09:35:07 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 10:32:08 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,19 @@ static int	init_outfile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 	return (0);
 }
 
+static int	is_cmd(t_token *words)
+{
+	t_token *token;
+	token = words;
+	while (token)
+	{
+		if (token->type == IS_CMD || token->type == IS_BUILT_IN)
+			return (1);
+		token = token->next;
+	}
+	return (0);
+}
+
 /*
 find_input_output
 
@@ -80,6 +93,7 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe, int fd)
 		pipe->input = IS_PIPE;
 	token = minishell->exec.last_pipe;
 	// printf("new\n");
+	pipe->is_cmd = is_cmd(token);
 	while (token)
 	{
 		// printf("token = %s\n", token->value);
@@ -129,6 +143,7 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe, int fd)
 			break ;
 		token = token->next;
 	}
+	pipe->is_cmd = 0;
 	if (heredoc_pipe_to_free && pipe->input != IS_HEREDOC)
 		close_fd(&minishell->here_doc->fd);
 	if (pipe->input == ERROR || pipe->output == ERROR)

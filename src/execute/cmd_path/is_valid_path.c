@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 23:11:46 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/20 10:33:44 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ static int	is_directory(t_minishell *minishell, char *str)
 		closedir(is_dir);
 		error_cmd_args(str, NULL, "Is a directory");
 		minishell->exec.error = 126;
+		// minishell->exec.error = 1;
 		return (1);
 	}
 	return (0);
@@ -73,7 +74,7 @@ To search path = 0;
 Absolute path = 1;
 Explicit path = 2;
 */
-static int	path_type(t_minishell *minishell, t_exec *exec, char *token)
+static int	path_type(t_minishell *minishell, t_pipe *pipe, char *token)
 {
 	if (token[0] == '/')
 	{
@@ -84,7 +85,11 @@ static int	path_type(t_minishell *minishell, t_exec *exec, char *token)
 		else
 		{
 			error_cmd_args(token, NULL, "No such file or directory");
-			exec->error = 127;
+			if (pipe->is_cmd)
+				minishell->exec.error = 1;
+			else
+				minishell->exec.error = 127;
+			// exec->error = 127;
 			return (-1);
 		}
 	}
@@ -99,7 +104,7 @@ static int	path_type(t_minishell *minishell, t_exec *exec, char *token)
 1 = / path + cmd valid
 2 = ./ path
 */
-int	path_cmd(t_minishell *minishell, t_token *token)
+int	path_cmd(t_minishell *minishell, t_pipe *pipe, t_token *token)
 {
 	int		i;
 	int		len;

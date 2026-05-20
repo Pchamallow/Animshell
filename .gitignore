@@ -16,3 +16,8 @@ minishell
 tests
 tmp_steph
 minishell_tester
+run_all.sh
+test_crash.sh
+test_errors.sh
+test_nopath.sh
+test_valgrind.sh
