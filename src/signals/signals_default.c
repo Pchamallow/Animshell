@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 21:14:00 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/20 14:24:47 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/20 16:44:02 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,13 @@ void	get_exit_status(t_minishell *minishell)
 	wpid = waitpid(-1, &child_exit_status, 0);
 	while (wpid > 0)
 	{
+		if (wpid == 0)
+		{
 			if (WIFEXITED(child_exit_status))
 				minishell->exec.error = WEXITSTATUS(child_exit_status);
 			if (WIFSIGNALED(child_exit_status))
 				get_signal_status(minishell, child_exit_status);
+		}
 		wpid = waitpid(-1, &child_exit_status, 0);
 	}
 }
