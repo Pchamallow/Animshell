@@ -9,6 +9,8 @@ display cmd->cmd_args[1]
 
 p nb_cmd_args
 display token->value
+display pipe->input
+display pipe->output
 display pipe->cmd->next->value
 display pipe->cmd->value
 display minishell->exec.nb_pipes
