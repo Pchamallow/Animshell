@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/21 16:00:42 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/21 16:32:08 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	find_input_output(t_minishell *minishell, t_pipe *pipe, int fd)
 			token->next->file_output = 2;
 		else if (token->file_input
 			&& !pipe->infile_error
-			&& pipe->input != IS_HEREDOC
+			//&& pipe->input != IS_HEREDOC ordre priorite droite gauche
 			&& (init_infile(minishell, pipe, token) == 0))
 		{
 			if (pipe->input == IS_FILE)

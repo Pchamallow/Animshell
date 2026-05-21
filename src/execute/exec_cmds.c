@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/21 15:30:22 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/21 17:01:29 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,6 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				return ;
 			at_least_one_pipe = 1;
 		}
-
-		// // pour le sinput output error si pipe renvoyer vers la pipe
-		// if (current->input == ERROR && current->output == ERROR)
-		// {
-		// 	current->input = IS_PIPE;
-		// 	current->output = TERMINAL;
-		// }
 
 		if (current->builtin_kind == IS_ECHO)
 			echo(minishell, current);
@@ -169,7 +162,7 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				if (execve(current->cmd->cmd_path, current->cmd->args_execve, minishell->exec.envp) == -1)
 					minishell->exec.error = errno;
 				strerror_file("execve");
-				perror("execve");
+				perror("minishell: execve: ");
 			}
 			else if (current->builtin_kind == IS_ECHO
 				|| current->builtin_kind == PWD
@@ -188,8 +181,6 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			pipefd[0] = -1;
 			close_fd(&pipefd[1]);
 		}
-
-		// si pipe error -> 
 		
 		if (minishell->prompt)
 		{
@@ -203,11 +194,6 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			minishell->here_doc->fd = -1;
 		}
 		close_fds_pipe(current);
-		// if (pipe_actual == minishell->exec.nb_pipes)
-		// {
-		// 	last_pid = pid;
-		// 	printf("last pid = %d\n", last_pid);
-		// }
 		pipe_actual++;
 		current = current->next;
 		
