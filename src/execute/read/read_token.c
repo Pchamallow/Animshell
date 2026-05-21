@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/21 15:38:56 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/21 15:56:55 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 			else
 			{
 				token->type = WORD;
-				if (pipe->infile_error != ERROR && pipe->outfile_error != ERROR)
+				if (!pipe->infile_error && !pipe->outfile_error)
 					ft_printf_fd(2, "minishell: %s: command not found\n", token->value);
 				minishell->exec.error = 127;
 				// pipe->input = ERROR;
