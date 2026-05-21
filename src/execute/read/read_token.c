@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 16:59:55 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/21 15:38:56 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,17 +119,17 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 			else if (invalid_cmd == 1)
 			{
 				token->type = WORD;
-				pipe->input = ERROR;
-				pipe->output = ERROR;
+				// pipe->input = ERROR;
+				// pipe->output = ERROR;
 			}
 			else
 			{
 				token->type = WORD;
-				if (pipe->input != ERROR && pipe->output != ERROR)
+				if (pipe->infile_error != ERROR && pipe->outfile_error != ERROR)
 					ft_printf_fd(2, "minishell: %s: command not found\n", token->value);
 				minishell->exec.error = 127;
-				pipe->input = ERROR;
-				pipe->output = ERROR;
+				// pipe->input = ERROR;
+				// pipe->output = ERROR;
 				return (1);
 			}
 		}
@@ -150,8 +150,8 @@ static int init_cmd(t_minishell *minishell, t_pipe *pipe)
 			close_fd(&minishell->here_doc->fd);
 			minishell->here_doc->fd = -1;
 		}
-		pipe->input = ERROR;
-		pipe->output = ERROR;
+		// pipe->input = ERROR;
+		// pipe->output = ERROR;
 	}
 	return (0);
 }

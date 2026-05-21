@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 16:00:01 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/20 18:11:27 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,12 @@ static bool	parsing_syntax_ok(char *line, t_minishell *minishell)
 
 static void	reinit_minishell(t_minishell *minishell)
 {
+	free_heredoc(minishell);
 	if (minishell->prompt)
 	{
 		free(minishell->prompt);
 		minishell->prompt = NULL;
 	}
-	free_heredoc(minishell);
 	if (minishell->token)
 		ft_token_lstclear(minishell->exec.first_token);
 	if (minishell->exec.pipe_lst)

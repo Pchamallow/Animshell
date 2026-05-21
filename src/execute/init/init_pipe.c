@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 14:55:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 14:54:29 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/21 15:36:15 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	init_pipe(t_minishell *minishell)
 		current->is_cmd = 0;
 		current->nb_args = 0;
 		current->error = 0;
+		current->infile_error = 0;
+		current->outfile_error = 0;
 		current->builtin_kind = NONE;
 		current->input = TERMINAL;
 		current->output = TERMINAL;

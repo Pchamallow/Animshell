@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 17:20:22 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/21 15:30:22 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,13 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				return ;
 			at_least_one_pipe = 1;
 		}
+
+		// // pour le sinput output error si pipe renvoyer vers la pipe
+		// if (current->input == ERROR && current->output == ERROR)
+		// {
+		// 	current->input = IS_PIPE;
+		// 	current->output = TERMINAL;
+		// }
 
 		if (current->builtin_kind == IS_ECHO)
 			echo(minishell, current);
@@ -172,7 +179,6 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			
 			free_all(minishell);
 			exit(minishell->exec.error);
-			
 		}
 		close_fd(&input_fd);
 
@@ -182,6 +188,8 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			pipefd[0] = -1;
 			close_fd(&pipefd[1]);
 		}
+
+		// si pipe error -> 
 		
 		if (minishell->prompt)
 		{
