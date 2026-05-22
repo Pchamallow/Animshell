@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 14:26:02 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 16:52:00 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/22 11:07:18 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,13 +125,13 @@ int	exit_multiple_args(t_minishell *minishell, char *nb)
 		return (1);
 }
 
-int	exit_gestion_args(t_minishell *minishell, char *nb)
+static int	exit_gestion_args(t_minishell *minishell, t_pipe *pipe, char *nb)
 {
 	int		error_numeric;
 	int		args;
 
 	error_numeric = 0;
-	args = nb_args(minishell->token);
+	args = pipe->nb_args;
 	if (args == 1 && exit_single_arg(minishell, nb))
 		error_numeric++;
 	else if (args > 1)
@@ -161,7 +161,7 @@ void	is_exit(t_minishell *minishell, t_pipe *pipe)
 	if (pipe->cmd->next)
 	{
 		arg++;
-		if (exit_gestion_args(minishell, pipe->cmd->next->value))
+		if (exit_gestion_args(minishell, pipe, pipe->cmd->next->value))
 			return ;
 	}
 	if (!minishell->exec.nb_pipes)

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/21 15:56:55 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/22 11:04:39 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,6 +259,9 @@ else if token is an argument and we have a command
 */
 void read_args(t_minishell *minishell, t_token *token, t_pipe *pipe)
 {
+	int	args;
+
+	args = 0;
 	while (token)
 	{
 		// printf("token = %s\n", token->value);//test
@@ -269,10 +272,14 @@ void read_args(t_minishell *minishell, t_token *token, t_pipe *pipe)
 			// printf("args = %s\n", token->value);
 			is_single_double_quoted(minishell, token);
 			if (pipe->is_cmd == 1 && token->value && token->value[0] != '\0')
+			{
 				add_args(minishell, pipe, token);
+				args++;
+			}
 		}
 		token = token->next;
 	}
+	pipe->nb_args = args;
 }
 
 /*
