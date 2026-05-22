@@ -106,7 +106,7 @@ int	parse_tokens(char *line, t_token **token_list, t_minishell *minishell)
 		if (!error && token && token->type == PIPE)
 			token = case_pipe(token, &cmd_found, &error, token_list);
 	}
-	print_tokens_types(*token_list);//test
+	// print_tokens_types(*token_list);//test
 	if (error)
 	{
 		free_line_and_token_list(line, token_list);
