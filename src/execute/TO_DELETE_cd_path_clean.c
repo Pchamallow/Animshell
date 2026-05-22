@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:24:30 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 12:25:02 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/22 12:51:52 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,59 +35,9 @@
 // 	}
 // }
 
-// static int	remove_lastfolder(char **old_pwd, int last_slash)
-// {
-// 	char	*tmp;
 
-// 	tmp = ft_strdup(*old_pwd);
-// 	if (!tmp)
-// 		return (1);
-// 	free(*old_pwd);
-// 	*old_pwd = ft_substr(tmp, 0, last_slash);
-// 	if (!*old_pwd)
-// 		return (1);
-// 	free(tmp);
-// 	return (0);
-// }
 
-// /* remove "./" */
-// static int	remove_relativepart(char **path)
-// {
-// 	char	*tmp;
 
-// 	tmp = ft_substr(*path, 2, ft_strlen(*path) + 1);
-// 	if (!tmp)
-// 		return (1);
-// 	free(*path);
-// 	*path = ft_strdup(tmp);
-// 	free(tmp);
-// 	return (0);
-// }
-
-// static int	path_replacefolder(char **old_pwd, char **path)
-// {
-// 	int		last_slash;
-
-// 	last_slash = index_lastchar(*old_pwd, '/');
-// 	if (last_slash > 0)
-// 	{
-// 		if (remove_relativepart(path))
-// 			return (1);
-// 		if (has_alpha(*path))
-// 		{
-// 			if (remove_lastfolder(old_pwd, last_slash)
-// 				|| join_oldnew(old_pwd, path))
-// 				return (1);
-// 		}
-// 		else
-// 		{
-// 			if (remove_lastfolder(old_pwd, last_slash)
-// 				|| str_copy_and_free(old_pwd, path))
-// 				return (1);
-// 		}
-// 	}
-// 	return (0);
-// }
 
 // void	cd_remove_duplicate(t_minishell *minishell, char **path)
 // {
