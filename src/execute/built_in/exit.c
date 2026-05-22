@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 14:26:02 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/22 11:38:28 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/22 15:32:42 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,32 @@ static long long	error_overflow(long nb)
 int	is_num_single_sign(char *str)
 {
 	int	i;
-	int	sign;
 	int	doubles;
+	int	number;
 
 	i = 0;
 	doubles = 0;
-	sign = 1;
+	number = 0;
 	while (str[i] && (str[i] == ' ' || (str[i] >= 7 && str[i] <= 13)))
 		i++;
-	if (str[0] == '-' && (str[1] >= '0' && str[1] <= '9'))
-		sign = -1;
 	while (str[i]
 			&& ((str[i] >= '0' && str[i] <= '9')
-			|| str[i] == '-' || str[i] == '+'))
+			|| str[i] == '-' || str[i] == '+'
+			|| (str[i] == ' ' || (str[i] >= 7 && str[i] <= 13))))
 	{
 		if (str[i] == '-' || str[i] == '+')
 			doubles++;
+		if ((str[i] >= '0' && str[i] <= '9')
+			&& str[i + 1]
+			&& !(str[i + 1] >= '0' && str[i + 1] <= '9') )
+			number++;
 		i++;
 	}
-	if (str[i] || doubles >= 2
-		|| !(str[i - 1] >= '0' && str[i - 1] <= '9'))
+	if (str[i] || doubles >= 2 || number != 1)
 		return (0);
-	return (sign);
+	if (number == 1)
+		return (1);
+	return (0);
 }
 
 static void	ft_atoll_exit(const char *str, long long *out)
@@ -109,6 +113,8 @@ int	exit_single_arg(t_minishell *minishell, char *nb)
 		minishell->exec.error = error_overflow(minishell->exec.error );
 		return (0);
 	}
+	else if (!ft_strcmp(nb, "--"))
+		return (0);
 	else
 		return (1);
 }
