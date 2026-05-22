@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 21:18:24 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/21 16:36:05 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/22 11:16:11 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int	parse_tokens(char *line, t_token **token_list, t_minishell *minishell)
 		if (!error && token && token->type == PIPE)
 			token = case_pipe(token, &cmd_found, &error, token_list);
 	}
-	print_tokens_types(*token_list);//test
+	// print_tokens_types(*token_list);//test
 	if (error)
 	{
 		free_line_and_token_list(line, token_list);
