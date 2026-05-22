@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 15:31:23 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/22 13:14:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,55 @@ int	is_pwd_invalid()
 	return (0);
 }
 
+static int	remove_lastfolder(char **old_pwd, int last_slash)
+{
+	char	*tmp;
+
+	tmp = ft_strdup(*old_pwd);
+	if (!tmp)
+		return (1);
+	free(*old_pwd);
+	*old_pwd = ft_substr(tmp, 0, last_slash);
+	if (!*old_pwd)
+		return (1);
+	free(tmp);
+	return (0);
+}
+
+static int	path_replacefolder(char **oldpwd, t_builtin_content *cd)
+{
+	int		last_slash;
+
+	last_slash = index_lastchar(*oldpwd, '/');
+	if (last_slash > 0)
+	{
+		if (has_alpha(cd->result))
+		{
+			if (remove_lastfolder(oldpwd, last_slash)
+				|| join_oldnew(oldpwd, &cd->result))
+				return (1);
+		}
+		else
+		{
+			if (remove_lastfolder(oldpwd, last_slash)
+				|| str_copy_and_free(oldpwd, &cd->result))
+				return (1);
+		}
+	}
+	return (0);
+}
+
+static void	remove_dir(t_minishell *minishell, t_builtin_content *cd)
+{
+	if (!ft_strnstr(cd->result, "../", ft_strlen(cd->result)))
+		return ;
+	char *old_pwd;
+	old_pwd = ft_substr(minishell->builtin.pwd.result, 4, ft_strlen(minishell->builtin.pwd.result));
+	if (!old_pwd || path_replacefolder(&old_pwd, cd))
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	free(old_pwd);
+}
+
 /*
 ** CD *********************************************
 ** Move the current position in a directory
@@ -198,7 +247,10 @@ int	is_pwd_invalid()
 ** - only a relative or absolute path, like required
 ** by the subject
 **
-** - no argument or > 1= error message
+** - no argument = or > 1 = error message
+**
+** - if no directory permissions
+**		-> remove directory from path
 **
 ** - if argument is valid
 ** 		- we move in folder
@@ -215,7 +267,7 @@ int	is_pwd_invalid()
 */
 int	cd(t_minishell *minishell, t_pipe *pipe)
 {
-	int error;
+	int	error;
 
 	if (minishell->builtin.cd.result)
 	{
@@ -224,6 +276,7 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 	}
 	if (cd_get_args(minishell, pipe))
 		return (0);
+	remove_dir(minishell, &minishell->builtin.cd);
 	error = chdir(minishell->builtin.cd.result);
 	if (error != 0)
 	{

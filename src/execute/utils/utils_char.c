@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:11:40 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/18 09:56:40 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/22 12:58:52 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,5 @@ int	join_oldnew(char **old, char **new)
 		return (1);
 	free(*new);
 	*new = new_path;
-	free(*old);
 	return (0);
 }
