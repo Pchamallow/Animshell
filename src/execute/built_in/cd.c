@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/23 17:47:49 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/23 18:23:52 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,7 +236,7 @@ static int	path_replacefolder(char **oldpwd, t_builtin_content *cd)
 ** if folder have permission access -> keep original path, eg: "../"
 ** else keep full path				-> eg: "/home/documents"
 */
-static int	dir_permission(t_minishell *minishell, t_builtin_content *cd, char *original)
+static int	dir_permission(t_builtin_content *cd, char *original)
 {
 	if (access(cd->result, X_OK))
 	{
@@ -266,7 +266,7 @@ static void	remove_dir(t_minishell *minishell, t_builtin_content *cd)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	}
 	free(old_pwd);
-	if (dir_permission(minishell, cd, original))
+	if (dir_permission(cd, original))
 	{
 		free(original);
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
