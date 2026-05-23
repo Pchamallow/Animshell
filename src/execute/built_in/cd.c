@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/23 16:56:53 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/23 17:47:49 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,17 +231,47 @@ static int	path_replacefolder(char **oldpwd, t_builtin_content *cd)
 	return (0);
 }
 
+
+/*
+** if folder have permission access -> keep original path, eg: "../"
+** else keep full path				-> eg: "/home/documents"
+*/
+static int	dir_permission(t_minishell *minishell, t_builtin_content *cd, char *original)
+{
+	if (access(cd->result, X_OK))
+	{
+		free(cd->result);
+		cd->result = ft_strdup(original);
+		if (!cd->result)
+			return (1);
+	}
+	return (0);
+}
+
 static void	remove_dir(t_minishell *minishell, t_builtin_content *cd)
 {
 	char	*old_pwd;
+	char	*original;
 
 	if (!ft_strnstr(cd->result, "../", ft_strlen(cd->result)))
 		return ;
+	original = ft_strdup(cd->result);
+	if (!original)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	old_pwd = ft_substr(minishell->builtin.pwd.result, 4,
 			ft_strlen(minishell->builtin.pwd.result));
 	if (!old_pwd || path_replacefolder(&old_pwd, cd))
+	{
+		free(original);
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	}
 	free(old_pwd);
+	if (dir_permission(minishell, cd, original))
+	{
+		free(original);
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	}
+	free(original);
 }
 
 void	free_and_set_null(t_minishell *minishell)
@@ -287,6 +317,7 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 {
 	int	error;
 
+	error = 0;
 	if (minishell->builtin.cd.result)
 		free_and_set_null(minishell);
 	if (cd_get_args(minishell, pipe))
