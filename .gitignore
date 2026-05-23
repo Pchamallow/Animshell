@@ -16,6 +16,7 @@ minishell
 tests
 tmp_steph
 minishell_tester
+minishell_tester_aliexei
 run_all.sh
 test_crash.sh
 test_errors.sh

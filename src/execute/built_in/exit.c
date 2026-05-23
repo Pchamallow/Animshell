@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 14:26:02 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/22 15:32:42 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/23 16:22:28 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ int	is_num_single_sign(char *str)
 		if (str[i] == '-' || str[i] == '+')
 			doubles++;
 		if ((str[i] >= '0' && str[i] <= '9')
-			&& str[i + 1]
-			&& !(str[i + 1] >= '0' && str[i + 1] <= '9') )
+			&& ((str[i + 1] && !(str[i + 1] >= '0' && str[i + 1] <= '9'))
+			|| !str[i + 1]))
 			number++;
 		i++;
 	}
@@ -83,7 +83,6 @@ static void	ft_atoll_exit(const char *str, long long *out)
 		if (sign == 1 && result > (LLONG_MAX - digit) / 10)
 		{
 			error_cmd_args("exit", (char *)str, "numeric argument required");
-			// minishell->exec.error = 2;
 			*out = 2;
 			return ;
 		}
@@ -94,7 +93,6 @@ static void	ft_atoll_exit(const char *str, long long *out)
 			{
 				error_cmd_args("exit", (char *)str, "numeric argument required");
 				*out = 2;
-				// *out = 0;
 				return ;
 			}
 		}

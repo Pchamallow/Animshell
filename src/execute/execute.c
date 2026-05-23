@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 18:11:27 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/23 16:42:08 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,13 @@ static bool	parsing_syntax_ok(char *line, t_minishell *minishell)
 		|| parse_tokens(line, minishell->exec.first_token, minishell) != 0)
 		return (false);
 	free(line);
+	if (nb_pipes(*minishell->exec.first_token) >= 100)
+	{
+		ft_printf_fd(2, "minishell: too many pipes\n");
+		ft_token_lstclear(minishell->exec.first_token);
+		minishell->exec.error = 2;
+		return (false);
+	}
 	return (true);
 }
 
