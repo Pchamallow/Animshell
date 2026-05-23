@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 17:12:26 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/23 18:14:50 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,28 +37,59 @@ int	echo_is_option(char *str)
 	return (0);
 }
 
+static char	*add_arg(t_minishell *minishell, t_token *args,
+		char *result, bool *is_arg)
+{
+	char	*tmp;
+
+	if (*is_arg == true)
+		tmp = ft_strjoin(result, " ");
+	else
+		tmp = ft_strdup(result);
+	if (!tmp)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	free(result);
+	result = ft_strjoin(tmp, args->value);
+	free(tmp);
+	if (!result)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	*is_arg = true;
+	return (result);
+}
+
+static void	update_echo_result(t_minishell *minishell, char *result)
+{
+	minishell->builtin.echo.result = ft_calloc(ft_strlen(result) + 2,
+			sizeof(char));
+	if (!minishell->builtin.echo.result)
+	{
+		free(result);
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	}
+	ft_strlcpy(minishell->builtin.echo.result, result,
+		ft_strlen(result) + 1);
+	minishell->builtin.echo.for_prompt = true;
+}
+
 /*
 Content print by echo before the prompt
 
 while 
-- value = space
 - value = -n (even if we have multiple - followed by multiple n) 
 -> we skip
 
-since the first word, the result is keep in echo.result
+since the first word, the result is kept in echo.result
 */
 void	echo_content(t_minishell *minishell, t_token *args)
 {
 	char	*result;
-	char	*tmp;
 	int		i;
 	bool	is_arg;
 
 	i = 0;
 	is_arg = false;
 	result = ft_strdup("");
-	while ((args->type == ONE_SPACE
-		|| echo_is_option(args->value)) && args && args->next)
+	while ((echo_is_option(args->value)) && args && args->next)
 	{
 		args = args->next;
 		i++;
@@ -68,31 +99,12 @@ void	echo_content(t_minishell *minishell, t_token *args)
 		if (args->type == PIPE)
 			break ;
 		else if (args->type == IS_ARG)
-		{
-			if (is_arg == true)
-				tmp = ft_strjoin(result, " ");
-			else
-				tmp = ft_strdup(result);
-			if (!tmp)
-				print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-			free(result);
-			result = ft_strjoin(tmp, args->value);
-			if (!result)
-				print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-			free(tmp);
-			is_arg = true;
-		}
+			result = add_arg(minishell, args, result, &is_arg);
 		args = args->next;
 		i++;
 	}
 	if (is_arg == true)
-	{
-		minishell->builtin.echo.result = ft_calloc(ft_strlen(result) + 2, sizeof(char));
-		if (!minishell->builtin.echo.result)
-			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-		ft_strlcpy(minishell->builtin.echo.result, result, ft_strlen(result) + 1);
-		minishell->builtin.echo.for_prompt = true;
-	}
+		update_echo_result(minishell, result);
 	free(result);
 }
 
@@ -107,7 +119,7 @@ if we print before prompt, we skip every -n
 */
 void	echo(t_minishell *minishell, t_pipe *pipe)
 {
-	t_token *args;
+	t_token	*args;
 
 	if (pipe->cmd->next)
 	{
@@ -121,64 +133,4 @@ void	echo(t_minishell *minishell, t_pipe *pipe)
 			}
 		}
 	}
-}
-
-void	print_no_quotes(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] != '"')
-			ft_printf_fd(1, "%c", str[i]);
-		i++;
-	}
-}
-
-// ECHO ****************
-/*- print a given string
-conditions
-
-- with argument -n
-
-- exit status to print
-- - if $? is find, 
-- - if $?word or word$? 
-- - no print with $ ?*/
-// *********************
-int echo_print(t_minishell *minishell, t_pipe *pipe)
-{
-	t_token *args;
-	bool	is_arg;
-
-	args = NULL;
-	is_arg = false;
-	if (minishell->builtin.echo.for_prompt == true)
-		return (0);
-	if (pipe->cmd->next && pipe->cmd->next->type != PIPE)
-	{
-		args = pipe->cmd->next;
-		while (args)
-		{
-			if (args->type == PIPE)
-			{
-				if (is_arg == true)
-					ft_printf_fd(1, "\n");
-				return (0);
-			}
-			if (args->type == IS_ARG)
-			{
-				if (is_arg == true)
-					ft_printf_fd(1, " ");
-				if (!args->value)
-					ft_printf_fd(1, "no arg value\n");
-				ft_printf_fd(1, "%s", args->value);
-				is_arg = true;
-			}
-			args = args->next;
-		}
-	}
-	ft_printf_fd(1, "\n");
-	return (0);
 }
