@@ -8,6 +8,9 @@ display array[i]
 display cmd->cmd_args[1]
 
 p nb_cmd_args
+
+display minishell->here_doc->fd
+
 display token->value
 display pipe->input
 display pipe->output

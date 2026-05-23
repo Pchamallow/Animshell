@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/16 13:50:42 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/23 15:49:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ int	heredoc(t_minishell *minishell, t_token *token, int fd)
 	}
 	else
 	{
-		close_fd(&minishell->here_doc->fd);
 		minishell->here_doc->fd = pipefd[0];
 		close_fd(&pipefd[1]);
 	}

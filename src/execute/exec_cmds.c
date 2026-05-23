@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/22 11:10:03 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/23 15:51:23 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,29 +104,29 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			if (current->input == IS_FILE && current->output == IS_FILE)
 			{
 				if (dup2(current->infile->fd, STDIN_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 infile", 2);
 				if (dup2(current->outfile->fd, STDOUT_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 outfile", 2);
 				already_output = 1;
 			}
 			
 			else if (current->input == IS_FILE)
 			{
 				if (dup2(current->infile->fd, STDIN_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 infile", 2);
 			}
 			
 			else if (current->input == IS_PIPE)
 			{
 				if (dup2(input_fd, STDIN_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 pipefd[0]", 2);
 				close_fd(&input_fd);
 			}
 			
 			else if (current->input == IS_HEREDOC)
 			{
 				if (dup2(minishell->here_doc->fd, STDIN_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 here doc", 2);
 				close_fd(&minishell->here_doc->fd);
 			}
 			
@@ -137,14 +137,14 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			if (current->output == IS_FILE && already_output == 0)
 			{
 				if (dup2(current->outfile->fd, STDOUT_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 outfile", 2);
 				close_fd(&current->outfile->fd);
 			}
 			else if (current->output == IS_PIPE
 				&& already_output == 0)
 			{
 				if (dup2(pipefd[1], STDOUT_FILENO) == -1)
-					strerror_free_structure(minishell, "dup2", 2);
+					strerror_free_structure(minishell, "dup2 pipefd[1]", 2);
 				close_fd(&pipefd[1]);
 			}
 
