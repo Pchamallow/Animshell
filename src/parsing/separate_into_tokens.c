@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:36:09 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/21 16:54:16 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/23 14:56:28 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool	is_whitespace(char c)
 {
-	if (c == ' ' || c == '\t')
+	if (c == ' ' || (c >= '\t' && c <= '\r'))
 		return (true);
 	return (false);
 }
