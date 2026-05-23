@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/22 13:14:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/23 16:56:53 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ int	is_root(t_minishell *minishell)
 	int	result;
 	int	len;
 
-	result = cpy_strvindex(&minishell->builtin.cd.result, minishell->exec.envp, "HOME=");
+	result = cpy_strvindex(&minishell->builtin.cd.result,
+			minishell->exec.envp, "HOME=");
 	if (result == 1)
 		return (1);
 	else if (result == -1)
 	{
 		len = root_from_pwd(minishell->builtin.pwd.result);
-		minishell->builtin.cd.result = 
-			ft_substr(minishell->builtin.pwd.result,
+		minishell->builtin.cd.result = ft_substr(minishell->builtin.pwd.result,
 				4, len - 4);
 		if (!minishell->builtin.cd.result)
 			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
@@ -54,11 +54,13 @@ void	replace_oldpwd(t_minishell *minishell, t_pipe *pipe)
 	int		result;
 
 	path_pwd = NULL;
-	if (pipe->cmd->cmd_args && pipe->cmd->cmd_args[0] && !ft_strcmp(pipe->cmd->cmd_args[0], "."))
+	if (pipe->cmd->cmd_args && pipe->cmd->cmd_args[0]
+		&& !ft_strcmp(pipe->cmd->cmd_args[0], "."))
 		init_pwd(minishell);
 	if (minishell->builtin.pwd.result)
 	{
-		path_pwd = ft_substr(minishell->builtin.pwd.result, 4, ft_strlen(minishell->builtin.pwd.result) - 4);
+		path_pwd = ft_substr(minishell->builtin.pwd.result, 4,
+				ft_strlen(minishell->builtin.pwd.result) - 4);
 		if (!path_pwd)
 			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	}
@@ -70,12 +72,9 @@ void	replace_oldpwd(t_minishell *minishell, t_pipe *pipe)
 	}
 	free(minishell->exec.envp[result]);
 	minishell->exec.envp[result] = ft_strjoin("OLDPWD=", path_pwd);
-	if (!minishell->exec.envp[result])
-	{
-		free(path_pwd);
-		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	}
 	free(path_pwd);
+	if (!minishell->exec.envp[result])
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 }
 
 void	root_with_folder(t_minishell *minishell)
@@ -89,7 +88,8 @@ void	root_with_folder(t_minishell *minishell)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	else if (result == -1)
 		return ;
-	folder = ft_substr(minishell->builtin.cd.result , 1, ft_strlen(minishell->builtin.cd.result ) - 1);
+	folder = ft_substr(minishell->builtin.cd.result, 1,
+			ft_strlen(minishell->builtin.cd.result) - 1);
 	if (!folder)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	free(minishell->builtin.cd.result);
@@ -110,7 +110,7 @@ int	cd_errors_args(t_minishell *minishell, t_pipe *pipe)
 	return (0);
 }
 
-int cd_get_args(t_minishell *minishell, t_pipe *pipe)
+int	cd_get_args(t_minishell *minishell, t_pipe *pipe)
 {
 	if (!pipe->cmd->cmd_args || !pipe->cmd->cmd_args[0])
 	{
@@ -142,7 +142,8 @@ int cd_get_args(t_minishell *minishell, t_pipe *pipe)
 */
 void	modify_pwd_in_envp(t_minishell *minishell)
 {
-	int i;
+	int	i;
+
 	if (strv_searchindex(minishell->exec.envp, "PWD=") == -1)
 		return ;
 	init_pwd(minishell);
@@ -163,7 +164,7 @@ void	error_getcwd(t_minishell *minishell, t_pipe *pipe)
 	len = ft_strlen(minishell->builtin.pwd.result);
 	if (minishell->builtin.pwd.result[len - 1] != '/')
 		pwd = ft_strjoin(minishell->builtin.pwd.result, "/");
-	else 
+	else
 		pwd = ft_strdup(minishell->builtin.pwd.result);
 	if (!pwd)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
@@ -172,11 +173,13 @@ void	error_getcwd(t_minishell *minishell, t_pipe *pipe)
 	minishell->builtin.pwd.result = ft_strjoin(pwd, pipe->cmd->cmd_args[0]);
 	if (!minishell->builtin.pwd.result)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	ft_printf_fd(2, "minishell: cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
+	ft_printf_fd(2, "minishell: cd: error retrieving current directory: ");
+	ft_printf_fd(2, "getcwd: cannot access parent directories: ");
+	ft_printf_fd(2, "No such file or directory\n");
 	free(pwd);
 }
 
-int	is_pwd_invalid()
+int	is_pwd_invalid(void)
 {
 	char	*is_pwd;
 
@@ -230,13 +233,28 @@ static int	path_replacefolder(char **oldpwd, t_builtin_content *cd)
 
 static void	remove_dir(t_minishell *minishell, t_builtin_content *cd)
 {
+	char	*old_pwd;
+
 	if (!ft_strnstr(cd->result, "../", ft_strlen(cd->result)))
 		return ;
-	char *old_pwd;
-	old_pwd = ft_substr(minishell->builtin.pwd.result, 4, ft_strlen(minishell->builtin.pwd.result));
+	old_pwd = ft_substr(minishell->builtin.pwd.result, 4,
+			ft_strlen(minishell->builtin.pwd.result));
 	if (!old_pwd || path_replacefolder(&old_pwd, cd))
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	free(old_pwd);
+}
+
+void	free_and_set_null(t_minishell *minishell)
+{
+	free(minishell->builtin.cd.result);
+	minishell->builtin.cd.result = NULL;
+}
+
+void	print_error_cd(t_minishell *minishell)
+{
+	ft_printf_fd(2, "minishell: cd: ");
+	perror(minishell->builtin.cd.result);
+	minishell->exec.error = 1;
 }
 
 /*
@@ -270,20 +288,13 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 	int	error;
 
 	if (minishell->builtin.cd.result)
-	{
-		free(minishell->builtin.cd.result);
-		minishell->builtin.cd.result = NULL;
-	}
+		free_and_set_null(minishell);
 	if (cd_get_args(minishell, pipe))
 		return (0);
 	remove_dir(minishell, &minishell->builtin.cd);
 	error = chdir(minishell->builtin.cd.result);
 	if (error != 0)
-	{
-		ft_printf_fd(2, "minishell: cd: ");
-		perror(minishell->builtin.cd.result);
-		minishell->exec.error = 1;
-	}
+		print_error_cd(minishell);
 	if (minishell->exec.nb_pipes)
 	{
 		chdir(&minishell->builtin.pwd.result[4]);
