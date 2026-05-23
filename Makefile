@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/19 21:35:21 by stkloutz         ###   ########.fr        #
+#    Updated: 2026/05/23 18:15:45 by stkloutz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ NC			:='\033[0m'
 SRCS		:= 											\
 			src/execute/built_in/cd.c					\
 			src/execute/built_in/echo.c					\
+			src/execute/built_in/echo_print.c			\
 			src/execute/built_in/env.c					\
 			src/execute/built_in/exit.c					\
 			src/execute/built_in/export.c				\
