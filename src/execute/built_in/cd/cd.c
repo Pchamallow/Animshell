@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/24 16:46:57 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/24 18:18:29 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ static int	cd_get_args(t_minishell *minishell, t_pipe *pipe)
 {
 	if (!pipe->cmd->cmd_args || !pipe->cmd->cmd_args[0])
 	{
-		if (is_root(minishell) == 1)
-			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+		is_root(minishell);
 		return (0);
 	}
 	if (cd_errors_args(minishell, pipe))
@@ -44,7 +43,6 @@ static int	cd_get_args(t_minishell *minishell, t_pipe *pipe)
 		minishell->builtin.cd.result = ft_strdup(pipe->cmd->cmd_args[0]);
 		if (!minishell->builtin.cd.result)
 			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-		if (!minishell->builtin.cd.result)
 		if (minishell->builtin.cd.result[0] == '~')
 			root_with_folder(minishell);
 		if (!ft_strcmp(minishell->builtin.cd.result, "./"))

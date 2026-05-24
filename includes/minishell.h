@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/24 16:21:27 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/24 18:19:06 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,18 +188,20 @@ int	heredoc(t_minishell *minishell, t_token *token, int fd);
 int		nb_pipes(t_token *first);
 
 /************************************************************ built-in */
-/** CD **/
+/** CD ******/
 void	remove_dir(t_minishell *minishell, t_builtin_content *cd);
-int		is_root(t_minishell *minishell);
+void	is_root(t_minishell *minishell);
 void	root_with_folder(t_minishell *minishell);
 int		is_pwd_invalid(void);
 void	error_getcwd(t_minishell *minishell, t_pipe *pipe);
 void	replace_oldpwd(t_minishell *minishell, t_pipe *pipe);
 void	modify_pwd_in_envp(t_minishell *minishell);
 int		cd(t_minishell *minishell, t_pipe *pipe);
-/********/
+/** ECHO ****/
 void	echo(t_minishell *minishell, t_pipe *pipe);
 int		echo_print(t_minishell *minishell, t_pipe *pipe);
+int		echo_is_option(char *str);
+/************/
 int		env(t_minishell *minishell, t_pipe *pipe);
 void	is_exit(t_minishell *minishell, t_pipe *pipe);
 int		exit_single_arg(t_minishell *minishell, char *nb);

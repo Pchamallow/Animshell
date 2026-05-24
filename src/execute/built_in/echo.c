@@ -6,55 +6,33 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:27:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/23 18:14:50 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/24 18:07:13 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-** options	=	-n	-nnnnnnnnn 
-** not		=	-	n
-*/
-int	echo_is_option(char *str)
-{
-	bool	option;
-	int		i;
-
-	i = 0;
-	option = false;
-	if (str[i] == '-')
-	{
-		i++;
-		while (str[i] && str[i] == 'n')
-		{
-			option = true;
-			i++;
-		}
-	}
-	if (!str[i] && option == true)
-		return (1);
-	return (0);
-}
-
 static char	*add_arg(t_minishell *minishell, t_token *args,
-		char *result, bool *is_arg)
+		char **result, bool *is_arg)
 {
 	char	*tmp;
 
 	if (*is_arg == true)
-		tmp = ft_strjoin(result, " ");
+		tmp = ft_strjoin(*result, " ");
 	else
-		tmp = ft_strdup(result);
+		tmp = ft_strdup(*result);
 	if (!tmp)
+	{
+		free(*result);
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	free(result);
-	result = ft_strjoin(tmp, args->value);
+	}
+	free(*result);
+	*result = ft_strjoin(tmp, args->value);
 	free(tmp);
-	if (!result)
+	if (!*result)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	*is_arg = true;
-	return (result);
+	return (*result);
 }
 
 static void	update_echo_result(t_minishell *minishell, char *result)
@@ -71,6 +49,23 @@ static void	update_echo_result(t_minishell *minishell, char *result)
 	minishell->builtin.echo.for_prompt = true;
 }
 
+static void	echo_args_for_prompt(t_minishell *minishell, t_token *args,
+	char **result, bool *is_arg)
+{
+	int	i;
+
+	i = 0;
+	while (args)
+	{
+		if (args->type == PIPE)
+			break ;
+		else if (args->type == IS_ARG)
+			*result = add_arg(minishell, args, result, is_arg);
+		args = args->next;
+		i++;
+	}
+}
+
 /*
 Content print by echo before the prompt
 
@@ -80,7 +75,7 @@ while
 
 since the first word, the result is kept in echo.result
 */
-void	echo_content(t_minishell *minishell, t_token *args)
+static void	echo_content(t_minishell *minishell, t_token *args)
 {
 	char	*result;
 	int		i;
@@ -89,20 +84,14 @@ void	echo_content(t_minishell *minishell, t_token *args)
 	i = 0;
 	is_arg = false;
 	result = ft_strdup("");
+	if (!result)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	while ((echo_is_option(args->value)) && args && args->next)
 	{
 		args = args->next;
 		i++;
 	}
-	while (args)
-	{
-		if (args->type == PIPE)
-			break ;
-		else if (args->type == IS_ARG)
-			result = add_arg(minishell, args, result, &is_arg);
-		args = args->next;
-		i++;
-	}
+	echo_args_for_prompt(minishell, args, &result, &is_arg);
 	if (is_arg == true)
 		update_echo_result(minishell, result);
 	free(result);
