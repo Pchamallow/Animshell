@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 14:26:02 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/23 16:22:28 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/24 13:45:59 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,20 @@ int	is_num_single_sign(char *str)
 	number = 0;
 	while (str[i] && (str[i] == ' ' || (str[i] >= 7 && str[i] <= 13)))
 		i++;
-	while (str[i]
-			&& ((str[i] >= '0' && str[i] <= '9')
-			|| str[i] == '-' || str[i] == '+'
+	if (str[i] == '-' || str[i] == '+')//test
+		i++;
+	while (str[i] && (ft_isdigit(str[i]) || str[i] == '-' || str[i] == '+'
 			|| (str[i] == ' ' || (str[i] >= 7 && str[i] <= 13))))
 	{
 		if (str[i] == '-' || str[i] == '+')
 			doubles++;
-		if ((str[i] >= '0' && str[i] <= '9')
-			&& ((str[i + 1] && !(str[i + 1] >= '0' && str[i + 1] <= '9'))
-			|| !str[i + 1]))
+		if (ft_isdigit(str[i]) && (((str[i + 1] && !ft_isdigit(str[i + 1])))
+				|| !str[i + 1]))
 			number++;
 		i++;
 	}
-	if (str[i] || doubles >= 2 || number != 1)
+	/*if (str[i] || doubles >= 2 || number != 1)*/
+	if (str[i] || doubles >= 1 || number != 1)
 		return (0);
 	if (number == 1)
 		return (1);
@@ -91,7 +91,8 @@ static void	ft_atoll_exit(const char *str, long long *out)
 			neg_result = result * -1;
 			if (neg_result < (LLONG_MIN + digit) / 10)
 			{
-				error_cmd_args("exit", (char *)str, "numeric argument required");
+				error_cmd_args("exit", (char *)str,
+					"numeric argument required");
 				*out = 2;
 				return ;
 			}
@@ -108,7 +109,7 @@ int	exit_single_arg(t_minishell *minishell, char *nb)
 	if (is_num_single_sign(nb) != 0)
 	{
 		ft_atoll_exit(nb, &minishell->exec.error);
-		minishell->exec.error = error_overflow(minishell->exec.error );
+		minishell->exec.error = error_overflow(minishell->exec.error);
 		return (0);
 	}
 	else if (!ft_strcmp(nb, "--"))
@@ -168,15 +169,11 @@ void	is_exit(t_minishell *minishell, t_pipe *pipe)
 		if (exit_gestion_args(minishell, pipe, pipe->cmd->next->value))
 			return ;
 	}
-	// else if (minishell->exec.nb_pipes)
-	// 	minishell->exec.error = 0;
 	if (!minishell->exec.nb_pipes)
 	{
 		free_all(minishell);
-		if (!minishell->exec.nb_pipes && !arg) // si j ai pas de pipe je prend l ancien error 0 - si j ai une pipe je prend le exec.error
+		if (!minishell->exec.nb_pipes && !arg)
 			exit(minishell->exec.error_old);
 		exit(minishell->exec.error);
 	}
-	// if (!minishell->exec.error && !minishell->exec.nb_pipes) // necessaire ou pas ? pourquoi mettre a 1 ici ?
-	// 	minishell->exec.error = 1;
 }
