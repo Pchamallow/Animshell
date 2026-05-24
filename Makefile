@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/23 18:15:45 by stkloutz         ###   ########.fr        #
+#    Updated: 2026/05/24 16:17:57 by stkloutz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ SRCS		:= 											\
 			src/execute/built_in/echo_print.c			\
 			src/execute/built_in/env.c					\
 			src/execute/built_in/exit.c					\
+			src/execute/built_in/exit_single_arg.c		\
 			src/execute/built_in/export.c				\
 			src/execute/built_in/export_utils.c			\
 			src/execute/built_in/export_update_envp.c	\
