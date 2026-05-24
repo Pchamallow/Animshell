@@ -202,6 +202,8 @@ void	echo(t_minishell *minishell, t_pipe *pipe);
 int		echo_print(t_minishell *minishell, t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
 void	is_exit(t_minishell *minishell, t_pipe *pipe);
+int		exit_single_arg(t_minishell *minishell, char *nb);
+int		is_num_single_sign(char *str);
 int		export_print(t_minishell *minishell, t_pipe *pipe);
 int		export(t_minishell *minishell, t_pipe *pipe);
 bool	is_concat(char *arg, int i);

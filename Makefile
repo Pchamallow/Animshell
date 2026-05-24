@@ -40,6 +40,7 @@ SRCS		:= 											\
 			src/execute/built_in/echo_print.c			\
 			src/execute/built_in/env.c					\
 			src/execute/built_in/exit.c					\
+			src/execute/built_in/exit_single_arg.c		\
 			src/execute/built_in/export.c				\
 			src/execute/built_in/export_utils.c			\
 			src/execute/built_in/export_update_envp.c	\
