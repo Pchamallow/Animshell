@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_print.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/23 18:13:49 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/23 18:14:19 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/24 17:46:58 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@ static void	echo_print_arg(t_token *args, bool *is_arg)
 	if (*is_arg == true)
 		ft_printf_fd(1, " ");
 	if (!args->value)
-		ft_printf_fd(1, "no arg value\n");
-	ft_printf_fd(1, "%s", args->value);
+		ft_printf_fd(1, "minishell : no arg value\n");
+	if (!echo_is_option(args->value))
+		ft_printf_fd(1, "%s", args->value);
 	*is_arg = true;
 }
 
@@ -39,6 +40,8 @@ int	echo_print(t_minishell *minishell, t_pipe *pipe)
 	if (pipe->cmd->next && pipe->cmd->next->type != PIPE)
 	{
 		args = pipe->cmd->next;
+		if (echo_is_option(args->value) && !args->next)
+			return (0);
 		while (args)
 		{
 			if (args->type == PIPE)
@@ -47,8 +50,8 @@ int	echo_print(t_minishell *minishell, t_pipe *pipe)
 					ft_printf_fd(1, "\n");
 				return (0);
 			}
-			if (args->type == IS_ARG)
-				echo_print_arg(args, &is_arg);
+			else if (args->type == IS_ARG)
+					echo_print_arg(args, &is_arg);
 			args = args->next;
 		}
 	}
