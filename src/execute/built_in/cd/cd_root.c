@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:47:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/24 15:58:37 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/24 18:19:39 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	root_from_pwd(char *pwd)
 	return (i);
 }
 
-int	is_root(t_minishell *minishell)
+void	is_root(t_minishell *minishell)
 {
 	int	result;
 	int	len;
@@ -36,7 +36,7 @@ int	is_root(t_minishell *minishell)
 	result = cpy_strvindex(&minishell->builtin.cd.result,
 			minishell->exec.envp, "HOME=");
 	if (result == 1)
-		return (1);
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	else if (result == -1)
 	{
 		len = root_from_pwd(minishell->builtin.pwd.result);
@@ -45,7 +45,6 @@ int	is_root(t_minishell *minishell)
 		if (!minishell->builtin.cd.result)
 			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	}
-	return (0);
 }
 
 void	root_with_folder(t_minishell *minishell)
