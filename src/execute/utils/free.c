@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 12:35:42 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/13 12:52:13 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/24 16:39:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	free_strv(char **array)
 	int	i;
 
 	i = 0;
-	if (!array)
+	if (!array || !array[i])
 		return ;
 	while (array[i])
 	{
@@ -55,6 +55,7 @@ void	free_all(t_minishell *minishell)
 		free(minishell->prompt);
 		minishell->prompt = NULL;
 	}
+	rl_clear_history();
 	// print_pauline(minishell);// print la commande et les arguments
 }
 
