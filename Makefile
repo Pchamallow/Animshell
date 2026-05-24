@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/23 18:15:45 by stkloutz         ###   ########.fr        #
+#    Updated: 2026/05/24 15:55:04 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,10 @@ NC			:='\033[0m'
 
 # Sources
 SRCS		:= 											\
-			src/execute/built_in/cd.c					\
+			src/execute/built_in/cd/cd_get_args.c		\
+			src/execute/built_in/cd/cd_root.c			\
+			src/execute/built_in/cd/cd_update_pwd.c		\
+			src/execute/built_in/cd/cd.c				\
 			src/execute/built_in/echo.c					\
 			src/execute/built_in/echo_print.c			\
 			src/execute/built_in/env.c					\
