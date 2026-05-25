@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/23 15:51:23 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/25 10:45:56 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,30 @@ void	exec_cmds_pipe(t_minishell *minishell)
 		else
 			current->error = 1;
 		if (minishell->exec.error == 130)
+		{
+			//j'ai recopié ce qu'il y avait à la fin de la boucle
+			//pour tout fermer comme il faut avant de break
+			//on peut surement en faire une fonction
+			close_fd(&input_fd);
+			if (current->next || at_least_one_pipe)
+			{
+				input_fd = pipefd[0];
+				pipefd[0] = -1;
+				close_fd(&pipefd[1]);
+			}
+			if (minishell->prompt)
+			{
+				free(minishell->prompt);
+				minishell->prompt = NULL;
+			}
+			if (minishell->here_doc->fd != -1)
+			{
+				close_fd(&minishell->here_doc->fd);
+				minishell->here_doc->fd = -1;
+			}
+			close_fds_pipe(current);
 			break ;
+		}
 		if (current->next)
 		{
 			if (pipe(pipefd) ==  -1)

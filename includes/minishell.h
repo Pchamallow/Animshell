@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/24 18:19:06 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/25 09:39:18 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -340,6 +340,7 @@ void	ignore_signal(void);
 void	check_signal_value(t_minishell *minishell);
 int		check_signal_heredoc(char *str, int signal);
 void	get_exit_status(t_minishell *minishell, pid_t last_pid);
+void	get_exit_heredoc(t_minishell *minishell, int return_value, int pid);
 /********************************************* tests print a supprimer */
 void	print_tokens_types(t_token *token);// pour tester
 void	print_tokens(t_token *token);// pour tester
