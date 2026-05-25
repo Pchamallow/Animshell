@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/25 18:04:44 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/25 18:16:34 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	free_parent_pipfd(t_minishell *minishell, t_pipe *current,
 	}
 }
 
-static void	free_parent(t_minishell *minishell, t_pipe *current)
+static void	free_garbage(t_minishell *minishell, t_pipe *current)
 {
 	if (minishell->prompt)
 	{
@@ -57,10 +57,17 @@ static int	build_pipeline_structure(t_minishell *minishell, t_pipe *current, int
 			minishell->exec.input_fd = pipefd[0];
 			pipefd[0] = -1;
 		}
-		free_parent(minishell, current);
+		free_garbage(minishell, current);
 		return (1);
 	}
 	return (0);
+}
+
+static void	free_parent(t_minishell *minishell, t_pipe *current, int *pipefd)
+{
+	close_fd(&minishell->exec.input_fd);
+	free_parent_pipfd(minishell, current, pipefd);
+	free_garbage(minishell, current);
 }
 
 static void	exec_builtins(t_minishell *minishell, t_pipe *current)
@@ -113,18 +120,12 @@ void	exec_cmds_pipe(t_minishell *minishell)
 			last_pid = pid;
 		if (pid == 0)
 			exec_child(minishell, current, pipefd);
-		close_fd(&minishell->exec.input_fd);
-		free_parent_pipfd(minishell, current, pipefd);
-		free_parent(minishell, current);
+		free_parent(minishell, current, pipefd);
 		pipe_actual++;
 		current = current->next;
 	}
 	get_exit_status(minishell, last_pid);
-	/*ft_printf_fd(2, "--------------------------------------------\n");*/
 }
-
-
-
 
 /*
 Print for tests
