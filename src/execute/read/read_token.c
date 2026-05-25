@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/25 12:27:40 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/25 13:33:58 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,30 @@
 
 int	next_pipe(t_minishell *minishell, t_token *token)
 {
-	t_token	*tmp;
+	/*t_token	*tmp;*/
 	int		i;
 	int		is_pipe;
 
 	i = 0;
 	is_pipe = 0;
-	tmp = token;
-	while (tmp)
+	/*tmp = token;*/
+	while (token)
 	{
-		if (i > 0 && tmp->type == PIPE)
+		if (i > 0 && token->type == PIPE)
 		{
 			is_pipe = 1;
-			if (tmp->next)
-				tmp = tmp->next;
+			if (token->next)
+				token = token->next;
 			break ;
 		}
-		tmp = tmp->next;
+		token = token->next;
 		i++;
 	}
-	if (tmp)
+	if (token)
 	{
 		if (is_pipe)
 		{
-			minishell->exec.last_pipe = tmp;
+			minishell->exec.last_pipe = token;
 			return (i);
 		}
 		else
