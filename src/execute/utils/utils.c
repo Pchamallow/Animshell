@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/15 10:28:40 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/25 08:54:02 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,8 @@ void	close_fds_pipe(t_pipe *pipe)
 {
 	if (pipe->infile && pipe->infile->fd >= 0)
 		close(pipe->infile->fd);
-	// else
-		// printf("--------------- already closed infile\n");
 	if (pipe->outfile && pipe->outfile->fd >= 0)
-	{
-		// printf("--------------- close outfile\n");
 		close(pipe->outfile->fd);
-	}
-	// else
-		// printf("---------- already closed infile\n");
 }
 
 void	close_fd(int *fd)
@@ -115,7 +108,6 @@ bool find_built_in(char *token)
 	builtins[6] = "exit";
 	i = 0;
 	len_token = ft_strlen(token);
-	// len == le plus grand entre le token et le builtins
 	while (i < 7)
 	{
 		len_builtin = ft_strlen(builtins[i]);
@@ -132,13 +124,6 @@ bool find_built_in(char *token)
 		i++;
 	}
 	return (false);
-}
-
-void free_cpy(char **dst, char *src)
-{
-	if (*dst != NULL)
-		free(*dst);
-	*dst = ft_strdup(src);
 }
 
 void	ft_strcpy(char *dst, char *src)

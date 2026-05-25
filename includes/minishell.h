@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/25 09:39:18 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/25 11:30:30 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ typedef struct s_builtin_content
 	char		*result;
 	bool		for_prompt;
 	int			error;
-	// t_path_kind	path;
 }				t_builtin_content;
 
 typedef struct s_builtin
@@ -125,27 +124,20 @@ typedef struct s_pipe
 	int				is_cmd;
 	int				nb_args;
 	int				error;
-	int				pipfd1;
 	int				infile_error;
 	int				outfile_error;
 	t_put			input;
 	t_put			output;
-	// t_builtin		builtin;
 	t_builtin_kind	builtin_kind;
 	struct s_pipe	*next;
 }				t_pipe;
 
 typedef struct s_exec
 {
-	char		*line;
-	char		*file_input;
-	char		*file_output;
 	char		**paths_for_search_cmd;
 	char		**envp;
 	long long	error;
 	long long	error_old;
-	int			input; // -1 file invalide, 0 pas de input, 1 = file, 2 = pipe
-	int			output; // 0 pas de output(donc terminal), 1 = file, 2 = pipe
 	int			index_pipe;
 	int			index_prev_pipe;
 	int			nb_pipes;
@@ -267,9 +259,6 @@ char	*safe_join(char *s1, char *s2);
 /************************************************************** utils_char */
 char	*str_beginend_char(t_minishell *minishell, char *str, char c);
 int		index_lastchar(char *str, char c);
-int	remove_begin(char **str, char c, int start, int end);
-// int		remove_begin(char **str, char c);
-int		remove_end(char **str, char c);
 int		join_oldnew(char **old, char **new);
 /*************************************************************** utils_str */
 int		strv_searchindex(char **strv, char *search);

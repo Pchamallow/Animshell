@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 11:29:03 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/24 16:33:17 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/25 08:36:37 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,3 @@ void	free_strv_len(char **array, int len)
 	free(array);
 	array = NULL;
 }
-
-// int	memcpy_strv(char ***dst, char **src, int max)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	if (!*dst || !**dst || !src || !*src)
-// 		return (1);
-// 	while ((src[i] && max == 0) || (i < max))
-// 	{
-// 		(*dst)[i] = src[i];
-// 		i++;
-// 	}
-// 	return (0);
-// }
