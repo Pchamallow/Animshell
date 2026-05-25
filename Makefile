@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/25 11:26:32 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/05/25 16:12:53 by stkloutz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,7 @@ SRCS		:= 											\
 			src/execute/cmd_path/get_paths.c			\
 			src/execute/cmd_path/cmd_explicit.c			\
 			src/execute/read/read_token.c				\
+			src/execute/read/init_cmd.c					\
 			src/execute/utils/error_free.c				\
 			src/execute/utils/free.c					\
 			src/execute/utils/strv_dup.c				\
