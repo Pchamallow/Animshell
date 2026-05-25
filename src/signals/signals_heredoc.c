@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 21:12:40 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/19 22:03:32 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/25 10:39:09 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ int	check_signal_heredoc(char *str, int signal)
 		ft_printf_fd(2, "(wanted '%s')\n", str);
 		return (signal);
 	}
+}
+
+void	get_exit_heredoc(t_minishell *minishell, int return_value, int pid)
+{
+	waitpid(pid, &return_value, 0);
+	if (WIFEXITED(return_value))
+		minishell->exec.error = WEXITSTATUS(return_value);
 }
 
 void	set_signal_heredoc(void)
