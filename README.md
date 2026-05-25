@@ -312,6 +312,7 @@ ls | exit 42
 - [using readline](https://www.codestudy.net/blog/where-is-the-readline-function-located-in-c/)
 - [termcap](https://www.gnu.org/software/termutils/manual/termcap-1.3/html_chapter/termcap_2.html)
 - [exit-code-terminal](https://www.geeksforgeeks.org/linux-unix/how-to-use-exit-code-to-read-from-terminal-from-script-and-with-logical-operators/)
+- Thanks to Gauthier(gaasseli) and lucnicol for their documentation : [minishell_tests](https://docs.google.com/document/d/1r0yE7gK12J6lW79mzY8ELyKJEiDqkOeRfXZ6DWSKZVE/edit?tab=t.0)
 - Thanks to our colleagues who shared their Minishell test suites to help us : 
 	- Nathan (nda-cunh) : [minishell_tester](https://gitlab.com/nda-cunh/minishell_tester)
 	- Aliexei (aprivalo)
