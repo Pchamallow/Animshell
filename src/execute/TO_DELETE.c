@@ -77,3 +77,97 @@ void	print_tokens_types(t_token *token)// pour tester
 		token = token->next;
 	}
 }
+
+//read_token:
+bool is_redirection(t_token *token)
+{
+	if (ft_strchr(token->value, '<') == NULL || ft_strchr(token->value, '>') == NULL)
+		return (true);
+	return (false);
+}
+
+void cpy_no_bzero(char *dst, const char *src, size_t size)
+{
+	size_t i;
+
+	i = 0;
+	while (i < (size - 1) && src[i] != '\0')
+	{
+		dst[i] = src[i];
+		i++;
+	}
+}
+
+void convert_to_single_quotes(t_minishell *minishell, t_token *token)
+{
+	t_token *tmp_modify;
+	char *original;
+	int len;
+
+	len = ft_strlen(token->value);
+	tmp_modify = token;
+	original = ft_calloc(len + 1, sizeof(char));
+	if (!tmp_modify->value)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	ft_strlcpy(original, token->value, len);
+	free(tmp_modify->value);
+	tmp_modify->value = ft_calloc(len + 1, sizeof(char));
+	if (!tmp_modify->value)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	tmp_modify->value[0] = '\'';
+	cpy_no_bzero(tmp_modify->value, &original[1], len - 1);
+	tmp_modify->value[len] = '\'';
+	free(original);
+}
+
+void	remove_quots(t_minishell *minishell, t_token *token)
+{
+	char	*original;
+	int		len;
+
+	original = ft_strdup(token->value);
+	if (!original)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	len = ft_strlen(original);
+	free(token->value);
+	token->value = ft_calloc(len, sizeof(char));
+	ft_strlcpy(token->value, &original[1], len - 1);
+	free(original);
+	// printf("resultat = %s\n", token->value);
+}
+
+bool is_single_double_quoted(t_minishell *minishell, t_token *token)
+{
+	char	*str;
+	int		i;
+	int		single;
+	int		doubled;
+
+	i = 0;
+	single = 0;
+	doubled = 0;
+	str = token->value;
+	if (token->quote == SINGLE && is_double_quoted(token->value))
+		return (false);
+	if (str[0] == '\0')
+		return (false);
+	if (str[i] == '\'')
+		single++;
+	if (str[i] == '"')
+		doubled++;
+	i++;
+	while (str[i])
+	{
+		if (str[i] == '\'')
+			single = i;
+		if (str[i] == '"')
+			doubled = i;
+		i++;
+	}
+	if (single > 1 && str[i] == '\'')
+		remove_quots(minishell, token);
+	if (doubled > 1 && str[i] == '\"')
+		remove_quots(minishell, token);
+	return (false);
+}
+
