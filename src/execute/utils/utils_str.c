@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:28:00 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 17:29:02 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/25 11:39:51 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	str_copy_and_free(char **src, char **dst)
 	return (0);
 }
 
-int	is_double_quoted(char *str)
+int	is_double_quoted(char *str)//peut-etre plus utile puisque le parsing ne garde plus les quotes
 {
 	int	i;
 	int	doubled;
