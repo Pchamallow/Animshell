@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/23 16:42:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/25 11:11:53 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,4 +117,5 @@ int	execute(t_minishell *minishell)
 		reinit_minishell(minishell);
 	}
 	return (0);
+	// minishell->exec.file_output;
 }
