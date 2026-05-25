@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/25 16:12:53 by stkloutz         ###   ########.fr        #
+#    Updated: 2026/05/25 17:38:10 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,7 +68,8 @@ SRCS		:= 											\
 			src/execute/utils/utils_strv.c				\
 			src/execute/utils/utils.c					\
 			src/execute/TO_DELETE.c						\
-			src/execute/exec_cmds.c						\
+			src/execute/exec_cmds/exec_child.c			\
+			src/execute/exec_cmds/exec_cmds.c			\
 			src/execute/execute.c						\
 			src/execute/term.c							\
 			src/execute/heredoc.c						\
