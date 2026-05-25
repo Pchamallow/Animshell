@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/25 18:16:34 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/25 18:27:23 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,27 +85,9 @@ static void	exec_builtins(t_minishell *minishell, t_pipe *current)
 	is_exit(minishell, current);
 }
 
-/*
-if current + is_next_pipe 
-but current->output == IS_FILE
-== ERROR 
--> next pipe will receive nothing,
-so we close pipefd[1] == writing
-*/
-void	exec_cmds_pipe(t_minishell *minishell)
+static void exec_loop(t_minishell *minishell, t_pipe *current, int *pipefd, int *pid)
 {
-	t_pipe *current;
-	pid_t	pid;
-	pid_t	last_pid = 0;
-	int		pipefd[2];
-	int		pipe_actual;
-	
-	ignore_signal();
-	current = minishell->exec.pipe_lst;
-	minishell->exec.input_fd = -1;
-	pipe_actual = 0;
-	last_pid = 0;
-	while (current)
+		while (current)
 	{
 		if (build_pipeline_structure(minishell, current, pipefd))
 			break;
@@ -115,16 +97,34 @@ void	exec_cmds_pipe(t_minishell *minishell)
 				return ;
 		}
 		exec_builtins(minishell, current);
-		pid = fork();
-		if (pipe_actual == minishell->exec.nb_pipes)
-			last_pid = pid;
+		*pid = fork();
+		if (minishell->exec.pipe_actual == minishell->exec.nb_pipes)
+			minishell->exec.pipe_actual = pid;
 		if (pid == 0)
 			exec_child(minishell, current, pipefd);
 		free_parent(minishell, current, pipefd);
-		pipe_actual++;
+		minishell->exec.pipe_actual++;
 		current = current->next;
 	}
-	get_exit_status(minishell, last_pid);
+}
+
+/*
+if current + is_next_pipe 
+but current->output == IS_FILE
+== ERROR 
+-> next pipe will receive nothing,
+so we close pipefd[1] == writing
+*/
+void	exec_cmds_pipe(t_minishell *minishell)
+{
+	t_pipe	*current;
+	pid_t	pid;
+	int		pipefd[2];
+	
+	ignore_signal();
+	current = minishell->exec.pipe_lst;
+	exec_loop(minishell, current, pipefd, &pid);
+	get_exit_status(minishell, minishell->exec.last_pid);
 }
 
 /*

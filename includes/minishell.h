@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/25 18:04:27 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/25 18:24:31 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,8 @@ typedef struct s_exec
 	int			index_prev_pipe;
 	int			nb_pipes;
 	int			input_fd;
+	int			pipe_actual;
+	int			last_pid;
 	t_pipe		*pipe_lst;
 	t_token		*last_pipe;
 	t_token		**first_token;
