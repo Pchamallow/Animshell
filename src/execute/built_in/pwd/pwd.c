@@ -6,33 +6,30 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 16:47:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 16:02:05 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 16:23:21 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**init_new_envp(t_minishell *minishell, int len)
+static char	**init_new_envp(t_minishell *minishell, int len)
 {
 	char	**new_envp;
+
 	new_envp = malloc(sizeof(char *) * (len + 3));
 	if (!new_envp)
-	{
-		free(minishell->builtin.pwd.result);
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	}
 	new_envp[0] = ft_calloc
 		(ft_strlen(minishell->builtin.pwd.result) + 1, sizeof(char));
 	if (!new_envp[0])
 	{
-		free(minishell->builtin.pwd.result);
 		free(new_envp);
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	}
 	return (new_envp);
 }
 
-void	add_pwd_to_envp(t_minishell *minishell)
+static void	add_pwd_to_envp(t_minishell *minishell)
 {
 	int		len;
 	char	**new_envp;
@@ -47,32 +44,9 @@ void	add_pwd_to_envp(t_minishell *minishell)
 	minishell->exec.envp = new_envp;
 }
 
-
-
-void	init_pwd(t_minishell *minishell)
-{
-	char	*str;
-
-	str = getcwd(NULL, 0);
-	if (!str)
-	{
-		minishell->builtin.cd.error = 1;
-		return ;
-	}
-	if (minishell->builtin.pwd.result)
-		free(minishell->builtin.pwd.result);
-	minishell->builtin.pwd.result = ft_strjoin("PWD=", str);
-	if (!minishell->builtin.pwd.result)
-	{
-		free(str);
-		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	}
-	free(str);
-}
-
 void	init_pwd_envp(t_minishell *minishell)
 {
-	init_pwd(minishell);
+	pwd_init(minishell);
 	if (strv_searchindex(minishell->exec.envp, "PWD=") == -1)
 		add_pwd_to_envp(minishell);
 }
@@ -82,7 +56,7 @@ void	pwd_update(t_minishell *minishell)
 	if (minishell->builtin.cd.error)
 		minishell->builtin.cd.error = 0;
 	else
-		init_pwd(minishell);
+		pwd_init(minishell);
 }
 
 int	pwd_print(t_minishell *minishell)
@@ -90,7 +64,7 @@ int	pwd_print(t_minishell *minishell)
 	if (minishell->builtin.cd.error)
 		minishell->builtin.cd.error = 0;
 	else
-		init_pwd(minishell);
+		pwd_init(minishell);
 	if (minishell->builtin.pwd.result)
 		printf("%s\n", &minishell->builtin.pwd.result[4]);
 	return (0);

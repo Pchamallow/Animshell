@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 11:29:03 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 15:54:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 16:57:05 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	free_strv(char **array)
 	int	i;
 
 	i = 0;
-	if (!array || !array[i])
+	// if (!array || !array[i])
+	if (!array)
 		return ;
 	while (array[i])
 	{
