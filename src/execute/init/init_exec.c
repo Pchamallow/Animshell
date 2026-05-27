@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 14:47:49 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/25 11:10:00 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/25 18:24:37 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,10 @@ void	init_exec(t_minishell *minishell)
 		minishell->exec.index_pipe = first_pipe;
 	else
 		minishell->exec.index_pipe = lst_size(minishell->token);
-	
 	minishell->exec.index_prev_pipe = 0;
+	minishell->exec.last_pid = 0;
+	minishell->exec.input_fd = -1;
+	minishell->exec.pipe_actual = 0;
 	minishell->exec.last_pipe = minishell->token;
 	minishell->exec.pipe_lst = NULL;
 	tmp = minishell->token;

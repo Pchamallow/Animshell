@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/25 18:04:27 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 11:06:03 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,8 @@ typedef struct s_exec
 	int			index_prev_pipe;
 	int			nb_pipes;
 	int			input_fd;
+	int			pipe_actual;
+	int			last_pid;
 	t_pipe		*pipe_lst;
 	t_token		*last_pipe;
 	t_token		**first_token;
@@ -178,10 +180,11 @@ void	cmd_explicit(t_minishell *minishell, t_token *token);
 // char	*is_path(t_minishell *minishell, char **envp);
 void	is_built_in(t_pipe *pipe, t_token *token);
 // int		heredoc(t_minishell *minishell, t_pipe *pipe, t_token *token);
-int	heredoc(t_minishell *minishell, t_token *token, int fd);
+int		heredoc(t_minishell *minishell, t_token *token, int fd);
 int		nb_pipes(t_token *first);
 void	exec_child(t_minishell *minishell, t_pipe *current, int *pipefd);
-
+void	free_garbage(t_minishell *minishell, t_pipe *current);
+int		build_pipeline_structure(t_minishell *minishell, t_pipe *current, int *pipefd);
 /************************************************************ built-in */
 /** CD ******/
 void	remove_dir(t_minishell *minishell, t_builtin_content *cd);
