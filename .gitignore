@@ -22,3 +22,4 @@ test_crash.sh
 test_errors.sh
 test_nopath.sh
 test_valgrind.sh
+pauline
