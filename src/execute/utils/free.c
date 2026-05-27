@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 12:35:42 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 12:06:47 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/27 15:10:55 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	free_strv(char **array)
 	int	i;
 
 	i = 0;
-	if (!array || !array[i])
+	/*if (!array || !array[i])*/
+	if (!array)
 		return ;
 	while (array[i])
 	{
@@ -40,6 +41,7 @@ void	free_builtin(t_minishell *minishell)
 
 void	free_all(t_minishell *minishell)
 {
+	close_fd(&minishell->exec.input_fd);
 	free_heredoc(minishell);
 	free_builtin(minishell);
 	if (minishell->exec.envp)
