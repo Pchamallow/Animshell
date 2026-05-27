@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 12:31:26 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 12:39:15 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,7 +257,6 @@ int		is_sign(char c);
 int		strv_dup(t_minishell *minishell, char ***dst, char **src);
 int		lst_size(t_token *token);
 int		count_chr(char *str, char c, bool followed);
-bool	find_built_in(t_minishell *minishell, char *token);
 int		ft_joinstr(char **result, char *str, bool reverse_order);
 void	ft_joinchr(t_minishell *minishell, char **result, char c);
 int		ft_strcmp(char *s1, char *s2);
@@ -317,6 +316,7 @@ t_token	*case_command(t_token *token, bool *cmd_found, char *line,
 t_token	*case_arg(t_token *token, char *line, t_minishell *minishell);
 t_token	*case_pipe(t_token *token, bool *cmd_found, int *error, t_token **head);
 int		parse_tokens(char *line, t_token **token_list, t_minishell *minishell);
+bool	find_built_in(char *token);
 /*******************************************************errors parsing */
 void	free_line_and_token_list(char *line, t_token **token_list);
 void	error_malloc(char *line, char *newline, t_minishell *minishell,
