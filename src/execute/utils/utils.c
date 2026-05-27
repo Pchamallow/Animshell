@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 12:01:15 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 14:47:15 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,6 @@ int	lst_size(t_token *token)
 		token = token->next;
 	}
 	return (count);
-}
-
-int	len_double(char **tab)
-{
-	int	i;
-
-	i = 0;
-	while (tab[i] != NULL)
-		i++;
-	if (i != 0)
-		i--;
-	return (i);
 }
 
 int	len_cmd_no_endspace(char *str)
@@ -88,9 +76,9 @@ void	ft_strcpy(char *dst, char *src)
 		ft_strlcpy(dst, (const char *)src, len_src);
 }
 
-char *safe_join(char *s1, char *s2)
+char	*safe_join(char *s1, char *s2)
 {
-	char *res;
+	char	*res;
 
 	res = ft_strjoin(s1, s2);
 	if (!res)

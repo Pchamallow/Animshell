@@ -136,6 +136,24 @@ void	remove_quots(t_minishell *minishell, t_token *token)
 	// printf("resultat = %s\n", token->value);
 }
 
+int	is_double_quoted(char *str)//peut-etre plus utile puisque le parsing ne garde plus les quotes
+{
+	int	i;
+	int	doubled;
+
+	i = 0;
+	doubled = 0;
+	while (str[i])
+	{
+		if (str[i] == '"')
+			doubled++;
+		i++;
+	}
+	if (str[i] == '\0' && doubled == 2)
+		return (1);
+	return (0);
+}
+
 bool is_single_double_quoted(t_minishell *minishell, t_token *token)
 {
 	char	*str;

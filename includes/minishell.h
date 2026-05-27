@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 12:39:15 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 14:49:12 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,7 +249,6 @@ void	free_heredoc(t_minishell *minishell);
 void	free_envp(t_minishell *minishell);
 
 /*************************************************************** utils */
-int		len_double(char **tab);
 int		len_cmd_no_endspace(char *str);
 void	close_fd(int *fd);
 void	close_fds_pipe(t_pipe *pipe);
@@ -268,7 +267,6 @@ int		index_lastchar(char *str, char c);
 int		join_oldnew(char **old, char **new);
 /*************************************************************** utils_str */
 int		strv_searchindex(char **strv, char *search);
-int		is_double_quoted(char *str);
 int		has_alpha(char *str);
 int		str_copy_and_free(char **src, char **dst);
 int		cpy_strvindex(char **result, char **src, char *search);
@@ -277,6 +275,7 @@ int		memcpy_strv(char **dst, char **src, int max);
 void	free_strv_len(char **array, int len);
 int		strvlen(char **array);
 int		is_safe_strvlen(char **s, int len);
+int		len_strv(char **tab);
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);

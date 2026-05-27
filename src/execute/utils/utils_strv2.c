@@ -6,11 +6,23 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/22 16:29:46 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 11:33:43 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 14:48:31 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	len_strv(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i] != NULL)
+		i++;
+	if (i != 0)
+		i--;
+	return (i);
+}
 
 int	ft_strcmp(char *s1, char *s2)
 {
@@ -35,7 +47,7 @@ int	strv_dup(t_minishell *minishell, char ***dst, char **src)
 	i = 0;
 	if (!src)
 		return (-1);
-	len = len_double(src) + 2;
+	len = len_strv(src) + 2;
 	*dst = (char **)malloc((sizeof(char *)) * len);
 	if (!*dst)
 		print_error_free(minishell, "Error\nMalloc failed.\n", 1);
