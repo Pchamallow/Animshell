@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 15:56:27 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 14:20:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 17:26:29 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ long	ft_atol(char *str)
 
 long long	ft_atoll(char *str)
 {
-	int		i;
-	int		sign;
 	long long	result;
+	int			i;
+	int			sign;
 
 	i = 0;
 	sign = 1;
@@ -69,4 +69,3 @@ long long	ft_atoll(char *str)
 	}
 	return (result * sign);
 }
-

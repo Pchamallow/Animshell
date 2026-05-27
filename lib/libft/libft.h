@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 10:50:27 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 17:23:55 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 17:25:39 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 int			ft_printf_fd(int fd, const char *format, ...);
 int			ft_putnbr_st_fd(size_t n, size_t baseformat, char *base, int fd);
 int			ft_putnbr_ui_fd(unsigned int n,
-			unsigned int baseformat, char *base, int fd);
+				unsigned int baseformat, char *base, int fd);
 int			ft_printhexalow(va_list args, int fd);
 int			ft_printhexaup(va_list args, int fd);
 int			ft_printchar(va_list args, int fd);
