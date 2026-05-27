@@ -167,6 +167,9 @@ int		main(int argc, char **argv, char **envp);
 /**************************************************************** init */
 void	init_exec(t_minishell *minishell);
 void	init_pipe(t_minishell *minishell);
+void	cpy_tab_cmd(char *str, t_pipe *pipe);
+int		is_cmd(t_token *words);
+bool	is_pipe(t_pipe *pipe, t_token *token);
 /************************************************************* execute */
 int		execute(t_minishell *minishell);
 void	get_paths_for_cmd(t_minishell *minishell);
