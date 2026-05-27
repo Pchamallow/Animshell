@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 17:22:09 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 11:18:46 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 16:01:53 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	exec_builtin_print(t_minishell *minishell, t_pipe *current,
 	if (kind == IS_ECHO)
 		echo_print(minishell, current);
 	else if (kind == PWD)
-		pwd_print(minishell, current);
+		pwd_print(minishell);
 	else if (kind == EXPORT)
 		export_print(minishell, current);
 	else if (kind == ENV)

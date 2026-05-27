@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:45:50 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/24 16:51:57 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 16:02:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void	error_getcwd(t_minishell *minishell, t_pipe *pipe)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	if (minishell->builtin.pwd.result)
 		free(minishell->builtin.pwd.result);
-	(void)pipe;
 	minishell->builtin.pwd.result = ft_strjoin(pwd, pipe->cmd->cmd_args[0]);
 	if (!minishell->builtin.pwd.result)
 	{

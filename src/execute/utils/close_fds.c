@@ -1,38 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   count_chr.c                                        :+:      :+:    :+:   */
+/*   close_fds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/27 14:25:11 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/25 08:41:38 by pswirgie         ###   ########.fr       */
+/*   Created: 2026/05/27 11:37:45 by pswirgie          #+#    #+#             */
+/*   Updated: 2026/05/27 11:37:56 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int count_chr(char *str, char c, bool followed)
+void	close_fds_pipe(t_pipe *pipe)
 {
-	int i;
-	int count;
-
-	i = 0;
-	count = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-		{
-			while (str[i] == c)
-			{
-				count++;
-				i++;
-			}
-			if (followed == true)
-				return (count);
-		}
-		i++;
-	}
-	return (followed ? count : 0);
+	if (pipe->infile && pipe->infile->fd >= 0)
+		close(pipe->infile->fd);
+	if (pipe->outfile && pipe->outfile->fd >= 0)
+		close(pipe->outfile->fd);
 }
 
+void	close_fd(int *fd)
+{
+	if (*fd && *fd >= 0)
+	{
+		close(*fd);
+		*fd = -1;
+	}
+}

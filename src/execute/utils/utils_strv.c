@@ -6,13 +6,28 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 11:29:03 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/25 08:36:37 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 15:54:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// verifier si cest utiliser
+void	free_strv(char **array)
+{
+	int	i;
+
+	i = 0;
+	if (!array || !array[i])
+		return ;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+	array = NULL;
+}
+
 int	memcpy_strv(char **dst, char **src, int max)
 {
 	int	i;
@@ -56,4 +71,31 @@ void	free_strv_len(char **array, int len)
 	}
 	free(array);
 	array = NULL;
+}
+
+char	**strv_dup(t_minishell *minishell, char **src)
+{
+	char	**dst;
+	int		len;
+	int		i;
+
+	i = 0;
+	if (!src)
+		return (NULL);
+	len = strvlen(src) + 2;
+	dst = (char **)malloc((sizeof(char *)) * len);
+	if (!dst)
+		print_error_free(minishell, "Error\nMalloc failed.\n", 1);
+	while (src[i])
+	{
+		dst[i] = ft_strdup(src[i]);
+		if (!dst[i])
+		{
+			free_strv(dst);
+			print_error_free(minishell, "Error\nMalloc failed.\n", 1);
+		}
+		i++;
+	}
+	dst[i] = NULL;
+	return (dst);
 }
