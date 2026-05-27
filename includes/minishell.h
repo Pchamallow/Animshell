@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 15:03:59 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 16:02:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,7 @@ char	**envp_copy(char **envp, int len);
 char	**update_envp(t_minishell *minishell, t_token *arg, int count);
 bool	is_same_name(char *env_var, t_token *arg);
 int		unset(t_minishell *minishell, t_pipe *pipe);
-int		pwd_print(t_minishell *minishell, t_pipe *pipe);
+int		pwd_print(t_minishell *minishell);
 void	pwd_update(t_minishell *minishell);
 void	init_pwd_envp(t_minishell *minishell);
 void	init_pwd(t_minishell *minishell);
@@ -247,19 +247,19 @@ char	*safe_join(char *s1, char *s2);
 /************************************************************** utils_char */
 int		count_chr(char *str, char c, bool followed);
 int		index_lastchar(char *str, char c);
-int		join_oldnew(char **old, char **new);
 /*************************************************************** utils_str */
 int		ft_strcmp(char *s1, char *s2);
 int		cpy_strvindex(char **result, char **src, char *search);
 int		strv_searchindex(char **strv, char *search);
 int		str_copy_and_free(char **src, char **dst);
 int		has_alpha(char *str);
+int		join_oldnew(char **old, char **new);
 /************************************************************** utils_strv */
 void	free_strv(char **array);
 int		memcpy_strv(char **dst, char **src, int max);
 int		strvlen(char **array);
 void	free_strv_len(char **array, int len);
-int		strv_dup(t_minishell *minishell, char ***dst, char **src);
+char	**strv_dup(t_minishell *minishell, char **src);
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);

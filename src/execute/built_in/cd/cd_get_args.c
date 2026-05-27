@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:50:34 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/24 16:02:38 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 15:08:25 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	remove_dir(t_minishell *minishell, t_builtin_content *cd)
 			ft_strlen(minishell->builtin.pwd.result));
 	if (!old_pwd || path_replacefolder(&old_pwd, cd))
 	{
+		free(old_pwd);
 		free(original);
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	}

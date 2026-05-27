@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:28:00 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 15:02:20 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 15:38:26 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	cpy_strvindex(char **result, char **src, char *search)
 		return (-1);
 	*result = ft_substr(src[index], len_search,
 			ft_strlen(src[index]) - len_search);
-	if (!result)
+	if (!*result)
 		return (1);
 	return (0);
 }
