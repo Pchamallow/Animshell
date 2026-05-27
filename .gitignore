@@ -22,3 +22,11 @@ test_crash.sh
 test_errors.sh
 test_nopath.sh
 test_valgrind.sh
+en.subject.pdf
+readline.supp
+.valgrindrc
+
+TO_DELETE.c
+TO_DELETE_cd_path_clean.c
+TO_DELETE_commentaires
+pauline
