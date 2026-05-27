@@ -6,11 +6,26 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:28:00 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 14:47:43 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 15:02:20 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	len_s1;
+	int	len_s2;
+	int	result;
+
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	if (len_s1 > len_s2)
+		result = ft_strncmp(s1, s2, len_s1);
+	else
+		result = ft_strncmp(s1, s2, len_s2);
+	return (result);
+}
 
 int	cpy_strvindex(char **result, char **src, char *search)
 {

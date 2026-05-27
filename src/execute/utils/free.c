@@ -6,13 +6,13 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 12:35:42 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 12:29:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 14:56:30 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_builtin(t_minishell *minishell)
+static void	free_builtin(t_minishell *minishell)
 {
 	if (minishell->builtin.echo.result)
 		free(minishell->builtin.echo.result);

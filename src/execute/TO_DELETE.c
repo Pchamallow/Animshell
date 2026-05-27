@@ -154,6 +154,94 @@ int	is_double_quoted(char *str)//peut-etre plus utile puisque le parsing ne gard
 	return (0);
 }
 
+void	ft_joinchr(t_minishell *minishell, char **result, char c)
+{
+	char	*tmp;
+	char	str[2];
+
+	str[0] = c;
+	str[1] = '\0';
+	tmp = ft_strdup(*result);
+	if (!tmp)
+	{
+		free(tmp);
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+		return ;
+	}
+	free(*result);
+	*result = ft_strjoin(tmp, str);
+	if (!*result)
+	{
+		free(*result);
+		free(tmp);
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+		return ;
+	}
+	free(tmp);
+}
+
+int	ft_joinstr(char **result, char *str, bool reverse_order)
+{
+	char	*tmp;
+
+	tmp = ft_strdup(*result);
+	if (!tmp)
+		return (1);
+	free(*result);
+	if (reverse_order == false)
+	{
+		*result = ft_strjoin(tmp, str);
+		if (!*result)
+			return (1);
+	}
+	else
+	{
+		*result = ft_strjoin(str, tmp);
+		if (!*result)
+			return (1);
+	}
+	free(tmp);
+	return (0);
+}
+
+int	is_safe_strvlen(char **s, int len)
+{
+	int	safe;
+	int	i;
+
+	i = 0;
+	safe = 1;
+	while (i < len)
+	{
+		if (!s[i])
+		{
+			free(s[i]);
+			safe = 0;
+		}
+		i++;
+	}
+	if (!safe)
+		return (0);
+	return (1);
+}
+
+char	*str_beginend_char(t_minishell *minishell, char *str, char c)
+{
+	char	*new;
+	int		len;
+
+	if (!str)
+		return (NULL);
+	len = ft_strlen(str) + 3;
+	new = ft_calloc(len, sizeof(char));
+	if (!new)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	new[0] = c;
+	ft_strlcpy(&new[1], str, len);
+	new[len - 2] = c;
+	return (new);
+}
+
 bool is_single_double_quoted(t_minishell *minishell, t_token *token)
 {
 	char	*str;

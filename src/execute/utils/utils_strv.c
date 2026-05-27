@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/13 11:29:03 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 12:27:29 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 15:02:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,28 +27,6 @@ void	free_strv(char **array)
 	free(array);
 }
 
-int	is_safe_strvlen(char **s, int len)
-{
-	int	safe;
-	int	i;
-
-	i = 0;
-	safe = 1;
-	while (i < len)
-	{
-		if (!s[i])
-		{
-			free(s[i]);
-			safe = 0;
-		}
-		i++;
-	}
-	if (!safe)
-		return (0);
-	return (1);
-}
-
-// verifier si cest utiliser
 int	memcpy_strv(char **dst, char **src, int max)
 {
 	int	i;
@@ -92,4 +70,28 @@ void	free_strv_len(char **array, int len)
 	}
 	free(array);
 	array = NULL;
+}
+
+int	strv_dup(t_minishell *minishell, char ***dst, char **src)
+{
+	int	len;
+	int	i;
+
+	i = 0;
+	if (!src)
+		return (-1);
+	len = strvlen(src) + 2;
+	*dst = (char **)malloc((sizeof(char *)) * len);
+	if (!*dst)
+		print_error_free(minishell, "Error\nMalloc failed.\n", 1);
+	len += 1;
+	while (src[i])
+	{
+		(*dst)[i] = ft_strdup(src[i]);
+		if (!(*dst)[i])
+			print_error_free(minishell, "Error\nMalloc failed.\n", 1);
+		i++;
+	}
+	(*dst)[i] = NULL;
+	return (0);
 }

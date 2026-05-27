@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 14:49:12 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 15:03:59 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,9 +177,7 @@ int		find_input_output(t_minishell *minishell, t_pipe *pipe, int fd);
 int		is_directory(t_minishell *minishell, t_pipe *pipe, char *str);
 int		path_cmd(t_minishell *minishell, t_pipe *pipe, t_token *token);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
-// char	*is_path(t_minishell *minishell, char **envp);
 void	is_built_in(t_pipe *pipe, t_token *token);
-// int		heredoc(t_minishell *minishell, t_pipe *pipe, t_token *token);
 int		heredoc(t_minishell *minishell, t_token *token, int fd);
 int		nb_pipes(t_token *first);
 void	exec_child(t_minishell *minishell, t_pipe *current, int *pipefd);
@@ -225,57 +223,43 @@ void	init_pwd(t_minishell *minishell);
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
 /**************************************************** execute commands */
 void	exec_cmds_pipe(t_minishell *minishell);
-
-/********************************************************** struct env */
-// void    init_struct_env(t_env *env);
-// void	free_struct_env(t_env *env);
 /********************************************************** read token */
 void	init_cmd_args(t_minishell *minishell, t_pipe *pipe, int nb_args);
 void	add_args(t_minishell *minishell, t_pipe *pipe, t_token *token);
-
-/**************************************************************** term */
-int		term_raw_mode(struct termios *oldt, struct termios *newt);
 /********************************************************** error_free */
-void	print_error_free(t_minishell *minishell, char *str, int error);
-void	strerror_file(char *filename);
 void	strerror_free_structure(t_minishell *minishell, char *filename, int error);
 void	error_cmd_args(char *cmd, char *filename, char *error);
+void	strerror_file(char *filename);
+void	print_error_free(t_minishell *minishell, char *str, int error);
 void	error_free_parsing(t_minishell *minishell);
 /**************************************************************** free */
-void	lst_pipe_clear(t_pipe **head);
 void	free_all(t_minishell *minishell);
-void	free_strv(char **array);
+void	lst_pipe_clear(t_pipe **head);
 void	free_heredoc(t_minishell *minishell);
 void	free_envp(t_minishell *minishell);
-
 /*************************************************************** utils */
-int		len_cmd_no_endspace(char *str);
-void	close_fd(int *fd);
 void	close_fds_pipe(t_pipe *pipe);
-int		is_sign(char c);
-int		strv_dup(t_minishell *minishell, char ***dst, char **src);
+void	close_fd(int *fd);
+int		len_cmd_no_endspace(char *str);
 int		lst_size(t_token *token);
-int		count_chr(char *str, char c, bool followed);
-int		ft_joinstr(char **result, char *str, bool reverse_order);
-void	ft_joinchr(t_minishell *minishell, char **result, char c);
-int		ft_strcmp(char *s1, char *s2);
 void	ft_strcpy(char *dst, char *src);
 char	*safe_join(char *s1, char *s2);
 /************************************************************** utils_char */
-char	*str_beginend_char(t_minishell *minishell, char *str, char c);
+int		count_chr(char *str, char c, bool followed);
 int		index_lastchar(char *str, char c);
 int		join_oldnew(char **old, char **new);
 /*************************************************************** utils_str */
-int		strv_searchindex(char **strv, char *search);
-int		has_alpha(char *str);
-int		str_copy_and_free(char **src, char **dst);
+int		ft_strcmp(char *s1, char *s2);
 int		cpy_strvindex(char **result, char **src, char *search);
+int		strv_searchindex(char **strv, char *search);
+int		str_copy_and_free(char **src, char **dst);
+int		has_alpha(char *str);
 /************************************************************** utils_strv */
+void	free_strv(char **array);
 int		memcpy_strv(char **dst, char **src, int max);
-void	free_strv_len(char **array, int len);
 int		strvlen(char **array);
-int		is_safe_strvlen(char **s, int len);
-int		len_strv(char **tab);
+void	free_strv_len(char **array, int len);
+int		strv_dup(t_minishell *minishell, char ***dst, char **src);
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);

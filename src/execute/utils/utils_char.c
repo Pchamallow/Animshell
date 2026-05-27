@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:11:40 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 11:35:12 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 14:55:02 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,23 +38,6 @@ int	count_chr(char *str, char c, bool followed)
 	return (0);
 }
 
-char	*str_beginend_char(t_minishell *minishell, char *str, char c)
-{
-	char	*new;
-	int		len;
-
-	if (!str)
-		return (NULL);
-	len = ft_strlen(str) + 3;
-	new = ft_calloc(len, sizeof(char));
-	if (!new)
-		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	new[0] = c;
-	ft_strlcpy(&new[1], str, len);
-	new[len - 2] = c;
-	return (new);
-}
-
 int	index_lastchar(char *str, char c)
 {
 	int	i;
@@ -65,13 +48,6 @@ int	index_lastchar(char *str, char c)
 	while (i >= 0 && str[i] && str[i] != c)
 		i--;
 	return (i);
-}
-
-int	is_sign(char c)
-{
-	if (c == '<' || c == '>' || c == '|' || c == '&' || c == '-')
-		return (1);
-	return (0);
 }
 
 int	join_oldnew(char **old, char **new)
