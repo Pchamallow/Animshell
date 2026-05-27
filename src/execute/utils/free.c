@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 12:35:42 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/24 16:39:04 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 11:26:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	free_builtin(t_minishell *minishell)
 
 void	free_all(t_minishell *minishell)
 {
+	close_fd(&minishell->exec.input_fd);
 	free_heredoc(minishell);
 	free_builtin(minishell);
 	if (minishell->exec.envp)
