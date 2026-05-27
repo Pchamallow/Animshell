@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 12:35:42 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/24 16:39:04 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 12:06:47 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,12 @@ void	lst_pipe_clear(t_pipe **head)
 
 void	free_heredoc(t_minishell *minishell)
 {
-	// free(minishell->here_doc->path_explicite);
-	if (minishell->here_doc->value)
-		free(minishell->here_doc->value);
-	free(minishell->here_doc);
+	if (minishell->here_doc)
+	{
+		if (minishell->here_doc->value)
+			free(minishell->here_doc->value);
+		free(minishell->here_doc);
+	}
 }
 
 void	free_envp(t_minishell *minishell)

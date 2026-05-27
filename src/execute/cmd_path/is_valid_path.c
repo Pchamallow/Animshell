@@ -6,23 +6,11 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/22 12:03:29 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 12:01:30 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	path_explicit(t_minishell *minishell, t_token *token)
-{
-	int	len;
-
-	len = ft_strlen(token->value);
-	token->cmd_path = ft_calloc(sizeof(char *), len + 1);
-	if (!token->cmd_path)
-		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	ft_strlcpy(token->cmd_path, token->value, len + 1);
-	cmd_explicit(minishell, token);
-}
 
 static int	is_valid_path(t_minishell *minishell, t_token *token)
 {
@@ -99,6 +87,26 @@ static int	path_type(t_minishell *minishell, t_pipe *pipe, char *token)
 	return (0);
 }
 
+static int	error_path(t_minishell *minishell, t_pipe *pipe, t_token *token)
+{
+	if (is_directory(minishell, pipe, token->value))
+		return (1);
+	if (access(token->value, X_OK) == 0)
+	{
+		path_explicit(minishell, token);
+		return (0);
+	}
+	else
+	{
+		error_cmd_args(token->value, NULL, "No such file or directory");
+		if (pipe->is_cmd)
+			minishell->exec.error = 1;
+		else
+			minishell->exec.error = 127;
+		return (1);
+	}
+}
+
 /*
 -1 = / path + no such file or directory
 0 = cmd, path to find
@@ -128,22 +136,8 @@ int	path_cmd(t_minishell *minishell, t_pipe *pipe, t_token *token)
 		return (1);
 	else if (i == 2)
 	{
-		if (is_directory(minishell, pipe, token->value))
+		if (error_path(minishell, pipe, token))
 			return (1);
-		if (access(token->value, X_OK) == 0)
-		{
-			path_explicit(minishell, token);
-			return (0);
-		}
-		else
-		{
-			error_cmd_args(token->value, NULL, "No such file or directory");
-			if (pipe->is_cmd)
-				minishell->exec.error = 1;
-			else
-				minishell->exec.error = 127;
-			return (1);
-		}
 	}
 	return (0);
 }
