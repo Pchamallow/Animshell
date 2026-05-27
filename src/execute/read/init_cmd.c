@@ -3,14 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   init_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stkloutz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 15:31:54 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/25 15:33:03 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/27 16:10:56 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	is_built_in(t_pipe *pipe, t_token *token)
+{
+	int	len;
+
+	len = ft_strlen(token->value);
+	if (ft_strncmp(token->value, "echo", len) == 0)
+		pipe->builtin_kind = IS_ECHO;
+	else if (ft_strncmp(token->value, "cd", len) == 0)
+		pipe->builtin_kind = CD;
+	else if (ft_strncmp(token->value, "pwd", len) == 0)
+		pipe->builtin_kind = PWD;
+	else if (ft_strncmp(token->value, "export", len) == 0)
+		pipe->builtin_kind = EXPORT;
+	else if (ft_strncmp(token->value, "unset", len) == 0)
+		pipe->builtin_kind = UNSET;
+	else if (ft_strncmp(token->value, "env", len) == 0)
+		pipe->builtin_kind = ENV;
+	else if (ft_strncmp(token->value, "exit", len) == 0)
+		pipe->builtin_kind = EXIT;
+}
 
 static bool	is_cmd_found(t_minishell *minishell, t_pipe *pipe, t_token *token)
 {

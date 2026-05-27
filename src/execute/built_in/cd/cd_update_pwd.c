@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:45:50 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 16:02:50 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 16:23:21 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static char	*find_oldpwd(t_minishell *minishell, t_pipe *pipe)
 	result = NULL;
 	if (pipe->cmd->cmd_args && pipe->cmd->cmd_args[0]
 		&& !ft_strcmp(pipe->cmd->cmd_args[0], "."))
-		init_pwd(minishell);
+		pwd_init(minishell);
 	if (minishell->builtin.pwd.result)
 	{
 		result = ft_substr(minishell->builtin.pwd.result, 4,
@@ -107,7 +107,7 @@ void	modify_pwd_in_envp(t_minishell *minishell)
 
 	if (strv_searchindex(minishell->exec.envp, "PWD=") == -1)
 		return ;
-	init_pwd(minishell);
+	pwd_init(minishell);
 	i = strv_searchindex(minishell->exec.envp, "PWD=");
 	if (i != -1)
 	{

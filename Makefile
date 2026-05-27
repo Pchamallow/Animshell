@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/27 15:57:13 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/05/27 16:52:57 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,8 +45,8 @@ SRCS		:= 											\
 			src/execute/built_in/export_utils.c			\
 			src/execute/built_in/export_update_envp.c	\
 			src/execute/built_in/export_print.c			\
-			src/execute/built_in/pwd.c					\
-			src/execute/built_in/exec_built_in.c		\
+			src/execute/built_in/pwd/pwd_init.c			\
+			src/execute/built_in/pwd/pwd.c				\
 			src/execute/built_in/unset.c				\
 			src/execute/built_in/envp_utils.c			\
 			src/execute/init/init_args.c				\
@@ -68,12 +68,10 @@ SRCS		:= 											\
 			src/execute/utils/utils_str2.c				\
 			src/execute/utils/utils_strv.c				\
 			src/execute/utils/utils.c					\
-			src/execute/TO_DELETE.c						\
 			src/execute/exec_cmds/exec_child.c			\
 			src/execute/exec_cmds/exec_cmds.c			\
 			src/execute/exec_cmds/exec_pipeline.c		\
 			src/execute/execute.c						\
-			src/execute/term.c							\
 			src/execute/heredoc.c						\
 			src/parsing/find_built_in.c					\
 			src/parsing/expand_line.c					\
