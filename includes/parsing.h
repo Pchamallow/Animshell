@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:33:12 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 16:52:00 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 17:11:08 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include "execute.h"
 
 /***********************************************************************/
-typedef struct s_minishell t_minishell;
+typedef struct s_minishell	t_minishell;
 
 typedef enum e_quote_type
 {
@@ -60,7 +60,7 @@ typedef struct s_token
 	struct s_token	*next;
 }				t_token;
 
-typedef struct	s_expand
+typedef struct s_expand
 {
 	char			*newline;
 	int				count;
@@ -115,7 +115,8 @@ void	print_error_unexpected_token(t_token *token);
 /* token_list **********************************************************/
 t_token	*ft_token_new(char *str, t_token_type token_type);
 t_token	*ft_token_last(t_token *lst);
-void	ft_token_add_back(t_token **head, t_token *newer, char *line, t_minishell *minishell);
+void	ft_token_add_back(t_token **head, t_token *newer,
+			char *line, t_minishell *minishell);
 void	ft_token_delone(t_token *lst, void (*del)(void *));
 void	ft_token_lstclear(t_token **head);
 /* signals *************************************************************/

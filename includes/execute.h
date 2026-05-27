@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:39:35 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 16:47:10 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 17:10:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ typedef struct s_builtin
 
 typedef struct s_pipe
 {
-	t_token 		*infile;
-	t_token 		*outfile;
+	t_token			*infile;
+	t_token			*outfile;
 	t_token			*token;
 	t_token			*cmd;
 	int				is_cmd;
@@ -93,6 +93,9 @@ int		main(int argc, char **argv, char **envp);
 /* init ****************************************************************/
 void	init_exec(t_minishell *minishell);
 void	init_pipe(t_minishell *minishell);
+void	cpy_tab_cmd(char *str, t_pipe *pipe);
+int		is_cmd(t_token *words);
+bool	is_pipe(t_pipe *pipe, t_token *token);
 /* execute *************************************************************/
 int		execute(t_minishell *minishell);
 void	get_paths_for_cmd(t_minishell *minishell);
@@ -108,7 +111,8 @@ int		heredoc(t_minishell *minishell, t_token *token, int fd);
 int		nb_pipes(t_token *first);
 void	exec_child(t_minishell *minishell, t_pipe *current, int *pipefd);
 void	free_garbage(t_minishell *minishell, t_pipe *current);
-int		build_pipeline_structure(t_minishell *minishell, t_pipe *current, int *pipefd);
+int		build_pipeline_structure(t_minishell *minishell,
+			t_pipe *current, int *pipefd);
 /* built-in ************************************************************/
 /** CD ******/
 void	remove_dir(t_minishell *minishell, t_builtin_content *cd);
@@ -151,11 +155,11 @@ void	exec_cmds_pipe(t_minishell *minishell);
 void	init_cmd_args(t_minishell *minishell, t_pipe *pipe, int nb_args);
 void	add_args(t_minishell *minishell, t_pipe *pipe, t_token *token);
 /* error_free **********************************************************/
-void	strerror_free_structure(t_minishell *minishell, char *filename, int error);
+void	strerror_free_structure(t_minishell *minishell, char *filename,
+			int error);
 void	error_cmd_args(char *cmd, char *filename, char *error);
 void	strerror_file(char *filename);
 void	print_error_free(t_minishell *minishell, char *str, int error);
-void	error_free_parsing(t_minishell *minishell);
 /* free ****************************************************************/
 void	free_all(t_minishell *minishell);
 void	lst_pipe_clear(t_pipe **head);
@@ -184,11 +188,5 @@ int		memcpy_strv(char **dst, char **src, int max);
 int		strvlen(char **array);
 void	free_strv_len(char **array, int len);
 char	**strv_dup(t_minishell *minishell, char **src);
-/*************************************************************** TO_DELETE */
-void	print_double(char **str);// section to delete
-void	print_pipefd(int fd1, int fd2);
-void	print_pauline(t_minishell *minishell);
-void	print_tokens_types(t_token *token);// pour tester
-void	print_tokens(t_token *token);// pour tester
 
 #endif

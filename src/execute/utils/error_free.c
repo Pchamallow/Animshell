@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 12:30:28 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 17:03:54 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,20 +52,3 @@ void	print_error_free(t_minishell *minishell, char *str, int error)
 	exit(error);
 }
 
-void	error_free_parsing(t_minishell *minishell)
-{
-	if (minishell->exec.envp)
-		free_strv(minishell->exec.envp);
-	if (minishell->exec.paths_for_search_cmd)
-		free_strv(minishell->exec.paths_for_search_cmd);
-	if (minishell->token)
-		ft_token_lstclear(minishell->exec.first_token);
-	if (minishell->exec.pipe_lst)
-		lst_pipe_clear(&minishell->exec.pipe_lst);
-	if (minishell->prompt)
-		free(minishell->prompt);
-	if (minishell->builtin.pwd.result)
-		free(minishell->builtin.pwd.result);
-	ft_printf_fd(2, "minishell: Malloc failed.\n");
-	exit(EXIT_FAILURE);
-}
