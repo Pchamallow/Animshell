@@ -11,15 +11,25 @@
 - [Minishell Project](#minishell-project)
 	- [1. Descriptions](#1-descriptions)
 	- [2. Architecture](#2-architecture)
-		- [2.1. Shell execution cycle](#21-shell-execution-cycle)
-		- [2.2. Structure typedef](#23-structure-typedef)
-		- [2.3. Structure folder](#23-structure-folder)
-		- [2.4. Fonctions utils](#24-fonctions-utils)
+	- [2.1 Shell execution cycle](#21-shell-execution-cycle)
+		- [1. Initialization](#1-initialization)
+		- [2. Main Loop](#2-main-loop)
+		- [3. Parsing](#3-parsing)
+		- [4. Command Execution](#4-command-execution)
+			- [1. Token reading (pipes)](#1-token-reading-pipes)
+				- [2. Command validation (non-builtin)](#2-command-validation-non-builtin)
+			- [3. Pipe management](#3-pipe-management)
+			- [4. Built-in commands](#4-built-in-commands)
+			- [5. Forking process](#5-forking-process)
+			- [6. Status and signal handling](#6-status-and-signal-handling)
+		- [5. Freeing and Reinitialization of the Structure](#5-freeing-and-reinitialization-of-the-structure)
+	- [2.2 Structure typedef](#22-structure-typedef)
+	- [2.3 Structure folder](#23-structure-folder)
+	- [2.4 Fonctions utils](#24-fonctions-utils)
 	- [3. Instructions](#3-instructions)
-		- [Valgrind Flags](#valgrind-flags)
-		- [Example basic tests](#example-basic-tests)
+			- [Valgrind Flags](#valgrind-flags)
+			- [Example basic tests](#example-basic-tests)
 	- [4. Resources](#4-resources)
-		- [Online ressources](#online-ressources)
 
 <!-- new lines -->
 <br><br><br>
@@ -255,8 +265,6 @@ typedef struct s_minishell
 |count_chr|count the occurrence(s) of a chr in a str|
 |UTILS_STR|--------------------------------------------------------|
 |ft_strcmp| = strlcmp, choose the longest len between src and dst|
-|ft_joinstr|make a strjoin, we make reverse the order of the join|
-|ft_joinchr|realloc a str and add chr c at the end|
 |is_space| index of the last space in a str|
 |ft_strcpy| = = strlcpy, choose the longest len between src and dst|
 |safe_join|strjoin, return NULL if malloc fail|

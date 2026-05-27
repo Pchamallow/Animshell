@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 17:27:22 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/25 08:54:02 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 16:01:12 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,35 +25,6 @@ int	lst_size(t_token *token)
 		token = token->next;
 	}
 	return (count);
-}
-
-void	close_fds_pipe(t_pipe *pipe)
-{
-	if (pipe->infile && pipe->infile->fd >= 0)
-		close(pipe->infile->fd);
-	if (pipe->outfile && pipe->outfile->fd >= 0)
-		close(pipe->outfile->fd);
-}
-
-void	close_fd(int *fd)
-{
-	if (*fd && *fd >= 0)
-	{
-		close(*fd);
-		*fd = -1;
-	}
-}
-
-int	len_double(char **tab)
-{
-	int	i;
-
-	i = 0;
-	while (tab[i] != NULL)
-		i++;
-	if (i != 0)
-		i--;
-	return (i);
 }
 
 int	len_cmd_no_endspace(char *str)
@@ -92,40 +63,6 @@ int	is_space(char *str, int not)
 	return (i);
 }
 
-bool find_built_in(char *token)
-{
-	const char *builtins[7];
-	int	i;
-	int	len_token;
-	int	len_builtin;
-
-	builtins[0] = "echo";
-	builtins[1] = "cd";
-	builtins[2] = "pwd";
-	builtins[3] = "export";
-	builtins[4] = "unset";
-	builtins[5] = "env";
-	builtins[6] = "exit";
-	i = 0;
-	len_token = ft_strlen(token);
-	while (i < 7)
-	{
-		len_builtin = ft_strlen(builtins[i]);
-		if (len_token > len_builtin)
-		{
-			if (ft_strncmp(token, builtins[i], len_token) == 0)
-				return (true);
-		}
-		else
-		{
-			if (ft_strncmp(token, builtins[i], len_builtin) == 0)
-				return (true);
-		}
-		i++;
-	}
-	return (false);
-}
-
 void	ft_strcpy(char *dst, char *src)
 {
 	int	len_dst;
@@ -139,9 +76,9 @@ void	ft_strcpy(char *dst, char *src)
 		ft_strlcpy(dst, (const char *)src, len_src);
 }
 
-char *safe_join(char *s1, char *s2)
+char	*safe_join(char *s1, char *s2)
 {
-	char *res;
+	char	*res;
 
 	res = ft_strjoin(s1, s2);
 	if (!res)

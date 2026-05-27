@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/20 16:01:59 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/27 15:53:49 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv, char **envp)
 	ft_bzero(&minishell, sizeof(t_minishell));
 	ft_bzero(&minishell.exec, sizeof(t_exec));
 	minishell.exec.first_token = &minishell.token;
-	strv_dup(&minishell, &minishell.exec.envp, envp);
+	minishell.exec.envp = strv_dup(&minishell, envp);
 	init_pwd_envp(&minishell);
 	if (execute(&minishell) == 1)
 		return (minishell.exec.error);

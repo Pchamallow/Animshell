@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 16:44:44 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/27 16:02:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,9 +181,7 @@ int		is_directory(t_minishell *minishell, t_pipe *pipe, char *str);
 int		path_cmd(t_minishell *minishell, t_pipe *pipe, t_token *token);
 void	path_explicit(t_minishell *minishell, t_token *token);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
-// char	*is_path(t_minishell *minishell, char **envp);
 void	is_built_in(t_pipe *pipe, t_token *token);
-// int		heredoc(t_minishell *minishell, t_pipe *pipe, t_token *token);
 int		heredoc(t_minishell *minishell, t_token *token, int fd);
 int		nb_pipes(t_token *first);
 void	exec_child(t_minishell *minishell, t_pipe *current, int *pipefd);
@@ -221,7 +219,7 @@ char	**envp_copy(char **envp, int len);
 char	**update_envp(t_minishell *minishell, t_token *arg, int count);
 bool	is_same_name(char *env_var, t_token *arg);
 int		unset(t_minishell *minishell, t_pipe *pipe);
-int		pwd_print(t_minishell *minishell, t_pipe *pipe);
+int		pwd_print(t_minishell *minishell);
 void	pwd_update(t_minishell *minishell);
 void	init_pwd_envp(t_minishell *minishell);
 void	init_pwd(t_minishell *minishell);
@@ -229,57 +227,43 @@ void	init_pwd(t_minishell *minishell);
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
 /**************************************************** execute commands */
 void	exec_cmds_pipe(t_minishell *minishell);
-
-/********************************************************** struct env */
-// void    init_struct_env(t_env *env);
-// void	free_struct_env(t_env *env);
 /********************************************************** read token */
 void	init_cmd_args(t_minishell *minishell, t_pipe *pipe, int nb_args);
 void	add_args(t_minishell *minishell, t_pipe *pipe, t_token *token);
-
-/**************************************************************** term */
-int		term_raw_mode(struct termios *oldt, struct termios *newt);
 /********************************************************** error_free */
-void	print_error_free(t_minishell *minishell, char *str, int error);
-void	strerror_file(char *filename);
 void	strerror_free_structure(t_minishell *minishell, char *filename, int error);
 void	error_cmd_args(char *cmd, char *filename, char *error);
+void	strerror_file(char *filename);
+void	print_error_free(t_minishell *minishell, char *str, int error);
+void	error_free_parsing(t_minishell *minishell);
 /**************************************************************** free */
-void	lst_pipe_clear(t_pipe **head);
 void	free_all(t_minishell *minishell);
-void	free_strv(char **array);
+void	lst_pipe_clear(t_pipe **head);
 void	free_heredoc(t_minishell *minishell);
 void	free_envp(t_minishell *minishell);
-
 /*************************************************************** utils */
-int		len_double(char **tab);
-int		len_cmd_no_endspace(char *str);
-void	close_fd(int *fd);
 void	close_fds_pipe(t_pipe *pipe);
-int		is_sign(char c);
-int		strv_dup(t_minishell *minishell, char ***dst, char **src);
+void	close_fd(int *fd);
+int		len_cmd_no_endspace(char *str);
 int		lst_size(t_token *token);
-int		count_chr(char *str, char c, bool followed);
-bool	find_built_in(char *token);
-int		ft_joinstr(char **result, char *str, bool reverse_order);
-void	ft_joinchr(t_minishell *minishell, char **result, char c);
-int		ft_strcmp(char *s1, char *s2);
 void	ft_strcpy(char *dst, char *src);
 char	*safe_join(char *s1, char *s2);
 /************************************************************** utils_char */
-char	*str_beginend_char(t_minishell *minishell, char *str, char c);
+int		count_chr(char *str, char c, bool followed);
 int		index_lastchar(char *str, char c);
-int		join_oldnew(char **old, char **new);
 /*************************************************************** utils_str */
-int		strv_searchindex(char **strv, char *search);
-int		is_double_quoted(char *str);
-int		has_alpha(char *str);
-int		str_copy_and_free(char **src, char **dst);
+int		ft_strcmp(char *s1, char *s2);
 int		cpy_strvindex(char **result, char **src, char *search);
+int		strv_searchindex(char **strv, char *search);
+int		str_copy_and_free(char **src, char **dst);
+int		has_alpha(char *str);
+int		join_oldnew(char **old, char **new);
 /************************************************************** utils_strv */
+void	free_strv(char **array);
 int		memcpy_strv(char **dst, char **src, int max);
-void	free_strv_len(char **array, int len);
 int		strvlen(char **array);
+void	free_strv_len(char **array, int len);
+char	**strv_dup(t_minishell *minishell, char **src);
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);
@@ -319,6 +303,7 @@ t_token	*case_command(t_token *token, bool *cmd_found, char *line,
 t_token	*case_arg(t_token *token, char *line, t_minishell *minishell);
 t_token	*case_pipe(t_token *token, bool *cmd_found, int *error, t_token **head);
 int		parse_tokens(char *line, t_token **token_list, t_minishell *minishell);
+bool	find_built_in(char *token);
 /*******************************************************errors parsing */
 void	free_line_and_token_list(char *line, t_token **token_list);
 void	error_malloc(char *line, char *newline, t_minishell *minishell,

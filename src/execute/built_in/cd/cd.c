@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/24 18:18:29 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 16:02:56 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static int	cd_errors_args(t_minishell *minishell, t_pipe *pipe)
 {
-	(void)pipe;
 	if (pipe->cmd->cmd_args && pipe->cmd->cmd_args[1])
 	{
 		error_cmd_args("cd", NULL, "too many arguments");

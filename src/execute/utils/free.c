@@ -6,29 +6,13 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 12:35:42 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 15:10:55 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/27 14:56:30 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_strv(char **array)
-{
-	int	i;
-
-	i = 0;
-	/*if (!array || !array[i])*/
-	if (!array)
-		return ;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
-}
-
-void	free_builtin(t_minishell *minishell)
+static void	free_builtin(t_minishell *minishell)
 {
 	if (minishell->builtin.echo.result)
 		free(minishell->builtin.echo.result);
@@ -36,7 +20,6 @@ void	free_builtin(t_minishell *minishell)
 		free(minishell->builtin.pwd.result);
 	if (minishell->builtin.cd.result)
 		free(minishell->builtin.cd.result);
-	// minishell->builtin.echo.for_prompt = false;
 }
 
 void	free_all(t_minishell *minishell)
@@ -58,7 +41,6 @@ void	free_all(t_minishell *minishell)
 		minishell->prompt = NULL;
 	}
 	rl_clear_history();
-	// print_pauline(minishell);// print la commande et les arguments
 }
 
 void	lst_pipe_clear(t_pipe **head)

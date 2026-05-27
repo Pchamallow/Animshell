@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 16:47:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/17 15:28:15 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 16:02:05 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,8 @@ void	pwd_update(t_minishell *minishell)
 		init_pwd(minishell);
 }
 
-int	pwd_print(t_minishell *minishell, t_pipe *pipe)
+int	pwd_print(t_minishell *minishell)
 {
-	(void)pipe;
 	if (minishell->builtin.cd.error)
 		minishell->builtin.cd.error = 0;
 	else

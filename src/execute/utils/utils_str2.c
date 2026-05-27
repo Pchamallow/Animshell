@@ -1,51 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_char.c                                       :+:      :+:    :+:   */
+/*   utils_str2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/07 11:11:40 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 15:56:33 by pswirgie         ###   ########.fr       */
+/*   Created: 2026/05/27 15:56:04 by pswirgie          #+#    #+#             */
+/*   Updated: 2026/05/27 16:03:00 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	count_chr(char *str, char c, bool followed)
+int	join_oldnew(char **old, char **new)
 {
-	int	i;
-	int	count;
+	char	*new_path;
 
-	i = 0;
-	count = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-		{
-			while (str[i] == c)
-			{
-				count++;
-				i++;
-			}
-			if (followed == true)
-				return (count);
-		}
-		i++;
-	}
-	if (followed)
-		return (count);
+	new_path = ft_strjoin(*old, *new);
+	if (!new_path)
+		return (1);
+	free(*new);
+	*new = new_path;
 	return (0);
-}
-
-int	index_lastchar(char *str, char c)
-{
-	int	i;
-
-	if (!str)
-		return (0);
-	i = ft_strlen(str) - 1;
-	while (i >= 0 && str[i] && str[i] != c)
-		i--;
-	return (i);
 }
