@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/27 10:04:03 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/05/27 12:09:09 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,10 +59,10 @@ SRCS		:= 											\
 			src/execute/cmd_path/cmd_explicit.c			\
 			src/execute/read/read_token.c				\
 			src/execute/read/init_cmd.c					\
+			src/execute/utils/close_fds.c				\
 			src/execute/utils/error_free.c				\
 			src/execute/utils/free.c					\
 			src/execute/utils/strv_dup.c				\
-			src/execute/utils/count_chr.c				\
 			src/execute/utils/utils_char.c				\
 			src/execute/utils/utils_str.c				\
 			src/execute/utils/utils_strv.c				\
@@ -74,6 +74,7 @@ SRCS		:= 											\
 			src/execute/execute.c						\
 			src/execute/term.c							\
 			src/execute/heredoc.c						\
+			src/parsing/find_built_in.c					\
 			src/parsing/expand_line.c					\
 			src/parsing/expand_line_count.c				\
 			src/parsing/expand_line_utils.c				\

@@ -6,11 +6,11 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/22 16:29:46 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/09 15:05:53 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 11:33:43 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
 int	ft_strcmp(char *s1, char *s2)
 {
@@ -34,7 +34,7 @@ int	strv_dup(t_minishell *minishell, char ***dst, char **src)
 
 	i = 0;
 	if (!src)
-		return(-1);
+		return (-1);
 	len = len_double(src) + 2;
 	*dst = (char **)malloc((sizeof(char *)) * len);
 	if (!*dst)
@@ -44,7 +44,7 @@ int	strv_dup(t_minishell *minishell, char ***dst, char **src)
 	{
 		(*dst)[i] = ft_strdup(src[i]);
 		if (!(*dst)[i])
-			print_error_free(minishell, "Error\nMalloc failed.\n", 1);;
+			print_error_free(minishell, "Error\nMalloc failed.\n", 1);
 		i++;
 	}
 	(*dst)[i] = NULL;
@@ -54,7 +54,7 @@ int	strv_dup(t_minishell *minishell, char ***dst, char **src)
 int	ft_joinstr(char **result, char *str, bool reverse_order)
 {
 	char	*tmp;
-	
+
 	tmp = ft_strdup(*result);
 	if (!tmp)
 		return (1);

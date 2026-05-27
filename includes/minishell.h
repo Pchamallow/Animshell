@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 11:06:03 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 12:31:26 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,6 +240,7 @@ void	print_error_free(t_minishell *minishell, char *str, int error);
 void	strerror_file(char *filename);
 void	strerror_free_structure(t_minishell *minishell, char *filename, int error);
 void	error_cmd_args(char *cmd, char *filename, char *error);
+void	error_free_parsing(t_minishell *minishell);
 /**************************************************************** free */
 void	lst_pipe_clear(t_pipe **head);
 void	free_all(t_minishell *minishell);
@@ -256,7 +257,7 @@ int		is_sign(char c);
 int		strv_dup(t_minishell *minishell, char ***dst, char **src);
 int		lst_size(t_token *token);
 int		count_chr(char *str, char c, bool followed);
-bool	find_built_in(char *token);
+bool	find_built_in(t_minishell *minishell, char *token);
 int		ft_joinstr(char **result, char *str, bool reverse_order);
 void	ft_joinchr(t_minishell *minishell, char **result, char c);
 int		ft_strcmp(char *s1, char *s2);
@@ -276,6 +277,7 @@ int		cpy_strvindex(char **result, char **src, char *search);
 int		memcpy_strv(char **dst, char **src, int max);
 void	free_strv_len(char **array, int len);
 int		strvlen(char **array);
+int		is_safe_strvlen(char **s, int len);
 /*************************************************************** TO_DELETE */
 void	print_double(char **str);// section to delete
 void	print_pipefd(int fd1, int fd2);

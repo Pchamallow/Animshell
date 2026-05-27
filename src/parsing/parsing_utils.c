@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/08 22:07:46 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/17 19:41:39 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/27 12:06:30 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ t_token	*case_command(t_token *token, bool *cmd_found, char *line,
 	*cmd_found = true;
 	if (token->next && token->next->type == WORD)
 		join_next_token(token, line, minishell);
-	if (find_built_in(token->value) == true)
+	if (find_built_in(minishell, token->value) == true)
 		token->type = IS_BUILT_IN;
 	else
 		token->type = IS_CMD;

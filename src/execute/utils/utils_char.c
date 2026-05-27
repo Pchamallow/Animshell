@@ -6,11 +6,37 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:11:40 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/22 12:58:52 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 11:35:12 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	count_chr(char *str, char c, bool followed)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+		{
+			while (str[i] == c)
+			{
+				count++;
+				i++;
+			}
+			if (followed == true)
+				return (count);
+		}
+		i++;
+	}
+	if (followed)
+		return (count);
+	return (0);
+}
 
 char	*str_beginend_char(t_minishell *minishell, char *str, char c)
 {

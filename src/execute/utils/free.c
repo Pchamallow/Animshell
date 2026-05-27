@@ -6,26 +6,11 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 12:35:42 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 11:26:04 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 12:29:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_strv(char **array)
-{
-	int	i;
-
-	i = 0;
-	if (!array || !array[i])
-		return ;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
-}
 
 void	free_builtin(t_minishell *minishell)
 {
@@ -35,7 +20,6 @@ void	free_builtin(t_minishell *minishell)
 		free(minishell->builtin.pwd.result);
 	if (minishell->builtin.cd.result)
 		free(minishell->builtin.cd.result);
-	// minishell->builtin.echo.for_prompt = false;
 }
 
 void	free_all(t_minishell *minishell)
@@ -57,7 +41,6 @@ void	free_all(t_minishell *minishell)
 		minishell->prompt = NULL;
 	}
 	rl_clear_history();
-	// print_pauline(minishell);// print la commande et les arguments
 }
 
 void	lst_pipe_clear(t_pipe **head)
@@ -79,10 +62,12 @@ void	lst_pipe_clear(t_pipe **head)
 
 void	free_heredoc(t_minishell *minishell)
 {
-	// free(minishell->here_doc->path_explicite);
-	if (minishell->here_doc->value)
-		free(minishell->here_doc->value);
-	free(minishell->here_doc);
+	if (minishell->here_doc)
+	{
+		if (minishell->here_doc->value)
+			free(minishell->here_doc->value);
+		free(minishell->here_doc);
+	}
 }
 
 void	free_envp(t_minishell *minishell)
