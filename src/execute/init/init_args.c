@@ -12,27 +12,6 @@
 
 #include "minishell.h"
 
-// static void	no_cmd(t_parse *parse, t_element *pipe)
-// {
-// 	pipe->is_cmd = 0;
-// 	ft_printf_fd(2, "command not found: %s\n", pipe->cmd);
-// 	parse->error = 127;
-// }
-static void	free_tab(t_minishell *minishell, char **tab)
-{
-	free_strv(tab);
-	print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-}
-
-static void	cpy_tab_cmd(char *str, t_pipe *pipe)
-{
-	int	len;
-
-	len = ft_strlen(pipe->cmd->value) + 2;
-	ft_strlcpy(str, pipe->cmd->value, len);
-	return ;
-}
-
 static void	cpy_tab_content(char *str, t_pipe *pipe, int index)
 {
 	int	len;
@@ -62,10 +41,36 @@ void	fill_tab(char **tab, t_pipe *pipe)
 	}
 }
 
+static int	calloc_args_tab(t_minishell *minishell, t_pipe *pipe,
+		char **tab, int nb)
+{
+	int	i;
+	int	len;
+
+	len = ft_strlen(pipe->cmd->value) + 1;
+	i = 0;
+	while (nb)
+	{
+		if (i > 0)
+			len = ft_strlen(pipe->cmd->cmd_args[i - 1]) + 1;
+		tab[i] = ft_calloc(len, sizeof(char));
+		if (!tab[i])
+		{
+			free_strv(tab);
+			ft_printf_fd(2, "minishell: Malloc failed !\n");
+			pipe->error = 1;
+			minishell->exec.error = EXIT_FAILURE;
+			return (-1);
+		}
+		i++;
+		nb--;
+	}
+	return (i);
+}
+
 char	**init_tab(t_minishell *minishell, t_pipe *pipe)
 {
 	char	**tab;
-	int		len;
 	int		len_tab;
 	int		i;
 	int		nb;
@@ -76,30 +81,19 @@ char	**init_tab(t_minishell *minishell, t_pipe *pipe)
 	if (!tab)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	nb = len_tab - 1;
-	len = ft_strlen(pipe->cmd->value) + 1;
-	while (nb)
-	{
-		if (i > 0)
-			len = ft_strlen(pipe->cmd->cmd_args[i - 1]) + 1;
-		tab[i] = ft_calloc(len, sizeof(char));
-		if (!tab[i])
-			free_tab(minishell, tab);
-		i++;
-		nb--;
-	}
+	i = calloc_args_tab(minishell, pipe, tab, nb);
+	if (i < 0)
+		return (NULL);
 	tab[i] = NULL;
 	return (tab);
-}
-
-void	tabs_for_execve(t_minishell *minishell, t_pipe *pipe)
-{
-	pipe->cmd->args_execve = init_tab(minishell, pipe);
-	if (pipe->cmd->args_execve)
-		fill_tab(pipe->cmd->args_execve, pipe);
 }
 
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe)
 {
 	if (pipe->is_cmd == 1)
-		tabs_for_execve(minishell, pipe);
+	{
+		pipe->cmd->args_execve = init_tab(minishell, pipe);
+		if (pipe->cmd->args_execve)
+			fill_tab(pipe->cmd->args_execve, pipe);
+	}
 }

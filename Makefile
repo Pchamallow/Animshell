@@ -54,6 +54,7 @@ SRCS		:= 											\
 			src/execute/init/init_exec.c				\
 			src/execute/init/init_files.c				\
 			src/execute/init/init_pipe.c				\
+			src/execute/init/init_utils.c				\
 			src/execute/cmd_path/is_valid_path.c		\
 			src/execute/cmd_path/get_paths.c			\
 			src/execute/cmd_path/cmd_explicit.c			\
