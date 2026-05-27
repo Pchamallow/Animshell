@@ -176,6 +176,7 @@ int		init_cmd(t_minishell *minishell, t_pipe *pipe);
 int		find_input_output(t_minishell *minishell, t_pipe *pipe, int fd);
 int		is_directory(t_minishell *minishell, t_pipe *pipe, char *str);
 int		path_cmd(t_minishell *minishell, t_pipe *pipe, t_token *token);
+void	path_explicit(t_minishell *minishell, t_token *token);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
 void	is_built_in(t_pipe *pipe, t_token *token);
 int		heredoc(t_minishell *minishell, t_token *token, int fd);
