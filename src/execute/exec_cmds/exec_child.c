@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 17:22:09 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/25 18:13:44 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 11:18:46 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ static void	redir_output(t_minishell *minishell, t_pipe *current, int *pipefd)
 	}
 }
 
-static void	exec_builtin_print(t_minishell *minishell, t_pipe *current, t_builtin_kind kind)
+static void	exec_builtin_print(t_minishell *minishell, t_pipe *current,
+	t_builtin_kind kind)
 {
 	if (kind == IS_ECHO)
 		echo_print(minishell, current);
@@ -79,9 +80,9 @@ void	exec_child(t_minishell *minishell, t_pipe *current, int *pipefd)
 	if (current->is_cmd && !current->error
 		&& current->builtin_kind == NONE)
 	{
-		if (execve(current->cmd->cmd_path, current->cmd->args_execve, minishell->exec.envp) == -1)
+		if (execve(current->cmd->cmd_path, current->cmd->args_execve,
+				minishell->exec.envp) == -1)
 			minishell->exec.error = errno;
-		strerror_file("execve");
 		perror("minishell: execve: ");
 	}
 	else if (current->builtin_kind != NONE)
