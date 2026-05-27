@@ -6,11 +6,28 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 21:18:24 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/27 10:20:37 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 17:31:13 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+bool	parsing_syntax_ok(char *line, t_minishell *minishell)
+{
+	line = expand_line(line, minishell->exec.envp, minishell);
+	if (separate_into_tokens(line, minishell->exec.first_token, minishell) != 0
+		|| parse_tokens(line, minishell->exec.first_token, minishell) != 0)
+		return (false);
+	free(line);
+	if (nb_pipes(*minishell->exec.first_token) >= 100)
+	{
+		ft_printf_fd(2, "minishell: too many pipes\n");
+		ft_token_lstclear(minishell->exec.first_token);
+		minishell->exec.error = 2;
+		return (false);
+	}
+	return (true);
+}
 
 void	delete_next(t_token *token)
 {
@@ -106,7 +123,6 @@ int	parse_tokens(char *line, t_token **token_list, t_minishell *minishell)
 		if (!error && token && token->type == PIPE)
 			token = case_pipe(token, &cmd_found, &error, token_list);
 	}
-	// print_tokens_types(*token_list);//test
 	if (error)
 	{
 		free_line_and_token_list(line, token_list);

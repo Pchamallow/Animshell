@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/25 18:17:00 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 17:31:34 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,23 +58,6 @@ static void	exit_ctrl_d(t_minishell *minishell)
 	exit(minishell->exec.error);
 }
 
-static bool	parsing_syntax_ok(char *line, t_minishell *minishell)
-{
-	line = expand_line(line, minishell->exec.envp, minishell);
-	if (separate_into_tokens(line, minishell->exec.first_token, minishell) != 0
-		|| parse_tokens(line, minishell->exec.first_token, minishell) != 0)
-		return (false);
-	free(line);
-	if (nb_pipes(*minishell->exec.first_token) >= 100)
-	{
-		ft_printf_fd(2, "minishell: too many pipes\n");
-		ft_token_lstclear(minishell->exec.first_token);
-		minishell->exec.error = 2;
-		return (false);
-	}
-	return (true);
-}
-
 static void	reinit_minishell(t_minishell *minishell)
 {
 	free_heredoc(minishell);
@@ -108,7 +91,7 @@ int	execute(t_minishell *minishell)
 			add_history(line);
 		if (!parsing_syntax_ok(line, minishell))
 			continue ;
-		init_exec(minishell);// voir si on peut optimiser avec bzero 
+		init_exec(minishell);
 		if (minishell->token)
 		{
 			init_pipe(minishell);
