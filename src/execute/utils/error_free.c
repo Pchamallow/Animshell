@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 17:03:54 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 17:19:29 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,3 @@ void	print_error_free(t_minishell *minishell, char *str, int error)
 	free_all(minishell);
 	exit(error);
 }
-
