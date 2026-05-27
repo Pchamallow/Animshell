@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:04:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 11:06:03 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 11:47:14 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,7 @@ int		init_cmd(t_minishell *minishell, t_pipe *pipe);
 int		find_input_output(t_minishell *minishell, t_pipe *pipe, int fd);
 int		is_directory(t_minishell *minishell, t_pipe *pipe, char *str);
 int		path_cmd(t_minishell *minishell, t_pipe *pipe, t_token *token);
+void	path_explicit(t_minishell *minishell, t_token *token);
 void	cmd_explicit(t_minishell *minishell, t_token *token);
 // char	*is_path(t_minishell *minishell, char **envp);
 void	is_built_in(t_pipe *pipe, t_token *token);
