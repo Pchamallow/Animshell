@@ -6,7 +6,7 @@
 /*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 11:41:13 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/09 15:33:29 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/28 23:18:54 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	**copy_unset_envp(t_minishell *minishell, t_token *arg, int envp_len)
 
 	new_envp = ft_calloc(envp_len + 1, sizeof(char *));
 	if (!new_envp)
-		print_error_free(minishell, "malloc error in export\n", EXIT_FAILURE);
+		print_error_free(minishell, "malloc error in unset\n", EXIT_FAILURE);
 	i = 0;
 	j = 0;
 	while (minishell->exec.envp[i])

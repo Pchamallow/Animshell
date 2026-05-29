@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 21:18:24 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/27 10:20:37 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 23:33:31 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,12 @@ t_token	*case_pipe(t_token *token, bool *cmd_found, int *error, t_token **head)
 /*	**********************************************		*/
 /* parse_tokens and subfunctions:						*/
 /*	1.define more precisely the type of the token:		*/
-/*		- WORD becomes	IS_CMD, IS_ARG					*/
+/*		- WORD becomes	IS_CMD, IS_BUILT_IN, IS_ARG		*/
 /*						IS_FILENAME or IS_DELIMITER		*/
 /*		- REDIRECTION becomes IS_ INPUT, IS_OUTPUT		*/
 /*							  HEREDOC or IS_APPEND		*/
-/*		- no change of type for PIPE and ONE_SPACE		*/
-/*	2.remove unnecessary spaces:						*/
-/*		Only spaces between 2 IS_ARG are left.			*/
+/*		- no change of type for PIPE					*/
+/*	2.remove spaces										*/
 /*	3.Check for syntax errors:							*/
 /*		- REDIRECTIONS must be followed by IS_FILENAME	*/
 /*		- HEREDOC must be followed by IS_DELIMITER		*/

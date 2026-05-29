@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 15:36:38 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/28 23:19:27 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	exec_builtins(t_minishell *minishell, t_pipe *current)
 	if (current->builtin_kind == CD)
 		cd(minishell, current);
 	if (current->builtin_kind == EXPORT)
-		export(minishell, current);
+		ft_export(minishell, current);
 	if (current->builtin_kind == UNSET && !minishell->exec.nb_pipes)
 		unset(minishell, current);
 	if (current->builtin_kind == PWD)
