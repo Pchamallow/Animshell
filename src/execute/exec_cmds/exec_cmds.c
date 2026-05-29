@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/29 18:09:05 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/29 18:43:14 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static void	exec_builtins(t_minishell *minishell, t_pipe *current)
 static void	exec_loop(t_minishell *minishell, t_pipe *current,
 	int *pipefd, int *pid)
 {
-	int		child_exit_status;
 	while (current)
 	{
 		if (build_pipeline_structure(minishell, current, pipefd))
@@ -67,9 +66,6 @@ static void	exec_loop(t_minishell *minishell, t_pipe *current,
 		free_parent(minishell, current, pipefd);
 		minishell->exec.pipe_actual++;
 		current = current->next;
-		waitpid(-1, &child_exit_status, 0);
-		if (WIFEXITED(child_exit_status))
-			minishell->exec.error = WEXITSTATUS(child_exit_status);
 	}
 }
 
