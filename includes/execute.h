@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:39:35 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 17:10:04 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/28 23:17:11 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void	is_exit(t_minishell *minishell, t_pipe *pipe);
 int		exit_single_arg(t_minishell *minishell, char *nb);
 int		is_num_single_sign(char *str);
 int		export_print(t_minishell *minishell, t_pipe *pipe);
-int		export(t_minishell *minishell, t_pipe *pipe);
+int		ft_export(t_minishell *minishell, t_pipe *pipe);
 bool	is_concat(char *arg, int i);
 int		concat_found(char *arg);
 char	*new_concat(char *arg);

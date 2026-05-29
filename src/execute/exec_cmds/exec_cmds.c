@@ -37,7 +37,7 @@ static void	exec_builtins(t_minishell *minishell, t_pipe *current)
 	if (current->builtin_kind == CD)
 		cd(minishell, current);
 	if (current->builtin_kind == EXPORT)
-		export(minishell, current);
+		ft_export(minishell, current);
 	if (current->builtin_kind == UNSET && !minishell->exec.nb_pipes)
 		unset(minishell, current);
 	if (current->builtin_kind == PWD)

@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by stkloutz and pswirgie.*
+*This project has been created as part of the 42 curriculum by stkloutz, pswirgie.*
 <p id="top"></p>
 
 <!-- new lines -->
@@ -34,7 +34,7 @@
 <!-- new lines -->
 <br><br><br>
 
-## 1. Descriptions
+## 1. Description
 This program is a minimal shell inspired by Bash, written in C.<br>
 It reads a prompt, e.g.:
 ```bash
@@ -105,8 +105,32 @@ Inside the loop, we:
 
 
 ### 3. Parsing
-// STEPH
+- Expand:  
 
+The *environnement variables* and the *exit status* expand to their values.  
+An environnement variable is a '\$' followed by a sequence of alphanumeric characters or an underscore.  
+The first character must be an alphabetic character or an underscore.  
+The exit status is called with '\$?', it expands to the exit status of the most recently executed pipeline.  
+-> '\$' expands to something only when it is followed by an alphabetic character, an underscore or '?'  
+Otherwise, it is print as a \$.  
+  
+*Single quotes* prevent minishell from interpreting special characters, *including* environnement variables and exit status.  
+*Double quotes* prevent minishell from interpreting special characters, *except* environnement variables and exit status.  
+If quotes are not closed, minishell prints an error message.  
+- Separate into tokens  
+The input line is first roughly separated into tokens. At this step, tokens are:
+	- *pipes*: |
+	- *redirections*: <, <<, > or >>
+	- *words*: characters enclosed with quotes or separated by spaces, pipes or redirections. Quotes are removed.  
+	- *spaces*: all white spaces are converted to space. No matter their number, if they are following each other, they become one space.
+- Parse tokens  
+Then the tokens are more precisely defined:
+	- *redirections* become *input*, *output*, *append* or *heredoc*  
+	- *words* become *commands* (or *built-in* commands), *arguments*, *filenames* or *delimiters*
+	- if 2 *words* are following each other without any space, they are combined into one  
+	- spaces are removed  
+  
+If a syntax error is encontered, minishell prints an error message.  
 
 ### 4. Command Execution
 - This process runs in a loop.
@@ -205,7 +229,7 @@ typedef struct s_minishell
 | `t_token *last_pipe` | First token of the next pipe (i.e. last token of current pipe + 1) |
 | `t_token **first_token` | Pointer to the first token of the entire command line |
 
-// STEPH ?? tableau similaire pour parse expand ou non ?
+
 
 [back to top](#top)
 <br><br>
@@ -216,27 +240,28 @@ typedef struct s_minishell
 ├── Makefile
 ├── README.md
 ├── includes
+│   └── execute.h
 │   └── minishell.h
+│   └── parsing.h
 ├── lib
 │   └── libft
-├── readline.supp
 └── src
 	├── execute
 	│   ├── built_in
 	│   ├── cmd_path
-	│	├── exec_cmds.c
+	│	├── exec_cmds
 	│   ├── execute.c
 	│   ├── heredoc.c
 	│   ├── init
-	│   ├── read_token.c
+	│   ├── read
 	│   └── utils
 	├── main.c
-	├── outfile.txt
 	├── parsing
 	│   ├── expand_line.c
 	│   ├── expand_line_count.c
 	│   ├── expand_line_strlcat_add_quotes.c
 	│   ├── expand_line_utils.c
+	│   ├── find_built_in.c
 	│   ├── ft_token_list.c
 	│   ├── handle_quote_type.c
 	│   ├── handle_token_types.c
@@ -295,6 +320,31 @@ typedef struct s_minishell
 --suppressions=readline.supp
 ```
 
+#### Suppressor Readline
+The readline() function may cause memory leaks !  
+Here is an example of suppressor for valgrind:  
+```
+#READLINE SUPPRESSORS
+{
+	leak readline
+	Memcheck:Leak
+	...
+	fun:readline
+}
+{
+	leak add_history
+	Memcheck:Leak
+	...
+	fun:add_history
+}
+{
+	too many lines
+	Memcheck:Leak
+	...
+	fun:readline_internal_char
+}
+```
+
 #### Example basic tests
 ```bash
 echo -n coucou
@@ -320,11 +370,10 @@ ls | exit 42
 - [using readline](https://www.codestudy.net/blog/where-is-the-readline-function-located-in-c/)
 - [termcap](https://www.gnu.org/software/termutils/manual/termcap-1.3/html_chapter/termcap_2.html)
 - [exit-code-terminal](https://www.geeksforgeeks.org/linux-unix/how-to-use-exit-code-to-read-from-terminal-from-script-and-with-logical-operators/)
-- Thanks to Gauthier(gaasseli) and lucnicol for their documentation : [minishell_tests](https://docs.google.com/document/d/1r0yE7gK12J6lW79mzY8ELyKJEiDqkOeRfXZ6DWSKZVE/edit?tab=t.0)
+- Thanks to Gauthier(gaasseli) and Lucie (lucnicol) for their documentation : [minishell_tests](https://docs.google.com/document/d/1r0yE7gK12J6lW79mzY8ELyKJEiDqkOeRfXZ6DWSKZVE/edit?tab=t.0)
 - Thanks to our colleagues who shared their Minishell test suites to help us : 
 	- Nathan (nda-cunh) : [minishell_tester](https://gitlab.com/nda-cunh/minishell_tester)
 	- Aliexei (aprivalo)
 - Thanks to Amy and Seb who tested our Minishell during an intense duel.
-//STEPH
 
 [back to top](#top)

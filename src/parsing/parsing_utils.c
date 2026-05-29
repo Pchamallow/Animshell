@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/08 22:07:46 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/27 14:50:34 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 23:34:17 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,15 +99,15 @@ t_token	*case_redirection(t_token *token, int *error, char *line,
 	return (token);
 }
 
-/*	*********************************		*/
-/* case_command:							*/
-/*	- sets the token type to IS_CMD			*/
-/*	- sets @cmd_found to true				*/
-/*	- if next token is a WORD:				*/
-/*				- joins next token			*/
-/*	- removes the following space if needed	*/
-/*	- returns the next token				*/
-/*	*********************************		*/
+/*	*****************************************		*/
+/* case_command:									*/
+/*	- sets the token type to IS_CMD	or IS_BUILT_IN	*/
+/*	- sets @cmd_found to true						*/
+/*	- if next token is a WORD:						*/
+/*				- joins next token					*/
+/*	- removes the following space if there is one	*/
+/*	- returns the next token						*/
+/*	*****************************************		*/
 t_token	*case_command(t_token *token, bool *cmd_found, char *line,
 		t_minishell *minishell)
 {
@@ -129,12 +129,7 @@ t_token	*case_command(t_token *token, bool *cmd_found, char *line,
 /*	- sets the token type to IS_ARG									*/
 /*	- if IS_ARG->next token is a WORD:								*/
 /*				- joins next token									*/
-/*	- checks if the next token is ONE_SPACE							*/
-/*			and the next next token WORD							*/
-/* 					-> if yes, keeps the space						*/
-/* 							and returns the next next token			*/
-/* 					-> if no, removes the space if there is one		*/
-/* 							and returns the next token				*/
+/*	- removes the following space if there is one					*/
 /*	*************************************************************	*/
 t_token	*case_arg(t_token *token, char *line, t_minishell *minishell)
 {

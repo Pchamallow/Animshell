@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 14:11:33 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/09 17:37:37 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/28 23:18:09 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ bool	export_option_error(t_minishell *minishell, t_token *arg)
 **		-> see export_print function
 **	*********************************************
 */
-int	export(t_minishell *minishell, t_pipe *pipe)
+int	ft_export(t_minishell *minishell, t_pipe *pipe)
 {
 	t_token	*arg;
 	int		count;
