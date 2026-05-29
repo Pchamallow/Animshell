@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:33:12 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 17:11:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/27 17:31:24 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ t_token	*case_command(t_token *token, bool *cmd_found, char *line,
 t_token	*case_arg(t_token *token, char *line, t_minishell *minishell);
 t_token	*case_pipe(t_token *token, bool *cmd_found, int *error, t_token **head);
 int		parse_tokens(char *line, t_token **token_list, t_minishell *minishell);
+bool	parsing_syntax_ok(char *line, t_minishell *minishell);
 bool	find_built_in(char *token);
 /* errors parsing ******************************************************/
 void	free_line_and_token_list(char *line, t_token **token_list);

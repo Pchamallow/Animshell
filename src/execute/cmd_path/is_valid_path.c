@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 14:59:13 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/29 16:14:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,12 @@ static int	is_valid_path(t_minishell *minishell, t_token *token)
 		token->cmd_path = ft_strjoin(tmp, token->value);
 		free(tmp);
 		if (access(token->cmd_path, X_OK) == 0)
-			break ;
+			return (0);
 		free(token->cmd_path);
 		token->cmd_path = NULL;
 		i++;
 	}
-	if (i >= len + 1)
-		return (-1);
-	return (0);
+	return (-1);
 }
 
 int	is_directory(t_minishell *minishell, t_pipe *pipe, char *str)
