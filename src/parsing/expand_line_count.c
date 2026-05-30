@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_line_count.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 22:10:40 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/18 19:47:34 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/30 15:37:46 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 */
 int	find_env_var(char *line, int len, t_quote_type *quote)
 {
-	int				i;
+	int	i;
 
 	i = 0;
 	while (i < len - 1)
@@ -121,8 +121,8 @@ int	count_total_char(char *line, int len, t_minishell *minishell)
 		toggle_quote(line[i], &quote);
 		if (quote != SINGLE && line[i] == '$' && line[i + 1] == '?')
 			count += get_exit_status_len(minishell->exec.error) - 2;
-		else if (quote != SINGLE && line[i] == '$' && line[i + 1] != '$'
-			&& line[i + 1] != '?' && !is_separator(line[i + 1]))
+		else if (quote != SINGLE && line[i] == '$'
+			&& (line[i + 1] == '_' || ft_isalpha(line[i + 1])))
 		{
 			i++;
 			count = add_var_value_len(minishell->exec.envp, line + i,

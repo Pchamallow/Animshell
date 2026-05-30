@@ -159,7 +159,6 @@ If a syntax error is encontered, minishell prints an error message.
 ---
 #### 5. Forking process
 - At this stage, we have both a parent and a child process
-- We store the `last_pid` of the last child to retrieve the final exit status
 - child process
 	- If input/output is not standard (= terminal), apply redirections using `dup2`
 	- Close all unnecessary file descriptors (infile, outfile, heredoc, pipefds)
@@ -240,39 +239,80 @@ typedef struct s_minishell
 ├── Makefile
 ├── README.md
 ├── includes
-│   └── execute.h
-│   └── minishell.h
+│   ├── execute.h
+│   ├── minishell.h
 │   └── parsing.h
 ├── lib
 │   └── libft
 └── src
-	├── execute
-	│   ├── built_in
-	│   ├── cmd_path
-	│	├── exec_cmds
-	│   ├── execute.c
-	│   ├── heredoc.c
-	│   ├── init
-	│   ├── read
-	│   └── utils
-	├── main.c
-	├── parsing
-	│   ├── expand_line.c
-	│   ├── expand_line_count.c
-	│   ├── expand_line_strlcat_add_quotes.c
-	│   ├── expand_line_utils.c
-	│   ├── find_built_in.c
-	│   ├── ft_token_list.c
-	│   ├── handle_quote_type.c
-	│   ├── handle_token_types.c
-	│   ├── parsing.c
-	│   ├── parsing_errors_free.c
-	│   ├── parsing_utils.c
-	│   └── separate_into_tokens.c
-	└── signals
-		├── signals_default.c
-		├── signals_heredoc.c
-		└── signals_interactive.c
+    ├── execute
+    │   ├── built_in
+    │   │   ├── cd
+    │   │   │   ├── cd.c
+    │   │   │   ├── cd_get_args.c
+    │   │   │   ├── cd_root.c
+    │   │   │   └── cd_update_pwd.c
+    │   │   ├── echo.c
+    │   │   ├── echo_print.c
+    │   │   ├── env.c
+    │   │   ├── envp_utils.c
+    │   │   ├── exit.c
+    │   │   ├── exit_single_arg.c
+    │   │   ├── export.c
+    │   │   ├── export_print.c
+    │   │   ├── export_update_envp.c
+    │   │   ├── export_utils.c
+    │   │   ├── pwd
+    │   │   │   ├── pwd.c
+    │   │   │   └── pwd_init.c
+    │   │   └── unset.c
+    │   ├── cmd_path
+    │   │   ├── cmd_explicit.c
+    │   │   ├── get_paths.c
+    │   │   └── is_valid_path.c
+    │   ├── exec_cmds
+    │   │   ├── exec_child.c
+    │   │   ├── exec_cmds.c
+    │   │   └── exec_pipeline.c
+    │   ├── execute.c
+    │   ├── heredoc.c
+    │   ├── init
+    │   │   ├── init_args.c
+    │   │   ├── init_cmd_args.c
+    │   │   ├── init_exec.c
+    │   │   ├── init_files.c
+    │   │   ├── init_pipe.c
+    │   │   └── init_utils.c
+    │   ├── read
+    │   │   ├── init_cmd.c
+    │   │   └── read_token.c
+    │   └── utils
+    │       ├── close_fds.c
+    │       ├── error_free.c
+    │       ├── free.c
+    │       ├── utils.c
+    │       ├── utils_char.c
+    │       ├── utils_str.c
+    │       ├── utils_str2.c
+    │       └── utils_strv.c
+    ├── main.c
+    ├── parsing
+    │   ├── expand_line.c
+    │   ├── expand_line_count.c
+    │   ├── expand_line_strlcat_add_quotes.c
+    │   ├── expand_line_utils.c
+    │   ├── find_built_in.c
+    │   ├── ft_token_list.c
+    │   ├── handle_quote_type.c
+    │   ├── handle_token_types.c
+    │   ├── parsing.c
+    │   ├── parsing_errors_free.c
+    │   ├── parsing_utils.c
+    │   └── separate_into_tokens.c
+    └── signals
+        ├── signals_default.c
+        ├── signals_heredoc.c
+        └── signals_interactive.c
 ```
 [back to top](#top)
 

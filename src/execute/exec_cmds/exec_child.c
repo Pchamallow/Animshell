@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 17:22:09 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 16:01:53 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/30 17:38:00 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ static void	exec_builtin_print(t_minishell *minishell, t_pipe *current,
 		export_print(minishell, current);
 	else if (kind == ENV)
 		env(minishell, current);
-	else if (kind == EXPORT)
-		export_print(minishell, current);
 }
 
 void	exec_child(t_minishell *minishell, t_pipe *current, int *pipefd)
@@ -82,8 +80,10 @@ void	exec_child(t_minishell *minishell, t_pipe *current, int *pipefd)
 	{
 		if (execve(current->cmd->cmd_path, current->cmd->args_execve,
 				minishell->exec.envp) == -1)
+		{
 			minishell->exec.error = errno;
-		perror("minishell: execve: ");
+			perror("minishell: execve: ");
+		}
 	}
 	else if (current->builtin_kind != NONE)
 		exec_builtin_print(minishell, current, current->builtin_kind);

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 16:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 15:53:49 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/30 17:46:41 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ int	main(int argc, char **argv, char **envp)
 	minishell.exec.first_token = &minishell.token;
 	minishell.exec.envp = strv_dup(&minishell, envp);
 	init_pwd_envp(&minishell);
-	if (execute(&minishell) == 1)
-		return (minishell.exec.error);
+	execute(&minishell);
 	return (minishell.exec.error);
 }

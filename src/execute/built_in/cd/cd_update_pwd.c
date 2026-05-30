@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:45:50 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 16:23:21 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/30 17:15:46 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ int	is_pwd_invalid(void)
 	return (0);
 }
 
+/*
+** if parent folder is deleted, we add the path to pwd 
+** eg : ../folder -> pwd = /home/documents/../folder
+*/
 void	error_getcwd(t_minishell *minishell, t_pipe *pipe)
 {
 	char	*pwd;

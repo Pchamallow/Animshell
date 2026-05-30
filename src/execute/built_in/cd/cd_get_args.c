@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:50:34 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 15:08:25 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/30 17:47:46 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,13 @@ static int	path_replacefolder(char **oldpwd, t_builtin_content *cd)
 	return (0);
 }
 
+/*
+** if args begin by "../" -> check permissions folder
+** no permissions = convert pwd in absolute path 
+** eg : arg = ../folder ->
+**					pwd	= /home/documents/tests
+**					cd	= /home/documents/folder
+*/
 void	remove_dir(t_minishell *minishell, t_builtin_content *cd)
 {
 	char	*old_pwd;

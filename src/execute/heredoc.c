@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 18:07:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/29 16:42:45 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/30 15:05:11 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ int	heredoc_lines(t_minishell *minishell, t_token *token, int fd)
 	return (signal);
 }
 
-static int	heredoc_child(t_minishell *minishell, t_token *token, int *pipefd, int *fd)
+static int	heredoc_child(t_minishell *minishell, t_token *token,
+	int *pipefd, int *fd)
 {
 	int	return_value;
 

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 16:08:45 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/26 22:36:49 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/30 16:21:39 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 static int	init_infile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 {
 	if (is_directory(minishell, pipe, token->value))
+	{
+		pipe->infile_error = 1;
 		return (-1);
+	}
 	token->fd = open(token->value, O_RDONLY);
 	if (token->fd < 0)
 	{
@@ -43,7 +46,10 @@ write in file after previous content
 static int	init_outfile(t_minishell *minishell, t_pipe *pipe, t_token *token)
 {
 	if (is_directory(minishell, pipe, token->value))
+	{
+		pipe->outfile_error = 1;
 		return (-1);
+	}
 	if (token->file_output == 2)
 		token->fd = open(token->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:39:35 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/28 23:17:11 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/30 17:48:58 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,12 @@ typedef struct s_exec
 	char		**paths_for_search_cmd;
 	char		**envp;
 	long long	error;
+	long long	error_sig;
 	long long	error_old;
 	int			index_pipe;
 	int			index_prev_pipe;
 	int			nb_pipes;
 	int			input_fd;
-	int			pipe_actual;
-	int			last_pid;
 	t_pipe		*pipe_lst;
 	t_token		*last_pipe;
 	t_token		**first_token;
@@ -97,7 +96,7 @@ void	cpy_tab_cmd(char *str, t_pipe *pipe);
 int		is_cmd(t_token *words);
 bool	is_pipe(t_pipe *pipe, t_token *token);
 /* execute *************************************************************/
-int		execute(t_minishell *minishell);
+void	execute(t_minishell *minishell);
 void	get_paths_for_cmd(t_minishell *minishell);
 int		read_tokens(t_minishell *minishell, t_pipe *pipe, int fd);
 int		nb_args(t_token *token);
