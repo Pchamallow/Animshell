@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/31 17:59:57 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/31 21:07:05 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,8 @@ static void	exec_builtins(t_minishell *minishell, t_pipe *current)
 static void	exec_loop(t_minishell *minishell, t_pipe *current,
 	int *pipefd, int *pid)
 {
-	int		child_exit_status;
-	pid_t	wpid;
-
 	while (current)
 	{
-		printf("pid exec loop = %d\n", *pid);
 		if (build_pipeline_structure(minishell, current, pipefd))
 			break ;
 		if (current->next)
@@ -71,71 +67,8 @@ static void	exec_loop(t_minishell *minishell, t_pipe *current,
 		minishell->exec.pipe_actual++;
 		current = current->next;
 	}
-	wpid = waitpid(-1, &child_exit_status, 0);
-	while (wpid > 0)
-	{
-		if (wpid == minishell->exec.last_pid)
-		{
-			if (WIFEXITED(child_exit_status))
-				minishell->exec.error = WEXITSTATUS(child_exit_status);
-			if (WIFSIGNALED(child_exit_status))
-				get_signal_status(minishell, child_exit_status);
-		}
-		wpid = waitpid(-1, &child_exit_status, 0);
-	}
-	/*get_exit_status(minishell, minishell->exec.last_pid);*/
+	get_exit_status(minishell, minishell->exec.last_pid);
 }
-/*static void	exec_loop(t_minishell *minishell, t_pipe *current,*/
-	/*int *pipefd, int *pid)*/
-/*{*/
-	/*while (current)*/
-	/*{*/
-		/*if (build_pipeline_structure(minishell, current, pipefd))*/
-			/*break ;*/
-		/*if (current->next)*/
-		/*{*/
-			/*if (pipe(pipefd) == -1)*/
-				/*return ;*/
-		/*}*/
-		/*exec_builtins(minishell, current);*/
-		/**pid = fork();*/
-		/*if (minishell->exec.pipe_actual == minishell->exec.nb_pipes)*/
-			/*minishell->exec.last_pid = *pid;*/
-		/*if (*pid == 0)*/
-			/*exec_child(minishell, current, pipefd);*/
-		/*free_parent(minishell, current, pipefd);*/
-		/*minishell->exec.pipe_actual++;*/
-		/*current = current->next;*/
-	/*}*/
-/*}*/
-
-/*static void	exec_loop(t_minishell *minishell, t_pipe *current,*/
-	/*int *pipefd, int *pid)*/
-/*{*/
-	/*int	child_exit_status;*/
-
-	/*while (current)*/
-	/*{*/
-		/*if (build_pipeline_structure(minishell, current, pipefd))*/
-			/*break ;*/
-		/*if (current->next)*/
-		/*{*/
-			/*if (pipe(pipefd) == -1)*/
-				/*return ;*/
-		/*}*/
-		/*exec_builtins(minishell, current);*/
-		/**pid = fork();*/
-		/*if (*pid == 0)*/
-			/*exec_child(minishell, current, pipefd);*/
-		/*free_parent(minishell, current, pipefd);*/
-		/*waitpid(-1, &child_exit_status, 0);*/
-		/*if (WIFEXITED(child_exit_status))*/
-			/*minishell->exec.error = WEXITSTATUS(child_exit_status);*/
-		/*if (WIFSIGNALED(child_exit_status))*/
-			/*get_signal_status(minishell, child_exit_status);*/
-		/*current = current->next;*/
-	/*}*/
-/*}*/
 
 /*
 if current + is_next_pipe 
@@ -144,17 +77,6 @@ but current->output == IS_FILE
 -> next pipe will receive nothing,
 so we close pipefd[1] == writing
 */
-/*void	exec_cmds_pipe(t_minishell *minishell)*/
-/*{*/
-	/*t_pipe	*current;*/
-	/*pid_t	pid;*/
-	/*int		pipefd[2];*/
-
-	/*ignore_signal();*/
-	/*current = minishell->exec.pipe_lst;*/
-	/*exec_loop(minishell, current, pipefd, &pid);*/
-	/*get_exit_status(minishell, minishell->exec.last_pid);*/
-/*}*/
 void	exec_cmds_pipe(t_minishell *minishell)
 {
 	t_pipe	*current;

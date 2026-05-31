@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/31 09:28:29 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/05/31 19:30:48 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ static void	reinit_minishell(t_minishell *minishell)
 		lst_pipe_clear(&minishell->exec.pipe_lst);
 	if (minishell->builtin.cd.result)
 		free(minishell->builtin.cd.result);
+	minishell->exec.pipe_actual = 0;
 }
 
 void	execute(t_minishell *minishell)
