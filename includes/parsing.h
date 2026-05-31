@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:33:12 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/30 15:01:23 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/31 17:45:48 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,5 +129,6 @@ void	check_signal_value(t_minishell *minishell);
 int		check_signal_heredoc(char *str, int signal);
 void	get_exit_heredoc(t_minishell *minishell, int return_value, int pid);
 void	get_signal_status(t_minishell *minishell, int child_exit_status);
+void	get_exit_status(t_minishell *minishell, pid_t last_pid);
 
 #endif

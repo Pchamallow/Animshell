@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 21:14:00 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/30 15:01:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/31 22:01:35 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,29 @@ void	get_signal_status(t_minishell *minishell, int child_exit_status)
 		if (WCOREDUMP(child_exit_status))
 			write(1, " (core dumped)", 14);
 		write(1, "\n", 1);
+	}
+}
+
+void	get_exit_status(t_minishell *minishell, pid_t last_pid)
+{
+	int		child_exit_status;
+	pid_t	wpid;
+	bool	already_signaled;
+
+	already_signaled = false;
+	wpid = waitpid(-1, &child_exit_status, 0);
+	while (wpid > 0)
+	{
+		if (wpid == last_pid)
+		{
+			if (WIFEXITED(child_exit_status))
+				minishell->exec.error = WEXITSTATUS(child_exit_status);
+		}
+		if (WIFSIGNALED(child_exit_status) && !already_signaled)
+		{
+			get_signal_status(minishell, child_exit_status);
+			already_signaled = true;
+		}
+		wpid = waitpid(-1, &child_exit_status, 0);
 	}
 }
