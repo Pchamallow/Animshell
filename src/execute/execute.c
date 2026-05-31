@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 14:11:38 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/30 17:47:03 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/05/31 09:28:29 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,11 @@ void	execute(t_minishell *minishell)
 		if (!parsing_syntax_ok(line, minishell))
 			continue ;
 		init_exec(minishell);
-		init_pipe(minishell);
-		exec_cmds_pipe(minishell);
+		if (minishell->token)
+		{
+			init_pipe(minishell);
+			exec_cmds_pipe(minishell);
+		}
 		reinit_minishell(minishell);
 	}
 	return ;
