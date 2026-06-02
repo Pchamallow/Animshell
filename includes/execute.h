@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:39:35 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/02 14:10:14 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/02 15:02:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,7 @@ int		cpy_strvindex(char **result, char **src, char *search);
 int		strv_searchindex(char **strv, char *search);
 int		str_copy_and_free(char **src, char **dst);
 int		has_alpha(char *str);
+int		strfind(char *src, char *target);
 int		str_iswhitespaces(char *s);
 int		join_oldnew(char **old, char **new);
 /* utils_strv **********************************************************/
