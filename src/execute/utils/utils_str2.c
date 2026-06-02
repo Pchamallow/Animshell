@@ -6,11 +6,33 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 15:56:04 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/02 12:07:43 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/02 15:25:57 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	strfind(char *src, char *target)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (src && src[i])
+	{
+		j = 0;
+		if (src[i + j] == target[j])
+		{
+			while (target[j] == src[i + j])
+				j++;
+			if (!target[j])
+				return (i + j - 1);
+		}
+		i++;
+	}
+	return (-1);
+}
 
 int	str_iswhitespaces(char *s)
 {
