@@ -9,27 +9,28 @@
 </div>
 
 - [Minishell Project](#minishell-project)
-	- [1. Descriptions](#1-descriptions)
-	- [2. Architecture](#2-architecture)
-	- [2.1 Shell execution cycle](#21-shell-execution-cycle)
-		- [1. Initialization](#1-initialization)
-		- [2. Main Loop](#2-main-loop)
-		- [3. Parsing](#3-parsing)
-		- [4. Command Execution](#4-command-execution)
-			- [1. Token reading (pipes)](#1-token-reading-pipes)
-				- [2. Command validation (non-builtin)](#2-command-validation-non-builtin)
-			- [3. Pipe management](#3-pipe-management)
-			- [4. Built-in commands](#4-built-in-commands)
-			- [5. Forking process](#5-forking-process)
-			- [6. Status and signal handling](#6-status-and-signal-handling)
-		- [5. Freeing and Reinitialization of the Structure](#5-freeing-and-reinitialization-of-the-structure)
-	- [2.2 Structure typedef](#22-structure-typedef)
-	- [2.3 Structure folder](#23-structure-folder)
-	- [2.4 Fonctions utils](#24-fonctions-utils)
-	- [3. Instructions](#3-instructions)
-			- [Valgrind Flags](#valgrind-flags)
-			- [Example basic tests](#example-basic-tests)
-	- [4. Resources](#4-resources)
+  - [1. Description](#1-description)
+  - [2. Architecture](#2-architecture)
+  - [2.1 Shell execution cycle](#21-shell-execution-cycle)
+    - [1. Initialization](#1-initialization)
+    - [2. Main Loop](#2-main-loop)
+    - [3. Parsing](#3-parsing)
+    - [4. Command Execution](#4-command-execution)
+      - [1. Token reading (pipes)](#1-token-reading-pipes)
+        - [2. Command validation (non-builtin)](#2-command-validation-non-builtin)
+      - [3. Pipe management](#3-pipe-management)
+      - [4. Built-in commands](#4-built-in-commands)
+      - [5. Forking process](#5-forking-process)
+      - [6. Status and signal handling](#6-status-and-signal-handling)
+    - [5. Freeing and Reinitialization of the Structure](#5-freeing-and-reinitialization-of-the-structure)
+  - [2.2 Structure typedef](#22-structure-typedef)
+  - [2.3 Structure folder](#23-structure-folder)
+  - [2.4 Fonctions utils](#24-fonctions-utils)
+  - [3. Instructions](#3-instructions)
+      - [Valgrind Flags](#valgrind-flags)
+      - [Suppressor Readline](#suppressor-readline)
+      - [Example basic tests](#example-basic-tests)
+  - [4. Resources](#4-resources)
 
 <!-- new lines -->
 <br><br><br>
@@ -100,7 +101,7 @@ We initialize values that will be used for the first prompt:
 
 Inside the loop, we:
 
-- Print the prompt (e.g. `minishell$: `), unless modified by a command that affects the prompt behavior
+- Print the prompt `minishell$: `
 - Initialisation of sub-part of structure(exec, pipe);
 
 
@@ -169,7 +170,6 @@ If a syntax error is encontered, minishell prints an error message.
 	- Read data from `pipefd[0]` and pass it to the next child if needed
 	- Close `pipefd[1]`
 	- Free and close unused resources:
-		- Prompt (reinitialized at each loop)
 		- Heredoc (if not closed)
 		- Infile / outfile
 	- Move to the next command in the pipeline
@@ -211,8 +211,7 @@ typedef struct s_minishell
 	t_token		*token;		// first token of the command line
 	t_token		*here_doc; 	// single active heredoc (fd + value)
 
-	t_builtin	builtin;	// builtin state (result, prompt flag, error code)
-	char		*prompt;	// current prompt string
+	t_builtin	builtin;	// builtin state (result, error code)
 }				t_minishell;
 ```
 | `t_exec exec` | Description |
@@ -220,7 +219,7 @@ typedef struct s_minishell
 | `char **paths_for_search_cmd` | Paths extracted from `PATH` environment variable, split into possible directories to locate and execute commands |
 | `char **envp` | Copy of the environment variables (`envp`), which may be modified during execution (e.g. after `unset PATH`) |
 | `long long error` | Error code of the last command or pipeline execution, used as the program return value |
-| `long long error_old` | Previous error code, kept when needed for restoration or comparison |
+| `long long error_last_child` | Previous error code, kept when needed for restoration or comparison |
 | `int index_pipe` | Index of the current pipe in the token list |
 | `int index_prev_pipe` | Index of the previous pipe in the token list |
 | `int nb_pipes` | Total number of pipes in the current command line |

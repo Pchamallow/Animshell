@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:39:35 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/31 16:34:27 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/06/02 14:10:14 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ typedef enum e_put
 typedef struct s_builtin_content
 {
 	char		*result;
-	bool		for_prompt;
 	int			error;
 }				t_builtin_content;
 
@@ -75,7 +74,8 @@ typedef struct s_exec
 	char		**envp;
 	long long	error;
 	long long	error_sig;
-	long long	error_old;
+	long long	error_last_child;
+	long long	error_last_prompt;
 	int			index_pipe;
 	int			index_prev_pipe;
 	int			nb_pipes;
@@ -124,11 +124,7 @@ void	error_getcwd(t_minishell *minishell, t_pipe *pipe);
 void	replace_oldpwd(t_minishell *minishell, t_pipe *pipe);
 void	modify_pwd_in_envp(t_minishell *minishell);
 int		cd(t_minishell *minishell, t_pipe *pipe);
-/** ECHO ****/
-void	echo(t_minishell *minishell, t_pipe *pipe);
-int		echo_print(t_minishell *minishell, t_pipe *pipe);
-int		echo_is_option(char *str);
-/************/
+void	echo(t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
 void	is_exit(t_minishell *minishell, t_pipe *pipe);
 int		exit_single_arg(t_minishell *minishell, char *nb);
@@ -182,6 +178,7 @@ int		cpy_strvindex(char **result, char **src, char *search);
 int		strv_searchindex(char **strv, char *search);
 int		str_copy_and_free(char **src, char **dst);
 int		has_alpha(char *str);
+int		str_iswhitespaces(char *s);
 int		join_oldnew(char **old, char **new);
 /* utils_strv **********************************************************/
 void	free_strv(char **array);

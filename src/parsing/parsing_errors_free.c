@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_errors_free.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 19:11:35 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/18 22:27:56 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/06/02 12:04:07 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,6 @@ void	error_malloc(char *line, char *newline,
 		ft_token_lstclear(minishell->exec.first_token);
 	if (minishell->exec.pipe_lst)
 		lst_pipe_clear(&minishell->exec.pipe_lst);
-	if (minishell->prompt)
-	{
-		free(minishell->prompt);
-		minishell->prompt = NULL;
-	}
 	rl_clear_history();
 	exit(EXIT_FAILURE);
 }

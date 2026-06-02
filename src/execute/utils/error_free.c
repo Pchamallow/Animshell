@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 17:35:31 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 17:19:29 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/02 14:22:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void	strerror_free_structure(t_minishell *minishell, char *filename,
 	char	*err;
 
 	err = strerror(errno);
-	write(2, err, strlen(err));
+	write(2, err, ft_strlen(err));
 	write(2, ": ", 2);
-	write(2, filename, strlen(filename));
+	write(2, filename, ft_strlen(filename));
 	write(2, "\n", 1);
 	free_all(minishell);
 	exit(error);
