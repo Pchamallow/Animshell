@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:39:35 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/02 12:07:14 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/02 14:10:14 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ typedef struct s_exec
 	char		**envp;
 	long long	error;
 	long long	error_sig;
-	long long	error_old;
+	long long	error_last_child;
+	long long	error_last_prompt;
 	int			index_pipe;
 	int			index_prev_pipe;
 	int			nb_pipes;

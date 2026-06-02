@@ -219,7 +219,7 @@ typedef struct s_minishell
 | `char **paths_for_search_cmd` | Paths extracted from `PATH` environment variable, split into possible directories to locate and execute commands |
 | `char **envp` | Copy of the environment variables (`envp`), which may be modified during execution (e.g. after `unset PATH`) |
 | `long long error` | Error code of the last command or pipeline execution, used as the program return value |
-| `long long error_old` | Previous error code, kept when needed for restoration or comparison |
+| `long long error_last_child` | Previous error code, kept when needed for restoration or comparison |
 | `int index_pipe` | Index of the current pipe in the token list |
 | `int index_prev_pipe` | Index of the previous pipe in the token list |
 | `int nb_pipes` | Total number of pipes in the current command line |

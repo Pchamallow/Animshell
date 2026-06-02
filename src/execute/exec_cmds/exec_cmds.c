@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/02 12:07:53 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/02 14:09:54 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,4 +88,5 @@ void	exec_cmds_pipe(t_minishell *minishell)
 	exec_loop(minishell, current, pipefd, &pid);
 	if (minishell->exec.error_sig)
 		minishell->exec.error = minishell->exec.error_sig;
+	minishell->exec.error_last_prompt = minishell->exec.error;
 }

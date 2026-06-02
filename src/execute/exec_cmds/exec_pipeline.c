@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 09:59:48 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/02 12:04:03 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/02 14:09:08 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	free_garbage(t_minishell *minishell, t_pipe *current)
 int	build_pipeline_structure(t_minishell *minishell, t_pipe *current,
 	int *pipefd)
 {
-	minishell->exec.error_old = minishell->exec.error;
+	minishell->exec.error_last_child = minishell->exec.error;
 	minishell->exec.error = 0;
 	if (read_tokens(minishell, current, minishell->exec.input_fd) != -1)
 	{
