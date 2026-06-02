@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/23 18:13:49 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/06/02 12:06:55 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/02 12:21:47 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ static void	echo_args(t_token *args, bool is_option)
 	bool	is_arg;
 
 	is_arg = false;
-	while (args && str_iswhitespaces(args->value))
-		args = args->next;
 	while (args && args->type != PIPE)
 	{
 		if (args->type == IS_ARG)
@@ -90,4 +88,6 @@ void	echo(t_pipe *pipe)
 		if (args)
 			echo_args(args, is_option);
 	}
+	else
+		ft_printf_fd(1, "\n");
 }
