@@ -235,14 +235,14 @@ typedef struct s_minishell
 ## 2.3 Structure folder
 ```
 .
-├── Makefile
-├── README.md
 ├── includes
 │   ├── execute.h
 │   ├── minishell.h
 │   └── parsing.h
 ├── lib
 │   └── libft
+├── Makefile
+├── README.md
 └── src
     ├── execute
     │   ├── built_in
@@ -252,7 +252,6 @@ typedef struct s_minishell
     │   │   │   ├── cd_root.c
     │   │   │   └── cd_update_pwd.c
     │   │   ├── echo.c
-    │   │   ├── echo_print.c
     │   │   ├── env.c
     │   │   ├── envp_utils.c
     │   │   ├── exit.c
@@ -291,8 +290,8 @@ typedef struct s_minishell
     │       ├── free.c
     │       ├── utils.c
     │       ├── utils_char.c
-    │       ├── utils_str.c
     │       ├── utils_str2.c
+    │       ├── utils_str.c
     │       └── utils_strv.c
     ├── main.c
     ├── parsing
