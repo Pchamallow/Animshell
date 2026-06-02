@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 12:35:42 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/27 14:56:30 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/02 12:04:10 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,6 @@ void	free_all(t_minishell *minishell)
 		ft_token_lstclear(minishell->exec.first_token);
 	if (minishell->exec.pipe_lst)
 		lst_pipe_clear(&minishell->exec.pipe_lst);
-	if (minishell->prompt)
-	{
-		free(minishell->prompt);
-		minishell->prompt = NULL;
-	}
 	rl_clear_history();
 }
 

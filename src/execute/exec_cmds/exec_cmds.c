@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/18 15:01:28 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/31 21:07:05 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/06/02 12:07:53 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ static void	free_parent(t_minishell *minishell, t_pipe *current, int *pipefd)
 
 static void	exec_builtins(t_minishell *minishell, t_pipe *current)
 {
-	if (current->builtin_kind == IS_ECHO)
-		echo(minishell, current);
 	if (current->builtin_kind == CD)
 		cd(minishell, current);
 	if (current->builtin_kind == EXPORT)

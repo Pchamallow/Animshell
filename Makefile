@@ -6,7 +6,7 @@
 #    By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/15 18:40:53 by pswirgie          #+#    #+#              #
-#    Updated: 2026/05/27 16:52:57 by pswirgie         ###   ########.fr        #
+#    Updated: 2026/06/02 11:54:35 by pswirgie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,6 @@ SRCS		:= 											\
 			src/execute/built_in/cd/cd_update_pwd.c		\
 			src/execute/built_in/cd/cd.c				\
 			src/execute/built_in/echo.c					\
-			src/execute/built_in/echo_print.c			\
 			src/execute/built_in/env.c					\
 			src/execute/built_in/exit.c					\
 			src/execute/built_in/exit_single_arg.c		\
