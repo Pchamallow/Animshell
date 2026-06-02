@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:11:40 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/02 15:22:40 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/02 17:21:26 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,7 @@ int	index_lastchar(char *str, char c)
 	i = ft_strlen(str) - 1;
 	while (i >= 0 && str[i] && str[i] != c)
 		i--;
-	return (i);
+	if (str[i] == c)
+		return (i);
+	return (-1);
 }

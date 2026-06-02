@@ -6,12 +6,57 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 15:56:04 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/02 15:25:57 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/02 18:29:06 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	strfind_occurences(char *src, char *target)
+{
+	int	occurrences;
+	int	len;
+	int	i;
+
+	i = 0;
+	occurrences = 0;
+	len = ft_strlen(target);
+	while (src && src[i])
+	{
+		if (strfind(&src[i], target) >= 0)
+		{
+			i += len - 1;
+			occurrences++;
+		}
+		i++;
+	}
+	if (occurrences)
+		return (occurrences);
+	return (0);
+}
+
+int	strfind_last(char *src, char *target)
+{
+	int	len;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = -1;
+	len = ft_strlen(target);
+	while (src && src[i])
+	{
+		if (strfind(&src[i], target))
+		{
+			i += len;
+			j = i;
+		}
+		i++;
+	}
+	if (j >= 0)
+		return (j);
+	return (0);
+}
 int	strfind(char *src, char *target)
 {
 	int	i;
@@ -24,7 +69,7 @@ int	strfind(char *src, char *target)
 		j = 0;
 		if (src[i + j] == target[j])
 		{
-			while (target[j] == src[i + j])
+			while (target[j] && target[j] == src[i + j])
 				j++;
 			if (!target[j])
 				return (i + j - 1);
@@ -48,14 +93,14 @@ int	str_iswhitespaces(char *s)
 	return (1);
 }
 
-int	join_oldnew(char **old, char **new)
+int	join_oldnew(char *old, char *new)
 {
 	char	*new_path;
 
-	new_path = ft_strjoin(*old, *new);
+	new_path = ft_strjoin(old, new);
 	if (!new_path)
 		return (1);
-	free(*new);
-	*new = new_path;
+	free(new);
+	new = new_path;
 	return (0);
 }

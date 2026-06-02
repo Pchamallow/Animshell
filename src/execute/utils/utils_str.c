@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:28:00 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/02 11:43:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/02 17:46:36 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,6 @@ int	str_copy_and_free(char **src, char **dst)
 		return (1);
 	free(*dst);
 	*dst = tmp;
-	free(*src);
-	*src = NULL;
 	return (0);
 }
 

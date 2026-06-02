@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:50:34 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/30 17:47:46 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/02 18:36:25 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,3 +99,53 @@ void	remove_dir(t_minishell *minishell, t_builtin_content *cd)
 	}
 	free(original);
 }
+
+/*
+static int	path_replacefolder(char **oldpwd, t_builtin_content *cd)
+{
+	int	i;
+	int	last_slash;
+	int	back;
+	int	len;
+
+	i = 0;
+	last_slash = 0;
+	back = 0;
+	char *original = ft_strdup(cd->result);
+	len = ft_strlen(original);
+	while (original[i])
+	{
+		if (ft_strcmp(&original[i], "../"))
+		{
+			i += 3;
+			back++;
+			while (i < len && ft_strcmp(&original[i], "../"))
+			{
+				i += 3;
+				back++;
+			}
+			while (back > 0)
+			{
+				last_slash = index_lastchar(*oldpwd, '/');
+				if (remove_lastfolder(oldpwd, last_slash))
+					return (1);
+				back--;
+			}
+		}
+		else if (original[i] == '/')
+		{
+			while (original[i] && original[i] == '/')
+				i++;
+		}
+		else
+		{
+			if (join_oldnew(*oldpwd, &original[i]))
+				return (1);
+		}
+		i++;
+	}
+	free(cd->result);
+	cd->result = original;
+	return (0);
+}
+*/
