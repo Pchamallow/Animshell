@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:47:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/03 11:19:43 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/03 12:12:56 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	end_root(char *path)
 		if (path[i] && path[i] != '/')
 		{
 			folder++;
-			while(path[i] && path[i] != '/')
+			while (path[i] && path[i] != '/')
 				i++;
 		}
 	}
@@ -57,7 +57,7 @@ static int	end_root(char *path)
 	return (-1);
 }
 
-char	*root()
+char	*root(void)
 {
 	char	*root;
 	char	*path;

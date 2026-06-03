@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:50:34 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/03 11:19:38 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/03 12:13:17 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ static int	remove_lastfolder(char **new_path, int last_slash)
 	*new_path = result;
 	return (0);
 }
-
-
 
 static int	add_folder(char **new_path, char *path_to_find, int *len)
 {
