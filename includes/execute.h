@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:39:35 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/02 18:26:47 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/03 09:44:57 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ void	error_getcwd(t_minishell *minishell, t_pipe *pipe);
 void	replace_oldpwd(t_minishell *minishell, t_pipe *pipe);
 void	modify_pwd_in_envp(t_minishell *minishell);
 int		cd(t_minishell *minishell, t_pipe *pipe);
+char	*root();
 void	echo(t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
 void	is_exit(t_minishell *minishell, t_pipe *pipe);
@@ -178,11 +179,11 @@ int		cpy_strvindex(char **result, char **src, char *search);
 int		strv_searchindex(char **strv, char *search);
 int		str_copy_and_free(char **src, char **dst);
 int		has_alpha(char *str);
-int		strfind_occurences(char *src, char *target);
+int		strfind_occurences(char *src, char *target, int index_of_occurrence);
 int		strfind_last(char *src, char *target);
-int		strfind(char *src, char *target);
+int		strfind(char *src, char *target, bool end);
 int		str_iswhitespaces(char *s);
-int		join_oldnew(char *old, char *new);
+char	*join_oldnew(char *old, char *new, bool invert_order);
 /* utils_strv **********************************************************/
 void	free_strv(char **array);
 int		memcpy_strv(char **dst, char **src, int max);

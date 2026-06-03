@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 17:22:40 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/06/02 15:23:36 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/03 08:47:11 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*new_concat(char *arg)
 		return (NULL);
 	i = 0;
 	j = 0;
-	plus = strfind(arg, "+");
+	plus = strfind(arg, "+", 0);
 	while (arg[i])
 	{
 		if (i != plus)

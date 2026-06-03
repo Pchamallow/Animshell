@@ -6,24 +6,21 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:50:34 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/02 18:36:25 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/03 11:00:48 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	remove_lastfolder(char **old_pwd, int last_slash)
+static int	remove_lastfolder(char **new_path, int last_slash)
 {
-	char	*tmp;
+	char	*result;
 
-	tmp = ft_strdup(*old_pwd);
-	if (!tmp)
+	result = ft_substr(*new_path, 0, last_slash);
+	free(*new_path);
+	if (!result)
 		return (1);
-	free(*old_pwd);
-	*old_pwd = ft_substr(tmp, 0, last_slash);
-	if (!*old_pwd)
-		return (1);
-	free(tmp);
+	*new_path = result;
 	return (0);
 }
 
@@ -43,27 +40,148 @@ static int	dir_permission(t_builtin_content *cd, char *original)
 	return (0);
 }
 
-static int	path_replacefolder(char **oldpwd, t_builtin_content *cd)
+int	end_root(char *path)
 {
-	int		last_slash;
+	int	folder;
+	int	slash;
+	int	i;
 
-	last_slash = index_lastchar(*oldpwd, '/');
-	if (last_slash > 0)
+	i = 0;
+	folder = 0;
+	slash = 0;
+	while (path[i] && slash < 2)
 	{
-		if (has_alpha(cd->result))
+		if (path[i] && path[i] == '/')
 		{
-			if (remove_lastfolder(oldpwd, last_slash)
-				|| join_oldnew(oldpwd, &cd->result))
-				return (1);
+			slash++;
+			while (path[i] && path[i] == '/')
+				i++;
 		}
-		else
+		if (path[i] && path[i] != '/')
 		{
-			if (remove_lastfolder(oldpwd, last_slash)
-				|| str_copy_and_free(oldpwd, &cd->result))
-				return (1);
+			folder++;
+			while(path[i] && path[i] != '/')
+				i++;
 		}
 	}
+	if (slash >= 2 && folder > 0)
+		return (i);
+	return (-1);
+}
+
+char	*root()
+// penser a ajouter ca dans root_with_folder
+//gere si root est null
+{
+	char	*root;
+	char	*path;
+	int		i;
+
+	path = getcwd(NULL, 0);
+	if (!path)
+		return (NULL);
+	i = end_root(path);
+	if (i != -1)
+		root = ft_substr(path, 0, i);
+	else
+		root = ft_strdup(path);
+	if (!root)
+		return (NULL);
+	return (root);
+}
+
+static int	add_folder(char **new_path, char *path_to_find, int *len)
+{
+	char	*folder;
+	char	*res;
+
+	res = ft_strdup(*new_path);
+	if (!res)
+		return (1);
+	free(*new_path);
+	*len = strfind(path_to_find, "/", 1);
+	if (*len == -1)
+		*len = ft_strlen(path_to_find);
+	folder = ft_substr(path_to_find, 0, *len);
+	if (!folder)
+		return (1);
+	folder = join_oldnew("/", folder, true);
+	if (!folder)
+		return (1);
+	res = join_oldnew(folder, res, false);
+	free(folder);
+	if (!res)
+		return (1);
+	*new_path = res;
 	return (0);
+}
+
+static void	handle_root(char **new_path)
+{
+	if (strfind_occurences(*new_path, "/", 0) < 2 && !has_alpha(*new_path))
+	{
+		free(*new_path);
+		*new_path = root();
+	}
+}
+
+static int	convert_to_absolute(char **new_path, char *path_to_find, int i)
+{
+	ft_printf_fd(2, "path_to_find = %s\n", &path_to_find[i]);// a suppr
+	ft_printf_fd(2, "new_path = %s\n", *new_path);// a suppr
+	ft_printf_fd(2, "i = %d\n", i);// a suppr
+	int	error;
+	int	len;
+
+	if (i >= (int)ft_strlen(path_to_find))
+	{
+		handle_root(new_path);
+		return (0);
+	}
+	else if (strfind(&path_to_find[i], "../", 0) == 0)
+	{
+		if (remove_lastfolder(new_path, index_lastchar(*new_path, '/')))
+			return (1);
+		error = convert_to_absolute(new_path, path_to_find, i + 3);
+	}
+	else if (strfind(&path_to_find[i], "./", 0) == 0)
+		error = convert_to_absolute(new_path, path_to_find, i + 2);
+	else if (ft_isalpha(path_to_find[i]))
+	{
+		if (add_folder(new_path, &path_to_find[i], &len))
+			return (1);
+		error = convert_to_absolute(new_path, path_to_find, i + len);
+	}
+	else if (path_to_find[i] == '/')
+		error = convert_to_absolute(new_path, path_to_find, i + 1);
+	return (error);
+}
+
+static int	path_replacefolder(char *oldpwd, t_builtin_content *cd)
+{
+	char	*path_to_find = ft_strdup(cd->result);
+	if (!path_to_find)
+		return (1);
+	char	*new_path = ft_strdup(oldpwd);
+	if (!new_path)
+		return (1);
+	
+
+	free(cd->result);
+	cd->result = NULL;
+	if (convert_to_absolute(&new_path, path_to_find, 0))
+	{
+		free(new_path);
+		free(path_to_find);
+		return (1);
+	}
+	cd->result = ft_strdup(new_path);
+	free(new_path);
+	free(path_to_find);
+	
+	return (0);
+	// si on commence a partir de l index 0 par telle str
+	// chercher str, retourner l index de debut du find
 }
 
 /*
@@ -85,7 +203,7 @@ void	remove_dir(t_minishell *minishell, t_builtin_content *cd)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	old_pwd = ft_substr(minishell->builtin.pwd.result, 4,
 			ft_strlen(minishell->builtin.pwd.result));
-	if (!old_pwd || path_replacefolder(&old_pwd, cd))
+	if (!old_pwd || path_replacefolder(old_pwd, cd))
 	{
 		free(old_pwd);
 		free(original);

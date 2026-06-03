@@ -6,46 +6,11 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:47:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/02 18:14:14 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/03 09:47:31 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	root_from_pwd(char *pwd)
-{
-	int	slash;
-	int	i;
-
-	i = 0;
-	slash = 0;
-	while (pwd[i] && slash < 3)
-	{
-		if (pwd[i] == '/')
-			slash++;
-		i++;
-	}
-	return (i);
-}
-
-void	is_root(t_minishell *minishell)
-{
-	int	result;
-	int	len;
-
-	result = cpy_strvindex(&minishell->builtin.cd.result,
-			minishell->exec.envp, "HOME=");
-	if (result == 1)
-		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	else if (result == -1)
-	{
-		len = root_from_pwd(minishell->builtin.pwd.result);
-		minishell->builtin.cd.result = ft_substr(minishell->builtin.pwd.result,
-				4, len - 4);
-		if (!minishell->builtin.cd.result)
-			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	}
-}
 
 void	root_with_folder(t_minishell *minishell)
 {

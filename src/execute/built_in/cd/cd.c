@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/05/29 18:55:52 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/03 09:47:36 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ static int	cd_get_args(t_minishell *minishell, t_pipe *pipe)
 {
 	if (!pipe->cmd->cmd_args || !pipe->cmd->cmd_args[0])
 	{
-		is_root(minishell);
+		minishell->builtin.cd.result = root();
+		if (!minishell->builtin.cd.result)
+			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 		return (0);
 	}
 	if (cd_errors_args(minishell, pipe))
