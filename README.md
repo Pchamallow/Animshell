@@ -9,28 +9,28 @@
 </div>
 
 - [Minishell Project](#minishell-project)
-  - [1. Description](#1-description)
-  - [2. Architecture](#2-architecture)
-  - [2.1 Shell execution cycle](#21-shell-execution-cycle)
-    - [1. Initialization](#1-initialization)
-    - [2. Main Loop](#2-main-loop)
-    - [3. Parsing](#3-parsing)
-    - [4. Command Execution](#4-command-execution)
-      - [1. Token reading (pipes)](#1-token-reading-pipes)
-        - [2. Command validation (non-builtin)](#2-command-validation-non-builtin)
-      - [3. Pipe management](#3-pipe-management)
-      - [4. Built-in commands](#4-built-in-commands)
-      - [5. Forking process](#5-forking-process)
-      - [6. Status and signal handling](#6-status-and-signal-handling)
-    - [5. Freeing and Reinitialization of the Structure](#5-freeing-and-reinitialization-of-the-structure)
-  - [2.2 Structure typedef](#22-structure-typedef)
-  - [2.3 Structure folder](#23-structure-folder)
-  - [2.4 Fonctions utils](#24-fonctions-utils)
-  - [3. Instructions](#3-instructions)
-      - [Valgrind Flags](#valgrind-flags)
-      - [Suppressor Readline](#suppressor-readline)
-      - [Example basic tests](#example-basic-tests)
-  - [4. Resources](#4-resources)
+	- [1. Description](#1-description)
+	- [2. Architecture](#2-architecture)
+	- [2.1 Shell execution cycle](#21-shell-execution-cycle)
+		- [1. Initialization](#1-initialization)
+		- [2. Main Loop](#2-main-loop)
+		- [3. Parsing](#3-parsing)
+		- [4. Command Execution](#4-command-execution)
+			- [1. Token reading (pipes)](#1-token-reading-pipes)
+				- [2. Command validation (non-builtin)](#2-command-validation-non-builtin)
+			- [3. Pipe management](#3-pipe-management)
+			- [4. Built-in commands](#4-built-in-commands)
+			- [5. Forking process](#5-forking-process)
+			- [6. Status and signal handling](#6-status-and-signal-handling)
+		- [5. Freeing and Reinitialization of the Structure](#5-freeing-and-reinitialization-of-the-structure)
+	- [2.2 Structure typedef](#22-structure-typedef)
+	- [2.3 Structure folder](#23-structure-folder)
+	- [2.4 Fonctions utils](#24-fonctions-utils)
+	- [3. Instructions](#3-instructions)
+			- [Valgrind Flags](#valgrind-flags)
+			- [Suppressor Readline](#suppressor-readline)
+			- [Example basic tests](#example-basic-tests)
+	- [4. Resources](#4-resources)
 
 <!-- new lines -->
 <br><br><br>
@@ -79,9 +79,9 @@ All along the project:
 - We handle several signal functions to receive and manage signals.
 - If a malloc fails, we free the entire structure and exit either the child process or the main program. In both cases, we ensure no memory leaks.
 - The return error code is updated throughout the program:
-  - If a command succeeds → return 0
-  - If infile/outfile fails → return the appropriate error code
-  - And many other cases depending on the context
+	- If a command succeeds → return 0
+	- If infile/outfile fails → return the appropriate error code
+	- And many other cases depending on the context
 
 [back to top](#top)
 <!-- new lines -->
@@ -114,7 +114,7 @@ The first character must be an alphabetic character or an underscore.
 The exit status is called with '\$?', it expands to the exit status of the most recently executed pipeline.  
 -> '\$' expands to something only when it is followed by an alphabetic character, an underscore or '?'  
 Otherwise, it is print as a \$.  
-  
+	
 *Single quotes* prevent minishell from interpreting special characters, *including* environnement variables and exit status.  
 *Double quotes* prevent minishell from interpreting special characters, *except* environnement variables and exit status.  
 If quotes are not closed, minishell prints an error message.  
@@ -130,7 +130,7 @@ Then the tokens are more precisely defined:
 	- *words* become *commands* (or *built-in* commands), *arguments*, *filenames* or *delimiters*
 	- if 2 *words* are following each other without any space, they are combined into one  
 	- spaces are removed  
-  
+	
 If a syntax error is encontered, minishell prints an error message.  
 
 ### 4. Command Execution
@@ -145,18 +145,18 @@ If a syntax error is encontered, minishell prints an error message.
 ---
 ##### 2. Command validation (non-builtin)
 - If the command is valid and is not a builtin:
-  - Create the `char **` array for `execve`
-  - Include the command path and its arguments
+	- Create the `char **` array for `execve`
+	- Include the command path and its arguments
 ---
 #### 3. Pipe management
 - Pipes are used to retrieve the output of commands
 - Data is passed between processes using `pipefd`
 ---
 #### 4. Built-in commands
-  - Execute it in the appropriate process (parent or child depending on the case)
-  - If the output must be piped, or if there are no pipes involved → execute in the child process
-  - If the result must affect the next prompt → execute in the parent process
-  - Example: `echo -n coucou` modifies the shell output directly, so it must be executed in the parent process to affect the next prompt
+	- Execute it in the appropriate process (parent or child depending on the case)
+	- If the output must be piped, or if there are no pipes involved → execute in the child process
+	- If the result must affect the next prompt → execute in the parent process
+	- Example: `echo -n coucou` modifies the shell output directly, so it must be executed in the parent process to affect the next prompt
 ---
 #### 5. Forking process
 - At this stage, we have both a parent and a child process
@@ -190,10 +190,10 @@ At this point, all pipes have been processed.
 The program returns to the main loop.
 
 - We only free the necessary parts of the structure, not everything:
-  - heredoc
-  - prompt
-  - the list of tokens and their contents (e.g. `char *value`)
-  - the `char *result` from `cd`
+	- heredoc
+	- prompt
+	- the list of tokens and their contents (e.g. `char *value`)
+	- the `char *result` from `cd`
 ---
 Finally, the loop starts again.
 
@@ -244,73 +244,73 @@ typedef struct s_minishell
 ├── Makefile
 ├── README.md
 └── src
-    ├── execute
-    │   ├── built_in
-    │   │   ├── cd
-    │   │   │   ├── cd.c
-    │   │   │   ├── cd_get_args.c
-    │   │   │   ├── cd_root.c
-    │   │   │   └── cd_update_pwd.c
-    │   │   ├── echo.c
-    │   │   ├── env.c
-    │   │   ├── envp_utils.c
-    │   │   ├── exit.c
-    │   │   ├── exit_single_arg.c
-    │   │   ├── export.c
-    │   │   ├── export_print.c
-    │   │   ├── export_update_envp.c
-    │   │   ├── export_utils.c
-    │   │   ├── pwd
-    │   │   │   ├── pwd.c
-    │   │   │   └── pwd_init.c
-    │   │   └── unset.c
-    │   ├── cmd_path
-    │   │   ├── cmd_explicit.c
-    │   │   ├── get_paths.c
-    │   │   └── is_valid_path.c
-    │   ├── exec_cmds
-    │   │   ├── exec_child.c
-    │   │   ├── exec_cmds.c
-    │   │   └── exec_pipeline.c
-    │   ├── execute.c
-    │   ├── heredoc.c
-    │   ├── init
-    │   │   ├── init_args.c
-    │   │   ├── init_cmd_args.c
-    │   │   ├── init_exec.c
-    │   │   ├── init_files.c
-    │   │   ├── init_pipe.c
-    │   │   └── init_utils.c
-    │   ├── read
-    │   │   ├── init_cmd.c
-    │   │   └── read_token.c
-    │   └── utils
-    │       ├── close_fds.c
-    │       ├── error_free.c
-    │       ├── free.c
-    │       ├── utils.c
-    │       ├── utils_char.c
-    │       ├── utils_str2.c
-    │       ├── utils_str.c
-    │       └── utils_strv.c
-    ├── main.c
-    ├── parsing
-    │   ├── expand_line.c
-    │   ├── expand_line_count.c
-    │   ├── expand_line_strlcat_add_quotes.c
-    │   ├── expand_line_utils.c
-    │   ├── find_built_in.c
-    │   ├── ft_token_list.c
-    │   ├── handle_quote_type.c
-    │   ├── handle_token_types.c
-    │   ├── parsing.c
-    │   ├── parsing_errors_free.c
-    │   ├── parsing_utils.c
-    │   └── separate_into_tokens.c
-    └── signals
-        ├── signals_default.c
-        ├── signals_heredoc.c
-        └── signals_interactive.c
+		├── execute
+		│   ├── built_in
+		│   │   ├── cd
+		│   │   │   ├── cd.c
+		│   │   │   ├── cd_get_args.c
+		│   │   │   ├── cd_root.c
+		│   │   │   └── cd_update_pwd.c
+		│   │   ├── echo.c
+		│   │   ├── env.c
+		│   │   ├── envp_utils.c
+		│   │   ├── exit.c
+		│   │   ├── exit_single_arg.c
+		│   │   ├── export.c
+		│   │   ├── export_print.c
+		│   │   ├── export_update_envp.c
+		│   │   ├── export_utils.c
+		│   │   ├── pwd
+		│   │   │   ├── pwd.c
+		│   │   │   └── pwd_init.c
+		│   │   └── unset.c
+		│   ├── cmd_path
+		│   │   ├── cmd_explicit.c
+		│   │   ├── get_paths.c
+		│   │   └── is_valid_path.c
+		│   ├── exec_cmds
+		│   │   ├── exec_child.c
+		│   │   ├── exec_cmds.c
+		│   │   └── exec_pipeline.c
+		│   ├── execute.c
+		│   ├── heredoc.c
+		│   ├── init
+		│   │   ├── init_args.c
+		│   │   ├── init_cmd_args.c
+		│   │   ├── init_exec.c
+		│   │   ├── init_files.c
+		│   │   ├── init_pipe.c
+		│   │   └── init_utils.c
+		│   ├── read
+		│   │   ├── init_cmd.c
+		│   │   └── read_token.c
+		│   └── utils
+		│       ├── close_fds.c
+		│       ├── error_free.c
+		│       ├── free.c
+		│       ├── utils.c
+		│       ├── utils_char.c
+		│       ├── utils_str2.c
+		│       ├── utils_str.c
+		│       └── utils_strv.c
+		├── main.c
+		├── parsing
+		│   ├── expand_line.c
+		│   ├── expand_line_count.c
+		│   ├── expand_line_strlcat_add_quotes.c
+		│   ├── expand_line_utils.c
+		│   ├── find_built_in.c
+		│   ├── ft_token_list.c
+		│   ├── handle_quote_type.c
+		│   ├── handle_token_types.c
+		│   ├── parsing.c
+		│   ├── parsing_errors_free.c
+		│   ├── parsing_utils.c
+		│   └── separate_into_tokens.c
+		└── signals
+				├── signals_default.c
+				├── signals_heredoc.c
+				└── signals_interactive.c
 ```
 [back to top](#top)
 
@@ -323,19 +323,29 @@ typedef struct s_minishell
 |Utils||
 |-|-|
 |TOKEN|--------------------------------------------------------|
-|lst_size| size of token list|
+|int	lst_size|size of token list|
 |UTILS_CHAR|--------------------------------------------------------|
-|count_chr|count the occurrence(s) of a chr in a str|
+|int	count_chr|count the occurrence(s) of a char in a str|
+|int	index_lastchar|index of last occurence of a char in a str|
 |UTILS_STR|--------------------------------------------------------|
-|ft_strcmp| = strlcmp, choose the longest len between src and dst|
-|is_space| index of the last space in a str|
-|ft_strcpy| = = strlcpy, choose the longest len between src and dst|
-|safe_join|strjoin, return NULL if malloc fail|
+|int	is_space|index of the last space in a str|
+|void	ft_strcpy|= = strlcpy, choose the longest len between src and dst|
+|char	*safe_join|strjoin, return NULL if malloc fail|
+|int ft_strcmp| = strlcmp, choose the longest len between src and dst |
+|int strv_searchindex|search a str in a strv, return index in strv|
+|int cpy_strvindex|search a str in a strv, cpy the str with index in result|
+|int	str_copy_and_free|cpy dest in src (free src before cpy)|
+|int	has_alpha|Returns 1 if the string contains at least one alphabetic character|
+|int	strfind_occurences| If occurrenceIndex is 0, returns the total number of occurrences. Otherwise, returns the index of the specified occurrence.|
+|int	strfind_last|index of the last occurrence|
+|int	strfind|index of the first occurrence|
+|int	str_iswhitespaces|return 1 if only whitespaces finded|
+|char	*join_oldnew|free the new,strjoin 2 str, order can be invert|
 |UTILS_STRV|--------------------------------------------------------|
-|strv_dup| malloc a char **str and copy from a char **str |
-|free_strv / free_strv_len| free a char **str |
-|strvlen| len of a strv|
-|memcpy_strv|copy memory strv|
+|void	free_strv / free_strv_len|free a char **str|
+|int	memcpy_strv|copy memory strv|
+|int	strvlen|len of a strv|
+|char	**strv_dup| malloc a char **str and copy from a char **str |
 [back to top](#top)
 <!-- new lines -->
 <br><br><br><br><br>

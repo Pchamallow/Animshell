@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 17:22:40 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/06/03 08:47:11 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/03 13:25:03 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,32 +67,4 @@ char	*new_concat(char *arg)
 		i++;
 	}
 	return (str);
-	//suppr original en dessous ou test ?
 }
-
-
-// original
-// char	*new_concat(char *arg)
-// {
-// 	char	*str;
-// 	int		i;
-// 	int		j;
-// 	int		len;
-
-// 	len = ft_strlen(arg);
-// 	str = ft_calloc(len, sizeof(char));
-// 	if (!str)
-// 		return (NULL);
-// 	i = 0;
-// 	j = 0;
-// 	while (arg[i])
-// 	{
-// 		if (arg[i] != '+')
-// 		{
-// 			str[j] = arg[i];
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// 	return (str);
-// }

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:28:00 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/02 17:46:36 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/03 12:47:06 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,6 @@ int	ft_strcmp(char *s1, char *s2)
 	return (result);
 }
 
-int	cpy_strvindex(char **result, char **src, char *search)
-{
-	int	index;
-	int	len_search;
-
-	len_search = ft_strlen(search);
-	index = strv_searchindex(src, search);
-	if (index == -1)
-		return (-1);
-	*result = ft_substr(src[index], len_search,
-			ft_strlen(src[index]) - len_search);
-	if (!*result)
-		return (1);
-	return (0);
-}
-
 int	strv_searchindex(char **strv, char *search)
 {
 	int	i;
@@ -59,6 +43,22 @@ int	strv_searchindex(char **strv, char *search)
 		i++;
 	}
 	return (-1);
+}
+
+int	cpy_strvindex(char **result, char **src, char *search)
+{
+	int	index;
+	int	len_search;
+
+	len_search = ft_strlen(search);
+	index = strv_searchindex(src, search);
+	if (index == -1)
+		return (-1);
+	*result = ft_substr(src[index], len_search,
+			ft_strlen(src[index]) - len_search);
+	if (!*result)
+		return (1);
+	return (0);
 }
 
 int	str_copy_and_free(char **src, char **dst)
