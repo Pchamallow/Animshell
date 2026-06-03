@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:39:35 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/03 09:44:57 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/03 11:20:19 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,15 +115,14 @@ void	free_garbage(t_minishell *minishell, t_pipe *current);
 int		build_pipeline_structure(t_minishell *minishell,
 			t_pipe *current, int *pipefd);
 /* built-in ************************************************************/
-/** CD ******/
 void	remove_dir(t_minishell *minishell, t_builtin_content *cd);
-void	is_root(t_minishell *minishell);
 void	root_with_folder(t_minishell *minishell);
 int		is_pwd_invalid(void);
 void	error_getcwd(t_minishell *minishell, t_pipe *pipe);
 void	replace_oldpwd(t_minishell *minishell, t_pipe *pipe);
 void	modify_pwd_in_envp(t_minishell *minishell);
 int		cd(t_minishell *minishell, t_pipe *pipe);
+int		dir_permission(t_builtin_content *cd, char *original);
 char	*root();
 void	echo(t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
