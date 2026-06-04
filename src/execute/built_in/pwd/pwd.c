@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 16:47:25 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/04 14:23:44 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/04 20:46:32 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ static void	add_pwd_to_envp(t_minishell *minishell)
 void	init_pwd_envp(t_minishell *minishell)
 {
 	pwd_init(minishell);
-	if (minishell->exec.envp && strv_searchindex(minishell->exec.envp, "PWD=") == -1)
+	if (minishell->exec.envp
+		&& strv_searchindex(minishell->exec.envp, "PWD=") == -1)
 		add_pwd_to_envp(minishell);
 }
 

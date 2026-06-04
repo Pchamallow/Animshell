@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 14:11:33 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/28 23:18:09 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/06/04 20:39:09 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ bool	export_option_error(t_minishell *minishell, t_token *arg)
 	{
 		ft_printf_fd(2, "minishell: export: -%c", arg->value[1]);
 		ft_printf_fd(2, ": invalid option\n");
-		ft_printf_fd(2, "export: usage: export [nom[=valeur] ...]\n");
+		ft_printf_fd(2, "export: usage: export [name[=value] ...]\n");
 		minishell->exec.error = 2;
 		return (true);
 	}
@@ -82,7 +82,7 @@ int	ft_export(t_minishell *minishell, t_pipe *pipe)
 	bool	valid_var_to_add;
 
 	minishell->exec.error = 0;
-	if (pipe->nb_args == 0)
+	if (!pipe->cmd->next)
 		return (minishell->exec.error);
 	arg = pipe->cmd->next;
 	if (export_option_error(minishell, arg))
