@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 14:11:33 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/24 18:17:26 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/06/04 19:52:40 by stkloutz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ static int	print_sorted_envp(t_minishell *minishell)
 */
 int	export_print(t_minishell *minishell, t_pipe *pipe)
 {
-	if (pipe->nb_args == 0)
+	if (!pipe->cmd->next)
 		print_sorted_envp(minishell);
 	return (0);
 }
