@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:50:34 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/04 13:25:30 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/04 13:41:04 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int	convert_to_absolute(char **new_path, char *path_to_find, int i)
 	}
 	else if (strfind(&path_to_find[i], "./", 0) == 0)
 		error = convert_to_absolute(new_path, path_to_find, i + 2);
-	else if (ft_isalpha(path_to_find[i]))
+	else if (path_to_find[i] != '/')
 	{
 		if (add_folder(new_path, &path_to_find[i], &len))
 			return (1);

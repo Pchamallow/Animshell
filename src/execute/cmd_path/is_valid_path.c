@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/01 15:44:18 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/04 14:18:16 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	is_directory(t_minishell *minishell, t_pipe *pipe, char *str)
 }
 
 /*
-Command not found = -1;
+Command not found = -1-1;
 To search path = 0;
 Absolute path = 1;
 Explicit path = 2;

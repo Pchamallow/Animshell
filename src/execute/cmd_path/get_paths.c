@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 14:55:34 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/01 15:44:22 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/04 14:24:38 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	get_paths_for_cmd(t_minishell *minishell)
 	if (minishell->exec.paths_for_search_cmd)
 		free_strv(minishell->exec.paths_for_search_cmd);
 	minishell->exec.paths_for_search_cmd = NULL;
-	while (minishell->exec.envp[i])
+	while (minishell->exec.envp && minishell->exec.envp[i])
 	{
 		if (ft_strnstr(minishell->exec.envp[i], "PATH=", 5) != NULL)
 		{

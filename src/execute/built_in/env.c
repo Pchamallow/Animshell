@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stkloutz <stkloutz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 10:31:25 by stkloutz          #+#    #+#             */
-/*   Updated: 2026/05/03 11:34:17 by stkloutz         ###   ########.fr       */
+/*   Updated: 2026/06/04 14:36:11 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int	env(t_minishell *minishell, t_pipe *pipe)
 	minishell->exec.error = 0;
 	if (pipe->nb_args > 0)
 	{
-		ft_printf_fd(2, "Error: too many arguments\n");
-		minishell->exec.error = 2;
+		ft_printf_fd(2, "minishell: Error: too many arguments\n");
+		minishell->exec.error = 127;
 		return (minishell->exec.error);
 	}
 	i = 0;
