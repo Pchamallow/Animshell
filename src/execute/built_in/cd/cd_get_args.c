@@ -6,13 +6,13 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:50:34 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/03 12:13:17 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/04 13:25:30 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	remove_lastfolder(char **new_path, int last_slash)
+int	remove_lastfolder(char **new_path, int last_slash)
 {
 	char	*result;
 
@@ -110,7 +110,7 @@ static int	path_replacefolder(char *oldpwd, t_builtin_content *cd)
 **					pwd	= /home/documents/tests
 **					cd	= /home/documents/folder
 */
-void	remove_dir(t_minishell *minishell, t_builtin_content *cd)
+void	is_perm_folder(t_minishell *minishell, t_builtin_content *cd)
 {
 	char	*old_pwd;
 	char	*original;
@@ -120,8 +120,7 @@ void	remove_dir(t_minishell *minishell, t_builtin_content *cd)
 	original = ft_strdup(cd->result);
 	if (!original)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-	old_pwd = ft_substr(minishell->builtin.pwd.result, 4,
-			ft_strlen(minishell->builtin.pwd.result));
+	old_pwd = init_oldpwd(minishell);
 	if (!old_pwd || path_replacefolder(old_pwd, cd))
 	{
 		free(old_pwd);
@@ -129,7 +128,7 @@ void	remove_dir(t_minishell *minishell, t_builtin_content *cd)
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
 	}
 	free(old_pwd);
-	if (dir_permission(cd, original))
+	if (dir_permission(minishell, cd, original))
 	{
 		free(original);
 		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/03 09:47:36 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/04 13:25:15 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	cd(t_minishell *minishell, t_pipe *pipe)
 		free_and_set_null(minishell);
 	if (cd_get_args(minishell, pipe))
 		return (0);
-	remove_dir(minishell, &minishell->builtin.cd);
+	is_perm_folder(minishell, &minishell->builtin.cd);
 	error = chdir(minishell->builtin.cd.result);
 	if (error != 0)
 		print_error_cd(minishell);

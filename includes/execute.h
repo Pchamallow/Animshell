@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:39:35 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/03 12:13:03 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/04 13:24:41 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ typedef struct s_exec
 /***********************************************************************/
 /*                            SRC                                      */
 /***********************************************************************/
-int		main(int argc, char **argv, char **envp);
 /* init ****************************************************************/
 void	init_exec(t_minishell *minishell);
 void	init_pipe(t_minishell *minishell);
@@ -115,14 +114,16 @@ void	free_garbage(t_minishell *minishell, t_pipe *current);
 int		build_pipeline_structure(t_minishell *minishell,
 			t_pipe *current, int *pipefd);
 /* built-in ************************************************************/
-void	remove_dir(t_minishell *minishell, t_builtin_content *cd);
+void	is_perm_folder(t_minishell *minishell, t_builtin_content *cd);
 void	root_with_folder(t_minishell *minishell);
 int		is_pwd_invalid(void);
 void	error_getcwd(t_minishell *minishell, t_pipe *pipe);
 void	replace_oldpwd(t_minishell *minishell, t_pipe *pipe);
 void	modify_pwd_in_envp(t_minishell *minishell);
 int		cd(t_minishell *minishell, t_pipe *pipe);
-int		dir_permission(t_builtin_content *cd, char *original);
+int		remove_lastfolder(char **new_path, int last_slash);
+int		dir_permission(t_minishell *minishell, t_builtin_content *cd,
+			char *original);
 char	*root(void);
 void	echo(t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
@@ -146,6 +147,7 @@ int		pwd_print(t_minishell *minishell);
 void	pwd_update(t_minishell *minishell);
 void	init_pwd_envp(t_minishell *minishell);
 void	pwd_init(t_minishell *minishell);
+char	*init_oldpwd(t_minishell *minishell);
 void	init_args_execve(t_minishell *minishell, t_pipe *pipe);
 void	exec_cmds_pipe(t_minishell *minishell);
 /* read token **********************************************************/
