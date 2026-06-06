@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 15:47:23 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/04 13:41:08 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/06 16:57:47 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,66 +78,29 @@ int	dir_permission(t_minishell *minishell, t_builtin_content *cd,
 	return (0);
 }
 
-static int	end_root(char *path)
+int	root(t_minishell *minishell, char **home)
 {
-	int	folder;
-	int	slash;
-	int	i;
+	int	result;
 
-	i = 0;
-	folder = 0;
-	slash = 0;
-	while (path[i] && slash < 2)
+	result = cpy_strvindex(home, minishell->exec.envp, "HOME=");
+	if (result == 1)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	else if (result == -1)
 	{
-		if (path[i] && path[i] == '/')
-		{
-			slash++;
-			while (path[i] && path[i] == '/')
-				i++;
-		}
-		if (path[i] && path[i] != '/')
-		{
-			folder++;
-			while (path[i] && path[i] != '/')
-				i++;
-		}
+		ft_printf_fd(2, "minishell: cd: HOME not set\n");
+		minishell->exec.error = 1;
+		return (0);
 	}
-	if (slash >= 2 && folder > 0)
-		return (i);
-	return (-1);
+	return (1);
 }
 
-char	*root(void)
-{
-	char	*root;
-	char	*path;
-	int		i;
-
-	path = getcwd(NULL, 0);
-	if (!path)
-		return (NULL);
-	i = end_root(path);
-	if (i != -1)
-		root = ft_substr(path, 0, i);
-	else
-		root = ft_strdup(path);
-	if (!root)
-	{
-		free(path);
-		return (NULL);
-	}
-	free(path);
-	return (root);
-}
-
-void	root_with_folder(t_minishell *minishell)
+int	root_with_folder(t_minishell *minishell)
 {
 	char	*home;
 	char	*folder;
 
-	home = root();
-	if (!home)
-		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	if (!root(minishell, &home))
+		return (0);
 	folder = ft_substr(minishell->builtin.cd.result, 1,
 			ft_strlen(minishell->builtin.cd.result) - 1);
 	if (!folder)
@@ -149,4 +112,25 @@ void	root_with_folder(t_minishell *minishell)
 	minishell->builtin.cd.result = ft_strjoin(home, folder);
 	free(folder);
 	free(home);
+	return (1);
+}
+
+int	check_args(t_minishell *minishell, t_pipe *pipe)
+{
+	if (!ft_strcmp(pipe->cmd->cmd_args[0], "-"))
+	{
+		pwd_update(minishell);
+		return (1);
+	}
+	minishell->builtin.cd.result = ft_strdup(pipe->cmd->cmd_args[0]);
+	if (!minishell->builtin.cd.result)
+		print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+	if (minishell->builtin.cd.result[0] == '~')
+	{
+		if (!root_with_folder(minishell))
+			return (1);
+	}
+	if (!ft_strcmp(minishell->builtin.cd.result, "./"))
+		return (0);
+	return (0);
 }

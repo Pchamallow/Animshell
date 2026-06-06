@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 15:58:58 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/04 14:06:37 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/06 16:46:50 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,31 +25,20 @@ static int	cd_errors_args(t_minishell *minishell, t_pipe *pipe)
 
 static int	cd_get_args(t_minishell *minishell, t_pipe *pipe)
 {
+	int	error;
+
+	error = 0;
 	if (!pipe->cmd->cmd_args || !pipe->cmd->cmd_args[0])
 	{
-		minishell->builtin.cd.result = root();
-		if (!minishell->builtin.cd.result)
-			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
+		if (!root(minishell, &minishell->builtin.cd.result))
+			return (1);
 		return (0);
 	}
 	if (cd_errors_args(minishell, pipe))
 		return (1);
 	if (pipe->cmd->cmd_args[0])
-	{
-		if (!ft_strcmp(pipe->cmd->cmd_args[0], "-"))
-		{
-			pwd_update(minishell);
-			return (1);
-		}
-		minishell->builtin.cd.result = ft_strdup(pipe->cmd->cmd_args[0]);
-		if (!minishell->builtin.cd.result)
-			print_error_free(minishell, "Malloc failed.\n", EXIT_FAILURE);
-		if (minishell->builtin.cd.result[0] == '~')
-			root_with_folder(minishell);
-		if (!ft_strcmp(minishell->builtin.cd.result, "./"))
-			return (0);
-	}
-	return (0);
+		error = check_args(minishell, pipe);
+	return (error);
 }
 
 static void	free_and_set_null(t_minishell *minishell)

@@ -367,6 +367,9 @@ typedef struct s_minishell
 --track-origins=yes
 --suppressions=readline.supp
 ```
+```
+--leak-check=full --show-leak-kinds=all --trace-children=yes --track-fds=yes --track-origins=yes --suppressions=readline.supp
+```
 
 #### Suppressor Readline
 The readline() function may cause memory leaks !  

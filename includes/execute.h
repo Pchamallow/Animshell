@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 16:39:35 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/04 13:41:33 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/06 16:46:15 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,16 +115,17 @@ int		build_pipeline_structure(t_minishell *minishell,
 			t_pipe *current, int *pipefd);
 /* built-in ************************************************************/
 void	is_perm_folder(t_minishell *minishell, t_builtin_content *cd);
-void	root_with_folder(t_minishell *minishell);
+int		root_with_folder(t_minishell *minishell);
 int		is_pwd_invalid(void);
 void	error_getcwd(t_minishell *minishell, t_pipe *pipe);
+int		check_args(t_minishell *minishell, t_pipe *pipe);
 void	replace_oldpwd(t_minishell *minishell, t_pipe *pipe);
 void	modify_pwd_in_envp(t_minishell *minishell);
 int		cd(t_minishell *minishell, t_pipe *pipe);
 int		remove_lastfolder(char **new_path, int last_slash);
 int		dir_permission(t_minishell *minishell, t_builtin_content *cd,
 			char *original);
-char	*root(void);
+int		root(t_minishell *minishell, char **home);
 void	echo(t_pipe *pipe);
 int		env(t_minishell *minishell, t_pipe *pipe);
 void	is_exit(t_minishell *minishell, t_pipe *pipe);
