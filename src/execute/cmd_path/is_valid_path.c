@@ -6,7 +6,7 @@
 /*   By: pswirgie <pswirgie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 16:07:17 by pswirgie          #+#    #+#             */
-/*   Updated: 2026/06/04 14:18:16 by pswirgie         ###   ########.fr       */
+/*   Updated: 2026/06/06 17:11:44 by pswirgie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static int	error_path(t_minishell *minishell, t_pipe *pipe, t_token *token)
 			error_cmd_args(token->value, NULL, "No such file or directory");
 			minishell->exec.error = 127;
 		}
-		if (access(token->value, R_OK) != 0)
+		else if (access(token->value, R_OK) != 0)
 		{
 			error_cmd_args(token->value, NULL, "Permission denied");
 			minishell->exec.error = 126;
